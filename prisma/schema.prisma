@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model Events {
+    id            String   @id @default(cuid())
+    name          String
+    description   String
+    organization  String
+    headerImage   String
+    createdAt     DateTime @default(now())
+    eventStart    DateTime
+    eventEnd      DateTime
+    formOpen      DateTime
+    formClose     DateTime
+    hasBeenForced Boolean  @default(false)
+    forcedIsOpen  Boolean  @default(false)
+}
+
+model Checkins {
+    id         String  @id @default(cuid())
+    member     Member  @relation(fields: [memberID], references: [id])
+    memberID   String
+    isInPerson Boolean
+    feedback   String
+}
+
+model Member {
+    id               String     @id @default(cuid())
+    email            String     @unique
+    shortID          String     @unique
+    attendanceCount  Int
+    joinDate         DateTime
+    checkins         Checkins[]
+    extendedUserData String
+}
+
+// model Example {
+//     id String @id @default(cuid())
+// }

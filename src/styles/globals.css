@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Raleway:display=swap");
+
+.page-view {
+	height: calc(100vh - 72px);
+	background-color: rgba(0, 0, 0, 0.4);
+}
