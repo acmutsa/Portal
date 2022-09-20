@@ -54,14 +54,14 @@ const Admin: NextPage = () => {
 				<div className="bg-zinc-200 font-opensans text-lg font-semibold p-[5px]">
 					<div className="w-full h-[50px] grid md:grid-cols-2 grid-cols-1 gap-1 mb-[0.25rem]">
 						<button
-							className="flex items-center justify-center w-full h-full rounded-xl hover:bg-zinc-100 bg-primary-lighter text-white"
+							className="flex items-center justify-center w-full h-full rounded-xl bg-primary-lighter text-white"
 							onClick={() => swapPage(viewType.dashboard)}
 						>
 							<BsCalendarRange className="mr-[5px]" />
 							New Event
 						</button>{" "}
 						<button
-							className="flex items-center justify-center w-full h-full rounded-xl hover:bg-zinc-100 bg-primary-lighter text-white"
+							className="flex items-center justify-center w-full h-full rounded-xl bg-primary-lighter text-white"
 							onClick={() => swapPage(viewType.dashboard)}
 						>
 							<CgProfile className="mr-[5px]" />
