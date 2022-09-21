@@ -4,7 +4,7 @@ import { z } from "zod";
 export const adminRouter = createRouter()
 	.query("createEvent", {
 		input: z.object({
-			text: z.string().nullish(),
+			user: z.object({}),
 		}),
 		resolve({ input }) {
 			return {
