@@ -18,7 +18,7 @@ const NewEventView: FunctionComponent = () => {
 	const { register, handleSubmit } = useForm();
 	const didSubmit = async (p: any) => {
 		let data = p;
-		const hello = trpc.useQuery([
+		const response = trpc.useQuery([
 			"admin.createEvent",
 			{
 				eventName: data.eventName,
@@ -31,6 +31,7 @@ const NewEventView: FunctionComponent = () => {
 				formClose: data.formClose,
 			},
 		]);
+		console.log(response);
 	};
 
 	return (
