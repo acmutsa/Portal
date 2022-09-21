@@ -2,6 +2,10 @@ import { FunctionComponent } from "react";
 import public_config from "../../../config/public_config.json";
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
+import { trpc } from "../../utils/trpc";
+
+// const Home: NextPage = () => {
+//   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
 
 const NewEventView: FunctionComponent = () => {
 	const orgs = public_config.organizations;
@@ -14,14 +18,19 @@ const NewEventView: FunctionComponent = () => {
 	const { register, handleSubmit } = useForm();
 	const didSubmit = async (p: any) => {
 		let data = p;
-		const res = await fetch("/api/events/create", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
+		const hello = trpc.useQuery([
+			"admin.createEvent",
+			{
+				eventName: data.eventName,
+				eventDescription: data.eventDescription,
+				eventImage: data.eventImage,
+				eventOrg: data.eventOrg,
+				eventStart: data.eventStart,
+				eventEnd: data.eventEnd,
+				formOpen: data.formOpen,
+				formClose: data.formClose,
 			},
-			body: JSON.stringify(data),
-		});
-		const res_json = await res.json();
+		]);
 	};
 
 	return (

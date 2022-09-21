@@ -4,9 +4,17 @@ import { z } from "zod";
 export const adminRouter = createRouter()
 	.query("createEvent", {
 		input: z.object({
-			user: z.object({}),
+			eventName: z.string(),
+			eventDescription: z.string(),
+			eventImage: z.string().optional(),
+			eventOrg: z.string(),
+			eventStart: z.date(),
+			eventEnd: z.date(),
+			formOpen: z.date(),
+			formClose: z.date(),
 		}),
-		resolve({ input }) {
+		resolve({ input, ctx }) {
+			console.log(ctx);
 			return {
 				status: "completed",
 				eventID: "TBD",
