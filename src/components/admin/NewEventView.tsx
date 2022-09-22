@@ -12,7 +12,11 @@ const NewEventView: FunctionComponent = () => {
 	const orgSelects = [];
 	for (let org of orgs) {
 		console.log(org);
-		orgSelects.push(<option value={org}>{org}</option>);
+		orgSelects.push(
+			<option key={org} value={org}>
+				{org}
+			</option>
+		);
 	}
 
 	let r = trpc.useMutation(["admin.createEvent"]);
