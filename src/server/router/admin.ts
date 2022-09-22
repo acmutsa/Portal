@@ -13,11 +13,23 @@ export const adminRouter = createRouter()
 			formOpen: z.date(),
 			formClose: z.date(),
 		}),
-		resolve({ input, ctx }) {
-			console.log(ctx);
+		async resolve({ input, ctx }) {
+			let newEvent = await ctx.prisma.events.create({
+				data: {
+					name: input.eventName,
+					description: input.eventDescription,
+					headerImage: input.eventImage!,
+					organization: input.eventOrg,
+					eventStart: input.eventStart,
+					eventEnd: input.eventEnd,
+					formOpen: input.formOpen,
+					formClose: input.formClose,
+				},
+			});
+			console.log(newEvent);
 			return {
-				status: "completed",
-				eventID: "TBD",
+				status: "success",
+				event: newEvent,
 			};
 		},
 	})

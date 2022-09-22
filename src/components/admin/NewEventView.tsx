@@ -30,10 +30,10 @@ const NewEventView: FunctionComponent = () => {
 			eventDescription: data.eventDescription,
 			eventImage: data.eventImage,
 			eventOrg: data.eventOrg,
-			eventStart: data.eventStart,
-			eventEnd: data.eventEnd,
-			formOpen: data.formOpen,
-			formClose: data.formClose,
+			eventStart: new Date(data.eventStart),
+			eventEnd: new Date(data.eventEnd),
+			formOpen: new Date(data.formOpen),
+			formClose: new Date(data.formClose),
 		});
 		console.log(ret);
 	};
@@ -95,7 +95,7 @@ const NewEventView: FunctionComponent = () => {
 					type="datetime-local"
 					id="formClose"
 					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("formEnd", { required: true })}
+					{...register("formClose", { required: true })}
 				/>
 				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl font-bold flex items-center justify-center">
 					Create Event <BsFillArrowRightCircleFill className="ml-[5px]" />
