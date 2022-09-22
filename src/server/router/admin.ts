@@ -2,7 +2,7 @@ import { createRouter } from "./context";
 import { z } from "zod";
 
 export const adminRouter = createRouter()
-	.query("createEvent", {
+	.mutation("createEvent", {
 		input: z.object({
 			eventName: z.string(),
 			eventDescription: z.string(),

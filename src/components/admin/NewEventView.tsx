@@ -15,23 +15,23 @@ const NewEventView: FunctionComponent = () => {
 		orgSelects.push(<option value={org}>{org}</option>);
 	}
 
+	let r = trpc.useMutation(["admin.createEvent"]);
+
 	const { register, handleSubmit } = useForm();
 	const didSubmit = async (p: any) => {
 		let data = p;
-		const response = trpc.useQuery([
-			"admin.createEvent",
-			{
-				eventName: data.eventName,
-				eventDescription: data.eventDescription,
-				eventImage: data.eventImage,
-				eventOrg: data.eventOrg,
-				eventStart: data.eventStart,
-				eventEnd: data.eventEnd,
-				formOpen: data.formOpen,
-				formClose: data.formClose,
-			},
-		]);
-		console.log(response);
+
+		const ret = r.mutate({
+			eventName: data.eventName,
+			eventDescription: data.eventDescription,
+			eventImage: data.eventImage,
+			eventOrg: data.eventOrg,
+			eventStart: data.eventStart,
+			eventEnd: data.eventEnd,
+			formOpen: data.formOpen,
+			formClose: data.formClose,
+		});
+		console.log(ret);
 	};
 
 	return (
