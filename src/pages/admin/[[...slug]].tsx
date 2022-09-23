@@ -33,6 +33,9 @@ const Admin: NextPage = () => {
 			case viewType.events:
 				router.push("/admin/events/", undefined, { shallow: true });
 				break;
+			case viewType.newEvent:
+				router.push("/admin/events/new", undefined, { shallow: true });
+				break;
 		}
 	};
 
@@ -55,7 +58,7 @@ const Admin: NextPage = () => {
 					<div className="w-full h-[50px] grid md:grid-cols-2 grid-cols-1 gap-1 mb-[0.25rem]">
 						<button
 							className="flex items-center justify-center w-full h-full rounded-xl bg-primary-lighter text-white"
-							onClick={() => swapPage(viewType.dashboard)}
+							onClick={() => swapPage(viewType.newEvent)}
 						>
 							<BsCalendarRange className="mr-[5px]" />
 							New Event
