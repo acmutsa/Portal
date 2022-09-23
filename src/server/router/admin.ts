@@ -26,7 +26,7 @@ export const adminRouter = createRouter()
 					formClose: input.formClose,
 				},
 			});
-			console.log(newEvent);
+
 			return {
 				status: "success",
 				event: newEvent,
