@@ -11,7 +11,7 @@ const EventView: NextPage = () => {
 		<div className="page-view pt-[20px]">
 			<EventHeader />
 			<br />
-			<EventDescription />
+			<EventDescription description="This is a event!" calanderLink="https://acmutsa.org/" />
 		</div>
 	);
 };
