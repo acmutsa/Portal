@@ -9,8 +9,9 @@ module.exports = {
 				paper: "#faebd7",
 			},
 			fontFamily: {
-				opensans: ["Open Sans", "sans-serif"],
-				raleway: ["Raleway", "sans-serif"],
+				opensans: ['"Open Sans"', "sans-serif"],
+				raleway: ['"Raleway"', "sans-serif"],
+				roboto: ['"Roboto"'],
 			},
 		},
 	},

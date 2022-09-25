@@ -6,8 +6,8 @@ const Home: NextPage = () => {
 	return (
 		<div className="page-view pt-[25vh]">
 			<div className="w-full max-w-[1024px] flex flex-col items-center mx-auto">
-				<h1 className="text-white font-white text-5xl font-bold font-raleway mb-[5px]">ACM UTSA</h1>
-				<h2 className="font-raleway font-semibold text-5xl p-[5px] text-primary-lighter bg-white rounded-lg">
+				<h1 className="text-white text-5xl font-bold font-raleway mb-[5px]">ACM UTSA</h1>
+				<h2 className="font-roboto font-bold text-5xl p-[5px] text-primary-lighter bg-white rounded-lg">
 					Membership Portal
 				</h2>
 				<div className="flex w-full justify-center mt-[25px]">
