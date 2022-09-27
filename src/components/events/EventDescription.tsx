@@ -2,6 +2,7 @@ import type { FunctionComponent } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { SiGooglecalendar } from "react-icons/si";
+import QRCode from "react-qr-code";
 
 interface EventDescriptionProps {
 	description: string;
@@ -40,6 +41,7 @@ export const EventDescription: FunctionComponent<EventDescriptionProps> = ({
 							Add To Google Calander
 						</button>
 					</a>
+					<QRCode className="mx-auto" value={"acmutsa.org"} style={{ transform: "scale(0.7)" }} />
 				</div>
 			</div>
 		</div>
