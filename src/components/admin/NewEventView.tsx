@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import public_config from "../../../config/public_config.json";
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
@@ -30,12 +30,19 @@ const NewEventView: FunctionComponent = () => {
 			eventDescription: data.eventDescription,
 			eventImage: data.eventImage,
 			eventOrg: data.eventOrg,
+			eventLocation: data.eventLocation,
 			eventStart: new Date(data.eventStart),
 			eventEnd: new Date(data.eventEnd),
 			formOpen: new Date(data.formOpen),
 			formClose: new Date(data.formClose),
 		});
 		console.log(ret);
+	};
+
+	const [showFormTimes, setShowFormTimes] = useState(false);
+
+	const shouldShowFormTimes = () => {
+		setShowFormTimes(() => !showFormTimes);
 	};
 
 	return (
@@ -104,26 +111,41 @@ const NewEventView: FunctionComponent = () => {
 						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
 						{...register("eventEnd", { required: true })}
 					/>
-					<label htmlFor="formOpen" className="text-sm">
-						Form Open
-					</label>
 					<input
-						type="datetime-local"
-						id="formOpen"
-						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
-						{...register("formOpen", { required: false })}
+						type="checkbox"
+						id="shouldShowFormTimes"
+						name="shouldShowFormTimes"
+						className="mr-[2px]"
+						onChange={() => shouldShowFormTimes()}
 					/>
-					<label htmlFor="formClose" className="text-sm">
-						Form Close
+					<label htmlFor="shouldShowFormTimes" className="text-sm">
+						Set Different Form Open/Close Time
 					</label>
-					<input
-						type="datetime-local"
-						id="formClose"
-						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
-						{...register("formClose", { required: false })}
-					/>
+					{showFormTimes ? (
+						<>
+							<br />
+							<label htmlFor="formOpen" className="text-sm">
+								Form Open
+							</label>
+							<input
+								type="datetime-local"
+								id="formOpen"
+								className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
+								{...register("formOpen", { required: false })}
+							/>
+							<label htmlFor="formClose" className="text-sm">
+								Form Close
+							</label>
+							<input
+								type="datetime-local"
+								id="formClose"
+								className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
+								{...register("formClose", { required: false })}
+							/>
+						</>
+					) : null}
 				</div>
-				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl font-bold flex items-center justify-center">
+				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl font-bold flex items-center justify-center align-center">
 					Create Event <BsFillArrowRightCircleFill className="ml-[5px]" />
 				</button>
 			</form>
