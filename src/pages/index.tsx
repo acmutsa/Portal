@@ -11,7 +11,7 @@ const Home: NextPage = () => {
 					Membership Portal
 				</h2>
 				<div className="flex w-full justify-center mt-[25px]">
-					<Link href="#">
+					<Link href="/events/">
 						<button className="h-[50px] w-[100px] bg-primary-darker text-white rounded font-semibold mx-[5px]">
 							Events
 						</button>
