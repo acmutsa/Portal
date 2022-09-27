@@ -38,16 +38,3 @@ export const adminRouter = createRouter()
 			return "Hello world";
 		},
 	});
-
-// .query("hello", {
-//   input: z
-//     .object({
-//       text: z.string().nullish(),
-//     })
-//     .nullish(),
-//   resolve({ input }) {
-//     return {
-//       greeting: `Hello ${input?.text ?? "world"}`,
-//     };
-//   },
-// })

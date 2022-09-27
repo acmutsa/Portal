@@ -23,6 +23,7 @@ model Events {
     formClose     DateTime
     hasBeenForced Boolean  @default(false)
     forcedIsOpen  Boolean  @default(false)
+    pageID        String   @unique @default("")
 }
 
 model Checkins {

@@ -3,7 +3,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 .page-view {
 	height: calc(100vh - 72px);
 	background-color: rgba(0, 0, 0, 0.4);
+	overflow-y: auto;
+	padding-bottom: 40px;
 }
