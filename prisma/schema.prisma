@@ -16,6 +16,7 @@ model Events {
     description   String
     organization  String
     headerImage   String
+    location      String
     createdAt     DateTime @default(now())
     eventStart    DateTime
     eventEnd      DateTime
