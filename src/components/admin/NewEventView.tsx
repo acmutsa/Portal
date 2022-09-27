@@ -40,63 +40,89 @@ const NewEventView: FunctionComponent = () => {
 
 	return (
 		<div className="w-full h-full p-[5px]">
+			<h1 className="text-5xl font-extrabold font-raleway max-w-[800px] mx-auto mb-[15px]">
+				New Event
+			</h1>
 			<form
 				onSubmit={handleSubmit(didSubmit)}
-				className="w-full flex flex-col mx-auto max-w-[800px]"
+				className="w-full flex flex-col mx-auto max-w-[800px] "
 			>
-				<label className="font-opensans">Event Name</label>
-				<input
-					id="eventName"
-					type="text"
-					placeholder="Event Name"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("eventName", { required: true })}
-				/>
-				<input
-					id="eventDescription"
-					type="text"
-					placeholder="Description"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("eventDescription", { required: true })}
-				/>
-				<input
-					id="eventImage"
-					type="text"
-					placeholder="Image URL (optional)"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("eventImage", { required: false })}
-				/>
-				<select
-					id="eventOrg"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("eventOrg", { required: true })}
-				>
-					{orgSelects}
-				</select>
-				<input
-					type="datetime-local"
-					id="eventStart"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("eventStart", { required: true })}
-				/>
-				<input
-					type="datetime-local"
-					id="eventEnd"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("eventEnd", { required: true })}
-				/>
-				<input
-					type="datetime-local"
-					id="formOpen"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("formOpen", { required: true })}
-				/>
-				<input
-					type="datetime-local"
-					id="formClose"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("formClose", { required: true })}
-				/>
+				<p className="text-sm">Event Info</p>
+				<div className="border-2 p-[5px] rounded-md">
+					<input
+						id="eventName"
+						type="text"
+						placeholder="Event Name"
+						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md my-[10px]"
+						{...register("eventName", { required: true })}
+					/>
+					<textarea
+						id="eventDescription"
+						placeholder="Description"
+						className="bg-slate-200 border-none h-[150px] w-full focus:outline-none p-[5px] rounded-md my-[10px]"
+						{...register("eventDescription", { required: true })}
+					/>
+					<input
+						id="eventImage"
+						type="text"
+						placeholder="Image URL (optional)"
+						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md my-[10px]"
+						{...register("eventImage", { required: false })}
+					/>
+					<input
+						type="text"
+						id="eventLocation"
+						placeholder="Event Location"
+						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md my-[10px]"
+						{...register("eventLocation", { required: true })}
+					/>
+					<select
+						id="eventOrg"
+						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md my-[10px]"
+						{...register("eventOrg", { required: true })}
+					>
+						{orgSelects}
+					</select>
+				</div>
+				<p className="text-sm mt-[15px]">Event Dates</p>
+				<div className="border-2 p-[5px] rounded-md mb-[5px]">
+					<label htmlFor="eventStart" className="text-sm">
+						Event Start
+					</label>
+					<input
+						type="datetime-local"
+						id="eventStart"
+						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
+						{...register("eventStart", { required: true })}
+					/>
+					<label htmlFor="eventEnd" className="text-sm">
+						Event End
+					</label>
+					<input
+						type="datetime-local"
+						id="eventEnd"
+						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
+						{...register("eventEnd", { required: true })}
+					/>
+					<label htmlFor="formOpen" className="text-sm">
+						Form Open
+					</label>
+					<input
+						type="datetime-local"
+						id="formOpen"
+						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
+						{...register("formOpen", { required: false })}
+					/>
+					<label htmlFor="formClose" className="text-sm">
+						Form Close
+					</label>
+					<input
+						type="datetime-local"
+						id="formClose"
+						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
+						{...register("formClose", { required: false })}
+					/>
+				</div>
 				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl font-bold flex items-center justify-center">
 					Create Event <BsFillArrowRightCircleFill className="ml-[5px]" />
 				</button>
