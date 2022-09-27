@@ -1,5 +1,6 @@
 import { createRouter } from "./context";
 import { z } from "zod";
+import { nanoid } from "nanoid";
 
 export const adminRouter = createRouter()
 	.mutation("createEvent", {
@@ -26,6 +27,7 @@ export const adminRouter = createRouter()
 					eventEnd: input.eventEnd,
 					formOpen: input.formOpen,
 					formClose: input.formClose,
+					pageID: nanoid(7).toLowerCase(),
 				},
 			});
 
