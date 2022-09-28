@@ -1,11 +1,12 @@
 import type { NextPage } from "next";
 import { AiOutlineDashboard } from "react-icons/ai";
-import { BsCalendarRange } from "react-icons/bs";
+import { BsCalendarRange, BsReplyAll } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import EventView from "../../components/admin/EventView";
 import MemberView from "../../components/admin/MemberView";
 import DashView from "../../components/admin/DashView";
 import NewEventView from "../../components/admin/NewEventView";
+import NewMemberView from "../../components/admin/NewMemberView";
 import { useRouter } from "next/router";
 import { FunctionComponent, useState } from "react";
 
@@ -34,21 +35,32 @@ const Admin: NextPage = () => {
 				router.push("/admin/events/", undefined, { shallow: true });
 				break;
 			case viewType.newEvent:
-				router.push("/admin/events/new", undefined, { shallow: true });
+				router.push("/admin/events/new/", undefined, { shallow: true });
+				break;
+			case viewType.newMember:
+				router.push("/admin/members/new/", undefined, { shallow: true });
 				break;
 		}
 	};
 
 	let ElementToShow: FunctionComponent | null = null;
 
-	if (path == "/admin/events/") {
-		ElementToShow = EventView;
-	} else if (path == "/admin/members/") {
-		ElementToShow = MemberView;
-	} else if (path == "/admin/") {
-		ElementToShow = DashView;
-	} else if (path == "/admin/events/new/") {
-		ElementToShow = NewEventView;
+	switch (path) {
+		case "/admin/events/":
+			ElementToShow = EventView;
+			break;
+		case "/admin/members/":
+			ElementToShow = MemberView;
+			break;
+		case "/admin/":
+			ElementToShow = DashView;
+			break;
+		case "/admin/events/new/":
+			ElementToShow = NewEventView;
+			break;
+		case "/admin/members/new/":
+			ElementToShow = NewMemberView;
+			break;
 	}
 
 	return (
@@ -65,7 +77,7 @@ const Admin: NextPage = () => {
 						</button>{" "}
 						<button
 							className="flex items-center justify-center w-full h-full rounded-xl bg-primary-lighter text-white"
-							onClick={() => swapPage(viewType.dashboard)}
+							onClick={() => swapPage(viewType.newMember)}
 						>
 							<CgProfile className="mr-[5px]" />
 							New Member

@@ -16,6 +16,7 @@ export const adminRouter = createRouter()
 			formClose: z.date(),
 		}),
 		async resolve({ input, ctx }) {
+			TODO: "add cookie validation here";
 			let newEvent = await ctx.prisma.events.create({
 				data: {
 					name: input.eventName,

@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useState, useEffect } from "react";
 import public_config from "../../../config/public_config.json";
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
@@ -21,7 +21,7 @@ const NewEventView: FunctionComponent = () => {
 
 	let r = trpc.useMutation(["admin.createEvent"]);
 
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit, setValue } = useForm();
 	const didSubmit = async (p: any) => {
 		let data = p;
 
@@ -38,6 +38,14 @@ const NewEventView: FunctionComponent = () => {
 		});
 		console.log(ret);
 	};
+
+	useEffect(() => {
+		const now = new Date();
+		now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
+		setValue("eventStart", now.toISOString().slice(0, 16));
+		setValue("eventEnd", now.toISOString().slice(0, 16));
+	}, []);
 
 	const [showFormTimes, setShowFormTimes] = useState(false);
 
