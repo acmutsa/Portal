@@ -25,18 +25,25 @@ const NewEventView: FunctionComponent = () => {
 	const didSubmit = async (p: any) => {
 		let data = p;
 
-		const ret = r.mutate({
-			eventName: data.eventName,
-			eventDescription: data.eventDescription,
-			eventImage: data.eventImage,
-			eventOrg: data.eventOrg,
-			eventLocation: data.eventLocation,
-			eventStart: new Date(data.eventStart.replace("T", " ").replace("-", "/")),
-			eventEnd: new Date(data.eventEnd.replace("T", " ").replace("-", "/")),
-			formOpen: new Date(data.formOpen.replace("T", " ").replace("-", "/")),
-			formClose: new Date(data.formClose.replace("T", " ").replace("-", "/")),
-		});
-		console.log(ret);
+		r.mutate(
+			{
+				eventName: data.eventName,
+				eventDescription: data.eventDescription,
+				eventImage: data.eventImage,
+				eventOrg: data.eventOrg,
+				eventLocation: data.eventLocation,
+				eventStart: new Date(data.eventStart.replace("T", " ").replace("-", "/")),
+				eventEnd: new Date(data.eventEnd.replace("T", " ").replace("-", "/")),
+				formOpen: new Date(data.formOpen.replace("T", " ").replace("-", "/")),
+				formClose: new Date(data.formClose.replace("T", " ").replace("-", "/")),
+			},
+			{
+				onSuccess: (res) => {
+					alert("Event created successfully!");
+					window.open(`/events/${res.event.pageID}`, "_blank");
+				},
+			}
+		);
 	};
 
 	useEffect(() => {
