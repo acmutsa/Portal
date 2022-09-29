@@ -31,11 +31,19 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 				<br></br>
 				<p className="font-semibold flex items-center">
 					<BsFillCalendarEventFill className="mr-[5px]" />
-					{startDate.toLocaleDateString()}
+					{startDate.toLocaleDateString() == endDate.toLocaleDateString()
+						? startDate.toLocaleDateString()
+						: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`}
 				</p>
 				<p className="font-semibold flex items-center">
 					<BsClockFill className="mr-[5px]" />
-					9:00am - 10:00am
+					{`${startDate.toLocaleTimeString([], {
+						hour: "2-digit",
+						minute: "2-digit",
+					})} - ${endDate.toLocaleTimeString([], {
+						hour: "2-digit",
+						minute: "2-digit",
+					})}`}
 				</p>
 				<p className="font-semibold flex items-center">
 					<BsPinMapFill className="mr-[5px]" />

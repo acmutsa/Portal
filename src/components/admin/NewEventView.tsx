@@ -31,10 +31,10 @@ const NewEventView: FunctionComponent = () => {
 			eventImage: data.eventImage,
 			eventOrg: data.eventOrg,
 			eventLocation: data.eventLocation,
-			eventStart: new Date(data.eventStart),
-			eventEnd: new Date(data.eventEnd),
-			formOpen: new Date(data.formOpen),
-			formClose: new Date(data.formClose),
+			eventStart: new Date(data.eventStart.replace("T", " ").replace("-", "/")),
+			eventEnd: new Date(data.eventEnd.replace("T", " ").replace("-", "/")),
+			formOpen: new Date(data.formOpen.replace("T", " ").replace("-", "/")),
+			formClose: new Date(data.formClose.replace("T", " ").replace("-", "/")),
 		});
 		console.log(ret);
 	};

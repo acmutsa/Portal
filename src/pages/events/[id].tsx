@@ -25,6 +25,20 @@ interface eventPageServerProps {
 const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 	const router = useRouter();
 	const { id } = router.query;
+	const callink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${serverProps.name?.replaceAll(
+		" ",
+		"+"
+	)}&details=Join+us+for+${serverProps.name?.replaceAll(" ", "+") + "!"}&dates=${new Date(
+		serverProps.startDate || ""
+	)
+		.toISOString()
+		.replaceAll(":", "")
+		.replaceAll(".", "")
+		.replaceAll("-", "")}/${new Date(serverProps.endDate || "")
+		.toISOString()
+		.replaceAll(":", "")
+		.replaceAll(".", "")
+		.replaceAll("-", "")}`;
 	if (serverProps.found) {
 		return (
 			<div className="page-view pt-[20px]">
@@ -32,14 +46,14 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 					title={serverProps.name || ""}
 					imageURL={serverProps.headerImage || ""}
 					hostOrg={serverProps.organization || ""}
-					startDate={new Date("Sun Sep 28 2022 04:15:04 GMT-0500 (Central Daylight Time)")}
-					endDate={new Date("Sun Sep 30 2022 04:15:04 GMT-0500 (Central Daylight Time)")}
+					startDate={new Date(serverProps.startDate || "")}
+					endDate={new Date(serverProps.endDate || "")}
 					location={serverProps.location || ""}
 				/>
 				<br />
 				<EventDescription
 					description={serverProps.description || `Come and join us for ${serverProps.name}!`}
-					calanderLink="https://acmutsa.org/"
+					calanderLink={callink}
 				/>
 			</div>
 		);
@@ -50,7 +64,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 
 export async function getStaticProps(urlParams: eventPageParams) {
 	const params = urlParams.params;
-	const revalTime = 10;
+	const revalTime = 2;
 
 	const event = await prisma.events.findUnique({
 		where: {
