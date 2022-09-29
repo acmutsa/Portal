@@ -22,7 +22,7 @@ For easy development, `yarn run dev` will start Next.js with hot-reloading & err
 
 ## Production
 
-Build for production with `yarn run build` then `yarn run serve` to test.
+Build for production with `yarn run build` then `yarn run start` to test.
 
 [node-js]: https://nodejs.org/en/download/
 [next-js]: https://nextjs.org/
