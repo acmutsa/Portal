@@ -36,13 +36,44 @@ model Checkins {
 }
 
 model Member {
-    id               String     @id @default(cuid())
-    email            String     @unique
-    shortID          String     @unique
-    attendanceCount  Int
-    joinDate         DateTime
-    checkins         Checkins[]
-    extendedUserData String
+    id                 String      @id @default(cuid())
+    email              String      @unique
+    shortID            String      @unique
+    attendanceCount    Int
+    joinDate           DateTime
+    checkins           Checkins[]
+    data               MemberData?
+    extendedMemberData String
+}
+
+model MemberData {
+    member             Member?   @relation(fields: [memberID], references: [id])
+    memberID           String    @id
+    major              String?
+    classification     String?
+    graduationDate     String?
+    shirtIsUnisex      Boolean?
+    shirtSize          String?
+    Birthday           DateTime?
+    isInACM            Boolean?
+    isInAMCW           Boolean?
+    isInRC             Boolean?
+    isInICPC           Boolean?
+    isInCIC            Boolean?
+    isBlackorAA        Boolean?
+    isAsian            Boolean?
+    isNAorAN           Boolean?
+    isNHorPI           Boolean?
+    isHispanicorLatinx Boolean?
+    isWhite            Boolean?
+    isMale             Boolean?
+    isFemale           Boolean?
+    isNonBinary        Boolean?
+    isTransgender      Boolean?
+    isIntersex         Boolean?
+    doesNotIdentify    Boolean?
+    otherIdentity      String?
+    address            String?
 }
 
 // model Example {
