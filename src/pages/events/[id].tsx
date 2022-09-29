@@ -38,7 +38,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 		.toISOString()
 		.replaceAll(":", "")
 		.replaceAll(".", "")
-		.replaceAll("-", "")}`;
+		.replaceAll("-", "")}&location=${serverProps.location?.replaceAll(" ", "+")}`;
 	if (serverProps.found) {
 		return (
 			<div className="page-view pt-[20px]">
