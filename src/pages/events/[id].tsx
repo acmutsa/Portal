@@ -38,9 +38,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 				/>
 				<br />
 				<EventDescription
-					description={
-						serverProps.description || `Come and join us for ${serverProps.description}!`
-					}
+					description={serverProps.description || `Come and join us for ${serverProps.name}!`}
 					calanderLink="https://acmutsa.org/"
 				/>
 			</div>
