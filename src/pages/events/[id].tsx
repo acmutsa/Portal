@@ -25,21 +25,21 @@ interface eventPageServerProps {
 const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 	const router = useRouter();
 	const { id } = router.query;
-	const callink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${serverProps.name?.replaceAll(
-		" ",
-		"+"
-	)}&details=Join+us+for+${serverProps.name?.replaceAll(" ", "+") + "!"}&dates=${new Date(
-		serverProps.startDate || ""
-	)
-		.toISOString()
-		.replaceAll(":", "")
-		.replaceAll(".", "")
-		.replaceAll("-", "")}/${new Date(serverProps.endDate || "")
-		.toISOString()
-		.replaceAll(":", "")
-		.replaceAll(".", "")
-		.replaceAll("-", "")}&location=${serverProps.location?.replaceAll(" ", "+")}`;
 	if (serverProps.found) {
+		const callink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${serverProps.name?.replaceAll(
+			" ",
+			"+"
+		)}&details=Join+us+for+${serverProps.name?.replaceAll(" ", "+") + "!"}&dates=${new Date(
+			serverProps.startDate || ""
+		)
+			.toISOString()
+			.replaceAll(":", "")
+			.replaceAll(".", "")
+			.replaceAll("-", "")}/${new Date(serverProps.endDate || "")
+			.toISOString()
+			.replaceAll(":", "")
+			.replaceAll(".", "")
+			.replaceAll("-", "")}&location=${serverProps.location?.replaceAll(" ", "+")}`;
 		return (
 			<div className="page-view pt-[20px]">
 				<EventHeader

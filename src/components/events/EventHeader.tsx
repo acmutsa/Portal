@@ -8,6 +8,7 @@ interface EventHeaderProps {
 	startDate: Date;
 	endDate: Date;
 	location: string;
+	maxWidth?: number;
 }
 
 const EventHeader: FunctionComponent<EventHeaderProps> = ({
@@ -17,9 +18,13 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 	startDate,
 	endDate,
 	location,
+	maxWidth = 1200,
 }) => {
 	return (
-		<div className="bg-white mx-auto max-w-[1200px] grid grid-cols-2 min-h-[400px] rounded-xl">
+		<div
+			className="bg-white mx-auto grid grid-cols-2 min-h-[400px] rounded-xl"
+			style={{ maxWidth }}
+		>
 			<div
 				className="flex items-center justify-center overflow-hidden rounded-l-xl bg-cover bg-no-repeat"
 				style={{ backgroundImage: `url(${imageURL})` }}
