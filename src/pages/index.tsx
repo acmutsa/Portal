@@ -16,12 +16,12 @@ const Home: NextPage = () => {
 							Events
 						</button>
 					</Link>
-					<Link href="/register">
+					<Link href="/register/">
 						<button className="h-[50px] w-[100px] bg-primary-darker text-white rounded font-semibold mx-[5px]">
 							Register
 						</button>
 					</Link>
-					<Link href="#">
+					<Link href="/status/">
 						<button className="h-[50px] w-[100px] bg-primary-darker text-white rounded font-semibold mx-[5px]">
 							Status
 						</button>
