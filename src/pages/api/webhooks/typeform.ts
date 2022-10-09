@@ -95,22 +95,23 @@ const memberItem = z.object({
 });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-	if (req.method == "POST") {
-		// const parsedData = memberItem.safeParse(req.body.form_response.answers);
+	// if (req.method == "POST") {
+	// 	// const parsedData = memberItem.safeParse(req.body.form_response.answers);
 
-		// if (parsedData.success) {
-		// 	const newMember = await prisma.member.create({
-		// 		data: {
-		// 			name: parsedData.data.answers[0].text,
-		// 		},
-		// 	});
-		// } else {
-		// 	res.status(400);
-		// }
+	// 	// if (parsedData.success) {
+	// 	// 	const newMember = await prisma.member.create({
+	// 	// 		data: {
+	// 	// 			name: parsedData.data.answers[0].text,
+	// 	// 		},
+	// 	// 	});
+	// 	// } else {
+	// 	// 	res.status(400);
+	// 	// }
 
-		// console.log(JSON.stringify(req.body));
-		return res.status(200);
-	} else {
-		return res.status(405);
-	}
+	// 	// console.log(JSON.stringify(req.body));
+	// 	return res.status(200);
+	// } else {
+	// 	return res.status(405);
+	// }
+	return res.status(200);
 };
