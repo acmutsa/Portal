@@ -6,7 +6,7 @@ const Join: NextPage = () => {
 	return (
 		<div className="page-view">
 			<div className="w-full max-w-[1024px] h-full flex flex-col items-center mx-auto">
-				<Widget className="w-full h-full" opacity={0} id="UXDf2pFZ" />
+				<Widget className="w-full h-full" opacity={0} id="xJq9Z5PI" />
 			</div>
 		</div>
 	);
