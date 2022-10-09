@@ -95,7 +95,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 			]),
 		});
 
-		const parsedData = memberItem.safeParse(req.body.form_response.answers);
+		const parsedData = memberItem.safeParse(req?.body?.form_response?.answers);
 
 		if (parsedData.success) {
 			// const newMember = await prisma.member.create({
