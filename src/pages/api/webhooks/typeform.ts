@@ -108,7 +108,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 		// 	res.status(400);
 		// }
 
-		console.log(JSON.stringify(req.body));
+		// console.log(JSON.stringify(req.body));
 		return res.status(200);
 	} else {
 		return res.status(405);
