@@ -38,6 +38,7 @@ model Checkins {
 model Member {
     id                 String      @id @default(cuid())
     email              String      @unique
+    name               String
     shortID            String      @unique
     attendanceCount    Int
     joinDate           DateTime
