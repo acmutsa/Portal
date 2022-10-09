@@ -104,12 +104,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 			// 	},
 			// });
 			console.log("Ayyyy!");
-			res.status(200);
+			res.status(200).json({});
 		} else {
-			res.status(400);
+			res.status(400).json({});
 		}
 	} else {
-		return res.status(405);
+		return res.status(405).json({});
 	}
 	return res.status(200).json({});
 };
