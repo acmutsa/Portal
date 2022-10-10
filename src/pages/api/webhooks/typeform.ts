@@ -99,6 +99,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 		console.log(JSON.stringify(req.body));
 		console.log("===========");
 
+		console.log("===========");
+		console.log(JSON.stringify(req?.body?.form_response?.answers));
+		console.log("===========");
+
 		const parsedData = memberItem.safeParse(req?.body?.form_response?.answers);
 
 		if (parsedData.success) {
