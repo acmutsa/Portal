@@ -95,15 +95,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 			]),
 		});
 
-		console.log("===========");
+		console.log("=========== body:");
 		console.log(JSON.stringify(req.body));
 		console.log("===========");
 
-		console.log("===========");
+		console.log("=========== answers object:");
 		console.log(JSON.stringify(req?.body?.form_response?.answers));
 		console.log("===========");
 
 		const parsedData = memberItem.safeParse(req?.body?.form_response?.answers);
+
+		console.log("=========== parsed data:");
+		console.log(JSON.stringify(JSON.stringify(parsedData)));
+		console.log("===========");
 
 		if (parsedData.success) {
 			// const newMember = await prisma.member.create({
