@@ -20,7 +20,7 @@ interface memberItem {
 	addressLineTwo?: string;
 	city: string;
 	state: string;
-	zipcode: number;
+	zipcode: string;
 }
 
 const memberItemValidator = z.object({
@@ -41,7 +41,7 @@ const memberItemValidator = z.object({
 	addressLineTwo: z.string().optional(),
 	city: z.string(),
 	state: z.string(),
-	zipcode: z.number(),
+	zipcode: z.string(),
 });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -85,7 +85,7 @@ const parseMemberItem = (data: any) => {
 					// name
 					memberToValidate.name = data[i].text;
 					break;
-				case "5uEXvAvPEtwc":
+				case "LmG2Xk4HXRCU":
 					// email
 					memberToValidate.email = data[i].email;
 					break;
@@ -147,7 +147,7 @@ const parseMemberItem = (data: any) => {
 					break;
 				case "8DcFsXk6QzIB":
 					// zipcode
-					memberToValidate.zipcode = parseInt(data[i].text);
+					memberToValidate.zipcode = data[i].text;
 					break;
 			}
 		}
