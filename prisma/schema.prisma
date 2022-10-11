@@ -48,16 +48,16 @@ model Member {
 }
 
 model MemberData {
-    member             Member?   @relation(fields: [memberID], references: [id])
-    memberID           String    @id
+    member             Member?  @relation(fields: [memberID], references: [id])
+    memberID           String   @id
     major              String?
     classification     String?
     graduationDate     String?
     shirtIsUnisex      Boolean?
     shirtSize          String?
-    Birthday           DateTime?
+    Birthday           String?
     isInACM            Boolean?
-    isInAMCW           Boolean?
+    isInACMW           Boolean?
     isInRC             Boolean?
     isInICPC           Boolean?
     isInCIC            Boolean?
