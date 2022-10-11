@@ -3,15 +3,18 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { SiGooglecalendar } from "react-icons/si";
 import QRCode from "react-qr-code";
+import Link from "next/link";
 
 interface EventDescriptionProps {
 	description: string;
 	calanderLink: string;
+	eventID: string;
 }
 
 export const EventDescription: FunctionComponent<EventDescriptionProps> = ({
 	description,
 	calanderLink,
+	eventID,
 }) => {
 	return (
 		<div className="bg-white mx-auto max-w-[1200px] min-h-[400px] rounded-xl p-[10px]">
@@ -32,16 +35,22 @@ export const EventDescription: FunctionComponent<EventDescriptionProps> = ({
 				</div>
 				<div className="border-l-2">
 					<h2 className="text-center font-bold">Actions</h2>
-					<button className="h-[50px] w-full bg-primary-darker text-white rounded-lg font-semibold mx-[5px] mb-[5px]">
-						Check-in
-					</button>
+					<Link href={`/check-in/${eventID}`}>
+						<button className="h-[50px] w-full bg-primary-darker text-white rounded-lg font-semibold mx-[5px] mb-[5px]">
+							Check-in
+						</button>
+					</Link>
 					<a href={calanderLink} target="_blank">
 						<button className="h-[50px] w-full bg-[#5484ED] text-white rounded-lg font-semibold mx-[5px] mb-[5px] flex items-center justify-center">
 							<SiGooglecalendar className="mr-[5px] w-[20px] h-[20px]" />
 							Add To Google Calander
 						</button>
 					</a>
-					<QRCode className="mx-auto" value={"acmutsa.org"} style={{ transform: "scale(0.7)" }} />
+					<QRCode
+						className="mx-auto"
+						value={`https://member.acmutsa.org/check-in/${eventID}`}
+						style={{ transform: "scale(0.7)" }}
+					/>
 				</div>
 			</div>
 		</div>

@@ -54,6 +54,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 				<EventDescription
 					description={serverProps.description || `Come and join us for ${serverProps.name}!`}
 					calanderLink={callink}
+					eventID={typeof id === "string" ? id : "error"}
 				/>
 			</div>
 		);
