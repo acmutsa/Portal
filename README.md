@@ -1,6 +1,6 @@
 # 📜 Lista
 
-### ACM UTSA's in-house membership portal and database system.
+ACM UTSA's in-house membership portal and database system.
 
 ## Stack
 
