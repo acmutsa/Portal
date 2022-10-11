@@ -1,4 +1,6 @@
-# Lista
+# 📜 Lista
+
+### ACM UTSA's in-house membership portal and database system.
 
 ## Stack
 
@@ -7,8 +9,7 @@
   - [TailwindCSS][tailwind-css]
 - [Next.js][next-js]
   - [TRPC][trpc]
-- [Prisma][prisma]
-  - SQLite Local Database
+- [Prisma][prisma] - SQLite Local Database
 
 ## Requirements
 
