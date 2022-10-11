@@ -154,9 +154,45 @@ const parseMemberItem = (data: any) => {
 	}
 
 	const parsedData = memberItemValidator.safeParse(memberToValidate);
-
+	//TODO: add custom identity handling
 	if (parsedData.success) {
-		// Write to database
+		prisma.member.create({
+			data: {
+				name: parsedData.data.name,
+				email: parsedData.data.email,
+				joinDate: new Date(),
+				shortID: parsedData.data.shortID,
+				attendanceCount: 0,
+				extendedMemberData: "{}",
+				data: {
+					create: {
+						major: parsedData.data.major,
+						classification: parsedData.data.classificaiton,
+						graduationDate: parsedData.data.gradDate,
+						shirtIsUnisex: parsedData.data.shirtType === "Unisex",
+						shirtSize: parsedData.data.shirtSize,
+						isInACM: parsedData.data.orgs.includes("ACM"),
+						isInACMW: parsedData.data.orgs.includes("ACM-W"),
+						isInRC: parsedData.data.orgs.includes("RC"),
+						isInICPC: parsedData.data.orgs.includes("ICPC"),
+						isInCIC: parsedData.data.orgs.includes("CIC"),
+						isBlackorAA: parsedData.data.identity.includes("Black or African American"),
+						isAsian: parsedData.data.identity.includes("Asian"),
+						isNAorAN: parsedData.data.identity.includes("Native American or Alaskan Native"),
+						isNHorPI: parsedData.data.identity.includes("Native Hawaiian or Pacific Islander"),
+						isHispanicorLatinx: parsedData.data.identity.includes("Hispanic or Latinx"),
+						isWhite: parsedData.data.identity.includes("White"),
+						isMale: parsedData.data.identity.includes("Male"),
+						isFemale: parsedData.data.identity.includes("Female"),
+						isNonBinary: parsedData.data.identity.includes("Non-binary"),
+						isTransgender: parsedData.data.identity.includes("Transgender"),
+						isIntersex: parsedData.data.identity.includes("Intersex"),
+						doesNotIdentify: parsedData.data.identity.includes("I prefer not to say"),
+						address: `${parsedData.data.addressLineOne}, ${parsedData.data.city}, ${parsedData.data.state} ${parsedData.data.zipcode}`,
+					},
+				},
+			},
+		});
 		console.log("Success!");
 		return true;
 	} else {
