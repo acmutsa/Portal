@@ -54,7 +54,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 		console.log(JSON.stringify(req?.body?.form_response?.answers));
 		console.log("===========");
 
-		if (parseMemberItem(req?.body?.form_response?.answers)) {
+		if (await parseMemberItem(req?.body?.form_response?.answers)) {
 			// const newMember = await prisma.member.create({
 			// 	data: {
 			// 		name: parsedData.data.answers[0].text,
@@ -73,7 +73,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 // TODO: really try to make this less janky but tbh I am fed up w/ the typeform webhooks rn
 // TODO: Add adress line 2 support
 
-const parseMemberItem = (data: any) => {
+const parseMemberItem = async (data: any) => {
 	let memberToValidate: any = {};
 	for (let i = 0; i <= data.length; i++) {
 		let currFieldID = data[i]?.field?.id;
@@ -156,7 +156,7 @@ const parseMemberItem = (data: any) => {
 	const parsedData = memberItemValidator.safeParse(memberToValidate);
 	//TODO: add custom identity handling
 	if (parsedData.success) {
-		prisma.member.create({
+		const item = await prisma.member.create({
 			data: {
 				name: parsedData.data.name,
 				email: parsedData.data.email,
