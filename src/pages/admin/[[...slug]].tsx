@@ -65,18 +65,18 @@ const Admin: NextPage = () => {
 
 	return (
 		<div className="page-view flex items-center justify-center">
-			<div className="bg-white w-full max-w-[2000px] h-[90%] rounded-lg mx-[5px] grid grid-cols-5 overflow-x-hidden">
-				<div className="bg-zinc-200 font-opensans text-lg font-semibold p-[5px]">
-					<div className="w-full h-[50px] grid md:grid-cols-2 grid-cols-1 gap-1 mb-[0.25rem]">
+			<div className="bg-white w-full max-w-[2000px] h-[90%] rounded-none mx-[5px] grid grid-cols-5 overflow-x-hidden">
+				<div className="bg-zinc-100 font-opensans text-lg font-semibold m-[5px] ">
+					<div className="w-full h-[50px] grid md:grid-cols-2 grid-cols-1 gap-1 text-base mb-[0.25rem] px-[5px]">
 						<button
-							className="flex items-center justify-center w-full h-full rounded-xl bg-primary-lighter text-white"
+							className="flex items-center justify-center w-full h-full rounded-sm bg-primary-lighter text-white"
 							onClick={() => swapPage(viewType.newEvent)}
 						>
 							<BsCalendarRange className="mr-[5px]" />
 							New Event
 						</button>{" "}
 						<button
-							className="flex items-center justify-center w-full h-full rounded-xl bg-primary-lighter text-white"
+							className="flex items-center justify-center w-full h-full rounded-sm bg-primary-lighter text-white"
 							onClick={() => swapPage(viewType.newMember)}
 						>
 							<CgProfile className="mr-[5px]" />
@@ -84,21 +84,21 @@ const Admin: NextPage = () => {
 						</button>
 					</div>
 					<button
-						className="flex items-center justify-center w-full h-[100px] rounded-xl hover:bg-zinc-100"
+						className="flex items-center justify-center w-full h-[4em]  hover:bg-zinc-200"
 						onClick={() => swapPage(viewType.dashboard)}
 					>
 						<AiOutlineDashboard className="mr-[5px]" />
 						Dashboard
 					</button>
 					<button
-						className="flex items-center justify-center w-full h-[100px] rounded-xl hover:bg-zinc-100"
+						className="flex items-center justify-center w-full h-[4em] hover:bg-zinc-200"
 						onClick={() => swapPage(viewType.members)}
 					>
 						<CgProfile className="mr-[5px]" />
 						Members
 					</button>
 					<button
-						className="flex items-center justify-center w-full h-[100px] rounded-xl hover:bg-zinc-100"
+						className="flex items-center justify-center w-full h-[4em] hover:bg-zinc-200"
 						onClick={() => swapPage(viewType.events)}
 					>
 						<BsCalendarRange className="mr-[5px]" />
