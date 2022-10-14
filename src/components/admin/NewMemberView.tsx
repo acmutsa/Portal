@@ -67,7 +67,7 @@ const NewMemberView: FunctionComponent = () => {
 					<input
 						type="text"
 						id="memberShortID"
-						placeholder="ABC123"
+						placeholder="abc123"
 						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md my-[10px]"
 						{...register("memberShortID", { required: true })}
 					/>
