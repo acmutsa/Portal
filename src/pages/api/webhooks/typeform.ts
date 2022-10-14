@@ -159,9 +159,9 @@ const parseMemberItem = async (data: any) => {
 		const item = await prisma.member.create({
 			data: {
 				name: parsedData.data.name,
-				email: parsedData.data.email,
+				email: parsedData.data.email.toLowerCase(),
 				joinDate: new Date(),
-				shortID: parsedData.data.shortID,
+				shortID: parsedData.data.shortID.toLowerCase(),
 				attendanceCount: 0,
 				extendedMemberData: "{}",
 				data: {

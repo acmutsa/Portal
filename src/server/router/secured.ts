@@ -1,32 +1,29 @@
 import { createRouter } from "./context";
 import { z } from "zod";
-import { nanoid } from "nanoid";
 
 export const securedRouter = createRouter()
-	.mutation("checkinToEvent", {
+	.mutation("validateLoginMatch", {
 		input: z.object({
-			eventID: z.string(),
+			email: z.string(),
+			shortID: z.string(),
 		}),
 		async resolve({ input, ctx }) {
-			// TODO: add cookie validation here
-			// let newEvent = await ctx.prisma.events.create({
-			// 	data: {
-			// 		name: input.eventName,
-			// 		description: input.eventDescription,
-			// 		headerImage: input.eventImage!,
-			// 		organization: input.eventOrg,
-			// 		location: input.eventLocation,
-			// 		eventStart: input.eventStart,
-			// 		eventEnd: input.eventEnd,
-			// 		formOpen: input.formOpen,
-			// 		formClose: input.formClose,
-			// 		pageID: nanoid(7).toLowerCase(),
-			// 	},
-			// });
+			let member = await ctx.prisma.member.findUnique({
+				where: {
+					email: input.email.toLowerCase(),
+					shortID: input.shortID.toLowerCase(),
+				},
+			});
 
-			return {
-				status: "success",
-			};
+			if (member) {
+				return {
+					isMember: true,
+				};
+			} else {
+				return {
+					isMember: false,
+				};
+			}
 		},
 	})
 	.query("getAll", {
