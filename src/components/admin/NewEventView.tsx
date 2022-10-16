@@ -61,7 +61,7 @@ const NewEventView: FunctionComponent = () => {
 	};
 
 	return (
-		<div className="w-full h-full p-[5px] pt-[50px]">
+		<div className="w-full h-full p-[5px]">
 			<h1 className="text-5xl font-extrabold font-raleway max-w-[800px] mx-auto mb-[15px]">
 				New Event
 			</h1>

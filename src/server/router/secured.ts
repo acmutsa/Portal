@@ -10,12 +10,10 @@ export const securedRouter = createRouter()
 		async resolve({ input, ctx }) {
 			let member = await ctx.prisma.member.findUnique({
 				where: {
-					email: input.email.toLowerCase(),
 					shortID: input.shortID.toLowerCase(),
 				},
 			});
-
-			if (member) {
+			if (member && member.email == input.email.toLowerCase()) {
 				return {
 					isMember: true,
 				};
