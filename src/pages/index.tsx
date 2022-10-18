@@ -1,31 +1,38 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 
 const Home: NextPage = () => {
 	return (
 		<div className="page-view pt-[25vh]">
-			<div className="w-full max-w-[1024px] flex flex-col items-center mx-auto">
-				<h1 className="text-white text-5xl font-bold font-raleway mb-[5px]">ACM UTSA</h1>
-				<h2 className="font-roboto font-bold text-5xl p-[5px] text-primary-lighter bg-white rounded-lg">
-					Membership Portal
-				</h2>
-				<div className="flex w-full justify-center mt-[25px]">
-					<Link href="/events/">
-						<button className="h-[50px] w-[100px] bg-primary-darker text-white rounded font-semibold mx-[5px]">
-							Events
-						</button>
-					</Link>
-					<Link href="/register/">
-						<button className="h-[50px] w-[100px] bg-primary-darker text-white rounded font-semibold mx-[5px]">
-							Register
-						</button>
-					</Link>
-					<Link href="/status/">
-						<button className="h-[50px] w-[100px] bg-primary-darker text-white rounded font-semibold mx-[5px]">
-							Status
-						</button>
-					</Link>
+			<div className="w-full max-w-[1024px] h-full flex flex-col items-center mx-auto">
+				<div className="flex flex-col items-center justify-start w-[25rem] bg-white rounded">
+					<div className="shrink relative bottom-[5rem] h-[4.5rem]">
+						<Image
+							className="drop-shadow-sm"
+							width={150}
+							height={150}
+							src={"/img/logo.png"}
+						/>
+					</div>
+					<div className="grid grid-rows-3 grid-cols-1 gap-2 px-3 pb-4 w-full text-white font-semibold">
+						<Link href="/events/">
+							<button className="h-[3.125rem] w-full px-2 justify-self-center bg-primary-darker rounded">
+								Events
+							</button>
+						</Link>
+						<Link href="/register/">
+							<button className="h-[3.125rem] w-full justify-self-center bg-primary-darker rounded">
+								Register
+							</button>
+						</Link>
+						<Link href="/status/" className="mx-2">
+							<button className="h-[3.125rem] w-full justify-self-center bg-primary-darker rounded">
+								Status
+							</button>
+						</Link>
+					</div>
 				</div>
 			</div>
 		</div>
