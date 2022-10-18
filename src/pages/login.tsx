@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { setCookie, getCookie } from "cookies-next";
+import { setCookie, removeCookies } from "cookies-next";
 import { trpc } from "../utils/trpc";
 import { Dialog, Transition } from "@headlessui/react";
 
@@ -31,6 +31,12 @@ const EventView: NextPage = () => {
 			setIsErrorOpen(true);
 		}
 	};
+
+	useEffect(() => {
+		// TODO: consider removing this
+		removeCookies("acm_email");
+		removeCookies("acm_shortID");
+	}, []);
 
 	return (
 		<>
