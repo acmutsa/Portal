@@ -52,11 +52,17 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 						content={`https://portal.acmutsa.org/events/${typeof id === "string" ? id : "error"}`}
 					/>
 					<meta
+						property="og:description"
+						content={`Come and join ${serverProps.organization} for ${serverProps.name}!`}
+					/>
+					<meta
 						property="og:image"
 						content={
 							serverProps.headerImage || "https://portal.acmutsa.org/img/default-thumbnail.png"
 						}
 					/>
+					<meta name="theme-color" content="#179BD5" />
+					<meta name="twitter:card" content="summary_large_image" />
 				</Head>
 				<div className="page-view pt-[20px]">
 					<EventHeader
