@@ -18,7 +18,6 @@
   "trailingComma": "es5",
   "useTabs": true,
   "vueIndentScriptAndStyle": false,
-  "filepath": "/Users/liam/Documents/Projects/lista/src/pages/events/[id].tsx",
   "parser": "typescript",
   "rangeEnd": 1576,
   "rangeStart": 1553
