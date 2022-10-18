@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import EventHeader from "../../components/events/EventHeader";
 import EventDescription from "../../components/events/EventDescription";
@@ -41,22 +42,39 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 			.replaceAll(".", "")
 			.replaceAll("-", "")}&location=${serverProps.location?.replaceAll(" ", "+")}`;
 		return (
-			<div className="page-view pt-[20px]">
-				<EventHeader
-					title={serverProps.name || ""}
-					imageURL={serverProps.headerImage || ""}
-					hostOrg={serverProps.organization || ""}
-					startDate={new Date(serverProps.startDate || "")}
-					endDate={new Date(serverProps.endDate || "")}
-					location={serverProps.location || ""}
-				/>
-				<br />
-				<EventDescription
-					description={serverProps.description || `Come and join us for ${serverProps.name}!`}
-					calanderLink={callink}
-					eventID={typeof id === "string" ? id : "error"}
-				/>
-			</div>
+			<>
+				<Head>
+					<title>{serverProps.name + " | ACM"}</title>
+					<meta property="og:title" content={serverProps.name + " | ACM"} />
+					<meta property="og:type" content="website" />
+					<meta
+						property="og:url"
+						content={`https://portal.acmutsa.org/events/${typeof id === "string" ? id : "error"}`}
+					/>
+					<meta
+						property="og:image"
+						content={
+							serverProps.headerImage || "https://portal.acmutsa.org/img/default-thumbnail.png"
+						}
+					/>
+				</Head>
+				<div className="page-view pt-[20px]">
+					<EventHeader
+						title={serverProps.name || ""}
+						imageURL={serverProps.headerImage || ""}
+						hostOrg={serverProps.organization || ""}
+						startDate={new Date(serverProps.startDate || "")}
+						endDate={new Date(serverProps.endDate || "")}
+						location={serverProps.location || ""}
+					/>
+					<br />
+					<EventDescription
+						description={serverProps.description || `Come and join us for ${serverProps.name}!`}
+						calanderLink={callink}
+						eventID={typeof id === "string" ? id : "error"}
+					/>
+				</div>
+			</>
 		);
 	} else {
 		return <p>Not found</p>;
