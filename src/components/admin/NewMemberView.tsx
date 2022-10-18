@@ -131,8 +131,8 @@ const NewMemberView: FunctionComponent = () => {
 						<option value="Graduate">Other</option>
 					</select>
 				</div>
-				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl font-bold flex items-center justify-center align-center mt-[15px]">
-					Create Event <BsFillArrowRightCircleFill className="ml-[5px]" />
+				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl ml-auto font-bold flex items-center justify-center align-center mt-[15px]">
+					Create Member <BsFillArrowRightCircleFill className="ml-[5px]" />
 				</button>
 			</form>
 		</div>
