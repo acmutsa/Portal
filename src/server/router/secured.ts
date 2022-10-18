@@ -24,8 +24,8 @@ export const securedRouter = createRouter()
 			}
 		},
 	})
-	.query("getAll", {
+	.query("getMemberStatus", {
 		async resolve({ ctx }) {
-			return "Hello world";
+			return "Hello!";
 		},
 	});
