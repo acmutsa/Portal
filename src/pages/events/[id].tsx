@@ -68,7 +68,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 					<EventHeader
 						title={serverProps.name || ""}
 						imageURL={serverProps.headerImage || ""}
-						hostOrg={serverProps.organization || ""}
+						eventHost={serverProps.organization || ""}
 						startDate={new Date(serverProps.startDate || "")}
 						endDate={new Date(serverProps.endDate || "")}
 						location={serverProps.location || ""}
