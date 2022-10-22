@@ -5,7 +5,7 @@ interface EventHeaderProps {
 	title: string;
 	imageURL: string;
 	eventHost: string;
-	eventDescription: string;
+	eventDescription: string | null | undefined;
 	startDate: Date;
 	endDate: Date;
 	location: string;
@@ -28,9 +28,10 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 	const localeOptions: Intl.DateTimeFormatOptions = { hour: "2-digit", minute: "2-digit" };
 	const endDateString = endDate.toLocaleTimeString([], localeOptions);
 	const startDateString = startDate.toLocaleTimeString([], localeOptions);
-
 	return (
-		<div className="flex bg-white mx-auto max-h-[10rem] min-h-[7rem] rounded-xl m-3 w-full max-w-[60rem]">
+		<div
+			className={`flex bg-white mx-auto max-h-[10rem] min-h-[7rem] rounded-xl m-3 w-full max-w-[60rem]`}
+		>
 			<div
 				className="overflow-hidden rounded-l-xl bg-cover bg-no-repeat min-w-[15rem]"
 				style={{ backgroundImage: `url(${imageURL})` }}
@@ -39,7 +40,8 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 				<h1 className="text-3xl font-extrabold font-raleway">{title}</h1>
 				<p className="ml-2 italic font-opensans font-semibold">Hosted by {eventHost}</p>
 				<p className="ml-2 text-sm overflow-ellipsis max-h-[4rem]">{eventDescription}</p>
-				<div className="justify-self-end columns-3 w-full">
+				<div className="flex-grow" />
+				<div className="self-end columns-3 w-full">
 					<p className="ml-2 flex items-center">
 						<BsFillCalendarEventFill className="mr-[0.3rem]" />
 						{dateString}
