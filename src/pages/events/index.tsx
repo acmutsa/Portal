@@ -49,7 +49,7 @@ const Events: NextPage = () => {
 				Up Next at <span className="text-primary-lighter bg-white rounded p-[5px]">ACM</span>
 			</h1>
 			{eventResults.map((event) => (
-				<EventHeader {...event} />
+				<EventHeader key={event.title} {...event} />
 			))}
 		</div>
 	);

@@ -12,7 +12,7 @@ const Login: NextPage = () => {
 
 	return (
 		<div className="flex items-center justify-center page-view">
-			<LoginForm callback={(uname, psswrd) => pressedSubmit(uname, psswrd)} />
+			<LoginForm callback={(username, password) => pressedSubmit(username, password)} />
 		</div>
 	);
 };
