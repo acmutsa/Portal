@@ -18,7 +18,5 @@
   "trailingComma": "es5",
   "useTabs": true,
   "vueIndentScriptAndStyle": false,
-  "parser": "typescript",
-  "rangeEnd": 1576,
-  "rangeStart": 1553
+  "parser": "typescript"
 }
