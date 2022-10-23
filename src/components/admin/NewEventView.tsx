@@ -1,8 +1,8 @@
 import { FunctionComponent, useState, useEffect } from "react";
-import public_config from "../../../config/public_config.json";
+import public_config from "@/config/public_config.json";
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "@/utils/trpc";
 
 // const Home: NextPage = () => {
 //   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);

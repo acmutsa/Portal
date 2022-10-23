@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { useState, Fragment, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { setCookie, removeCookies } from "cookies-next";
-import { trpc } from "../utils/trpc";
+import { trpc } from "@/utils/trpc";
 import { Dialog, Transition } from "@headlessui/react";
 
 const EventView: NextPage = () => {

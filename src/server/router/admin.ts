@@ -1,6 +1,6 @@
-import { createRouter } from "./context";
 import { z } from "zod";
 import { nanoid } from "nanoid";
+import { createRouter } from "@/server/router/context";
 
 export const adminRouter = createRouter()
 	.mutation("createEvent", {

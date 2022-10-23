@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import EventHeader from "../../components/events/EventHeader";
+import EventHeader from "@/components/events/EventHeader";
 
 const eventResults = [
 	{

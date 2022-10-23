@@ -1,10 +1,10 @@
 // src/server/router/index.ts
-import { createRouter } from "./context";
 import superjson from "superjson";
 
-import { adminRouter } from "./admin";
-import { securedRouter } from "./secured";
-import { eventsRouter } from "./events";
+import { createRouter } from "@/server/router/context";
+import { adminRouter } from "@/server/router/admin";
+import { securedRouter } from "@/server/router/secured";
+import { eventsRouter } from "@/server/router/events";
 
 export const appRouter = createRouter()
 	.transformer(superjson)

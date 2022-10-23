@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import EventHeader from "../../components/events/EventHeader";
-import EventDescription from "../../components/events/EventDescription";
-import { prisma } from "../../server/db/client";
+import EventHeader from "@/components/events/EventHeader";
+import EventDescription from "@/components/events/EventDescription";
+import { prisma } from "@/server/db/client";
 
 interface eventPageParams {
 	params: { id: string };

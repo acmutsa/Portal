@@ -1,5 +1,5 @@
 // @ts-check
-import { clientEnv, clientSchema } from "./schema.mjs";
+import { clientEnv, clientSchema } from "@/env/schema.mjs";
 
 const _clientEnv = clientSchema.safeParse(clientEnv);
 

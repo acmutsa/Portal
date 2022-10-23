@@ -1,14 +1,14 @@
 import type { NextPage } from "next";
 import { AiOutlineDashboard } from "react-icons/ai";
-import { BsCalendarRange, BsReplyAll } from "react-icons/bs";
+import { BsCalendarRange } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
-import EventView from "../../components/admin/EventView";
-import MemberView from "../../components/admin/MemberView";
-import DashView from "../../components/admin/DashView";
-import NewEventView from "../../components/admin/NewEventView";
-import NewMemberView from "../../components/admin/NewMemberView";
+import EventView from "@/components/admin/EventView";
+import MemberView from "@/components/admin/MemberView";
+import DashView from "@/components/admin/DashView";
+import NewEventView from "@/components/admin/NewEventView";
+import NewMemberView from "@/components/admin/NewMemberView";
 import { useRouter } from "next/router";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 
 enum viewType {
 	dashboard = "dashboard",
