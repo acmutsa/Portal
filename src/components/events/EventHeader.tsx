@@ -5,7 +5,7 @@ interface EventHeaderProps {
 	title: string;
 	imageURL: string;
 	eventHost: string;
-	eventDescription: string | null | undefined;
+	eventDescription?: string;
 	startDate: Date;
 	endDate: Date;
 	location: string;
