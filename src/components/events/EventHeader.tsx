@@ -1,5 +1,5 @@
-import { FunctionComponent } from "react";
-import { BsFillCalendarEventFill, BsClockFill, BsPinMapFill } from "react-icons/bs";
+import { FunctionComponent, useEffect, useState } from "react";
+import { BsClockFill, BsFillCalendarEventFill, BsPinMapFill } from "react-icons/bs";
 
 interface EventHeaderProps {
 	title: string;
@@ -32,9 +32,17 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 			? startDate.toLocaleDateString()
 			: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
 
-	const now = new Date();
-	const is_ongoing = startDate < now && endDate > now;
+	const [now, setDate] = useState(new Date()); // Save the current date to be able to trigger an update
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setDate(new Date());
+		}, 60 * 1000);
+		return () => {
+			clearInterval(timer); // Return a function to clear the timer so that it will stop being called on unmount
+		};
+	}, []);
 
+	const is_ongoing = startDate < now && endDate > now;
 	const localeOptions: Intl.DateTimeFormatOptions = { hour: "numeric", minute: "2-digit" };
 	const endDateString = endDate.toLocaleTimeString([], localeOptions);
 	const startDateString = startDate.toLocaleTimeString([], localeOptions);
