@@ -11,6 +11,13 @@ interface EventHeaderProps {
 	location: string;
 }
 
+const ping = (
+	<span className="flex relative h-[10px] w-[10px] top-0 left-0 -mr-1">
+		<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+		<span className="relative inline-flex rounded-full h-[10px] w-[10px] bg-sky-500" />
+	</span>
+);
+
 const EventHeader: FunctionComponent<EventHeaderProps> = ({
 	title,
 	imageURL,
@@ -25,7 +32,10 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 			? startDate.toLocaleDateString()
 			: `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
 
-	const localeOptions: Intl.DateTimeFormatOptions = { hour: "2-digit", minute: "2-digit" };
+	const now = new Date();
+	const is_ongoing = startDate < now && endDate > now;
+
+	const localeOptions: Intl.DateTimeFormatOptions = { hour: "numeric", minute: "2-digit" };
 	const endDateString = endDate.toLocaleTimeString([], localeOptions);
 	const startDateString = startDate.toLocaleTimeString([], localeOptions);
 	return (
@@ -37,7 +47,10 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 				style={{ backgroundImage: `url(${imageURL})` }}
 			/>
 			<div className="flex flex-col mx-5 p-[0.3rem] w-full min-h-full">
-				<h1 className="text-3xl font-extrabold font-raleway">{title}</h1>
+				<div className="relative inline-flex">
+					<div className="inline-flex text-3xl font-extrabold font-raleway">{title}</div>
+					{is_ongoing ? ping : null}
+				</div>
 				<p className="ml-2 italic font-opensans font-semibold">Hosted by {eventHost}</p>
 				<p className="ml-2 text-sm overflow-ellipsis max-h-[4rem]">{eventDescription}</p>
 				<div className="flex-grow" />
@@ -48,7 +61,7 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 					</p>
 					<p className="ml-2 flex items-center">
 						<BsClockFill className="mr-[0.3rem]" />
-						{`${startDateString} - ${endDateString}`}
+						{startDateString} - {endDateString}
 					</p>
 					<p className="ml-2 flex items-center">
 						<BsPinMapFill className="mr-[0.3rem]" />
