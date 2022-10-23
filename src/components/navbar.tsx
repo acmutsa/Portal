@@ -9,7 +9,7 @@ const Navbar: FunctionComponent = () => {
 				Events
 			</Link>
 			<Link href={"/"}>
-				<div className="relative top-[1.2rem]">
+				<div className="relative top-[1.2rem] hover:translate-y-1 cursor-pointer hover:scale-[110%] transition-transform">
 					<Image width={100} height={100} quality={100} loading={"eager"} src={"/img/logo.png"} />
 				</div>
 			</Link>
