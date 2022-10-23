@@ -40,26 +40,49 @@ const EventView: NextPage = () => {
 
 	return (
 		<>
-			<div className="page-view flex items-center">
-				<div className="bg-white max-w-[800px] w-full mx-auto min-h-[400px] max-h-[500px] h-full rounded-xl text-center flex flex-col items-center justify-center p-[10px]">
-					<h1 className="text-5xl font-extrabold font-raleway">Welcome!</h1>
-					<p className="text-lg font-extrabold font-raleway mb-[40px]">Please Login Below</p>
-					<form onSubmit={handleSubmit(didSubmit)} className="min-w-[400px]">
-						<input
-							type="email"
-							placeholder="person@example.com"
-							id="email"
-							{...register("email", { required: true })}
-							className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
-						/>
-						<input
-							type="text"
-							placeholder="abc123"
-							id="shortID"
-							{...register("shortID", { required: true, pattern: /[a-zA-Z]{3}[0-9]{3}/ })}
-							className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md mb-[10px]"
-						/>
-						<button className="h-[50px] w-full bg-primary-darker text-white rounded-lg font-semibold mx-[5px] mb-[5px] max-w-[300px] mt-[40px]">
+			<div className="page-view flex flex-col justify-center">
+				<p className="text-lg text-white font-semibold font-raleway mb-2">
+					Sign-in to the ACM-UTSA Portal
+				</p>
+				<div className="bg-white max-w-[50rem] self-center p-5 pt-3 rounded-xl text-center flex flex-col items-center justify-center">
+					<form
+						onSubmit={handleSubmit(didSubmit)}
+						className="min-w-[25rem] flex flex-col justify-start"
+					>
+						<label className="block">
+							<p className="block text-sm text-left font-medium text-slate-700">
+								Email Address
+							</p>
+							<input
+								type="email"
+								placeholder="first.last@provider.com"
+								id="email"
+								{...register("email", { required: true })}
+								className="bg-slate-200 border-none h-[2.9rem] w-full outline-1 p-[5px] rounded-md peer"
+							/>
+							<p className="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
+								Please provide a valid email address.
+							</p>
+						</label>
+						<label>
+							<span className="block text-sm text-left font-medium text-slate-700">
+								abc123
+							</span>
+							<input
+								type="text"
+								placeholder="abc123"
+								id="shortID"
+								{...register("shortID", {
+									required: true,
+									pattern: /[a-zA-Z]{3}[0-9]{3}/,
+								})}
+								className="bg-slate-200 border-none h-[2.9rem] w-full outline-1 p-[5px] rounded-md mb-[10px] peer"
+							/>
+							<p className="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
+								Please provide a valid email address.
+							</p>
+						</label>
+						<button className="h-[50px] w-full bg-primary-lighter mx-auto text-white rounded-lg font-semibold mb-[5px]">
 							Login
 						</button>
 					</form>
@@ -91,17 +114,21 @@ const EventView: NextPage = () => {
 								leaveTo="opacity-0 scale-95"
 							>
 								<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-									<Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+									<Dialog.Title
+										as="h3"
+										className="text-lg font-medium leading-6 text-gray-900"
+									>
 										Incorrect Login
 									</Dialog.Title>
 									<div className="mt-2">
 										<p className="text-sm text-gray-500">
 											Hmmm... it seems that we weren't able to find your account.
 											<br />
-											<br /> Please make sure that you have registed and then try again! <br />
+											<br /> Please make sure that you have registered and
+											then try again! <br />
 											<br />
-											If you belive that this may be in error, please email us at team@acmutsa.org
-											or contact an officer on{" "}
+											If you believe that this may be in error, please email
+											us at team@acmutsa.org or contact an officer on{" "}
 											<a className="https://discord.acmutsa.org/">Discord</a>.
 										</p>
 									</div>
@@ -147,7 +174,10 @@ const EventView: NextPage = () => {
 								leaveTo="opacity-0 scale-95"
 							>
 								<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-									<Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+									<Dialog.Title
+										as="h3"
+										className="text-lg font-medium leading-6 text-gray-900"
+									>
 										Success!
 									</Dialog.Title>
 									<div className="mt-2">
