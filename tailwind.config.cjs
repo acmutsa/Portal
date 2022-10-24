@@ -10,6 +10,7 @@ module.exports = {
 			},
 			fontFamily: {
 				opensans: ['"Open Sans"', "sans-serif"],
+				inter: ['"Inter"', "sans-serif"],
 				raleway: ['"Raleway"', "sans-serif"],
 				roboto: ['"Roboto"'],
 			},
