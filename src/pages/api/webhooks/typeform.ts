@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { prisma } from "../../../server/db/client";
+import { prisma } from "@/server/db/client";
 
 interface memberItem {
 	name: string;

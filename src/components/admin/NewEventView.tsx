@@ -1,8 +1,8 @@
 import { FunctionComponent, useState, useEffect } from "react";
-import public_config from "../../../config/public_config.json";
+import public_config from "@/config/public_config.json";
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "@/utils/trpc";
 
 // const Home: NextPage = () => {
 //   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
@@ -160,8 +160,8 @@ const NewEventView: FunctionComponent = () => {
 						</>
 					) : null}
 				</div>
-				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl font-bold flex items-center justify-center align-center mt-[15px]">
-					Create Event <BsFillArrowRightCircleFill className="ml-[5px]" />
+				<button className="bg-primary-lighter text-white h-[50px] w-[150px] ml-auto align-text-center rounded-full font-bold flex items-center justify-center align-center mt-[15px]">
+					Create Event <BsFillArrowRightCircleFill className="ml-[15px]" />
 				</button>
 			</form>
 		</div>

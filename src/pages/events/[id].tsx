@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import EventHeader from "../../components/events/EventHeader";
-import EventDescription from "../../components/events/EventDescription";
-import { prisma } from "../../server/db/client";
+import EventHeader from "@/components/events/EventHeader";
+import EventDescription from "@/components/events/EventDescription";
+import { prisma } from "@/server/db/client";
 
 interface eventPageParams {
 	params: { id: string };
@@ -68,7 +68,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 					<EventHeader
 						title={serverProps.name || ""}
 						imageURL={serverProps.headerImage || ""}
-						hostOrg={serverProps.organization || ""}
+						eventHost={serverProps.organization || ""}
 						startDate={new Date(serverProps.startDate || "")}
 						endDate={new Date(serverProps.endDate || "")}
 						location={serverProps.location || ""}

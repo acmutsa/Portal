@@ -1,4 +1,5 @@
-import { createRouter } from "./context";
+import { createRouter } from "@/server/router/context";
+
 import { z } from "zod";
 
 export const securedRouter = createRouter()

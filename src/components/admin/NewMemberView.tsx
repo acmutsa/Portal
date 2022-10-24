@@ -1,8 +1,8 @@
 import { FunctionComponent, useState, useEffect } from "react";
-import public_config from "../../../config/public_config.json";
+import public_config from "@/config/public_config.json";
 import { BsFillArrowRightCircleFill } from "react-icons/bs";
 import { useForm } from "react-hook-form";
-import { trpc } from "../../utils/trpc";
+import { trpc } from "@/utils/trpc";
 
 // const Home: NextPage = () => {
 //   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
@@ -67,9 +67,11 @@ const NewMemberView: FunctionComponent = () => {
 					<input
 						type="text"
 						id="memberShortID"
-						placeholder="ABC123"
+						minLength={6}
+						maxLength={6}
+						placeholder="abc123"
 						className="bg-slate-200 border-none h-[50px] w-full focus:outline-none p-[5px] rounded-md my-[10px]"
-						{...register("memberShortID", { required: true })}
+						{...register("memberShortID", { required: true, minLength: 6, maxLength: 6 })}
 					/>
 				</div>
 				<p className="text-sm mt-[15px]">Academic Info</p>
@@ -131,8 +133,8 @@ const NewMemberView: FunctionComponent = () => {
 						<option value="Graduate">Other</option>
 					</select>
 				</div>
-				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl font-bold flex items-center justify-center align-center mt-[15px]">
-					Create Event <BsFillArrowRightCircleFill className="ml-[5px]" />
+				<button className="bg-primary-lighter text-white h-[50px] w-[150px] rounded-xl ml-auto font-bold flex items-center justify-center align-center mt-[15px]">
+					Create Member <BsFillArrowRightCircleFill className="ml-[5px]" />
 				</button>
 			</form>
 		</div>

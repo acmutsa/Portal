@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import settings from "../config/settings.json";
+import settings from "@/config/settings.json";
 
 export function middleware(req: NextRequest) {
 	if (req.nextUrl.pathname.startsWith("/admin")) {

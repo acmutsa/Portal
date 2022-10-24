@@ -1,11 +1,11 @@
-import "../styles/globals.css";
+import "@/styles/globals.css";
 import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
 import { loggerLink } from "@trpc/client/links/loggerLink";
 import { withTRPC } from "@trpc/next";
 import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
-import type { AppRouter } from "../server/router";
-import Navbar from "../components/navbar";
+import type { AppRouter } from "@/server/router";
+import Navbar from "@/components/navbar";
 import Head from "next/head";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
@@ -19,7 +19,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<Component {...pageProps} />
 				<p className="absolute bottom-0 w-full text-center text-[10px] mx-auto text-white">
 					Made with &lt;/&gt; @ ACM UTSA
-					<br />© Association of Computing Machinery at UTSA 2022. All Rights Reserved.
+					<br />© Association of Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
+					Reserved.
 				</p>
 			</div>
 		</>
