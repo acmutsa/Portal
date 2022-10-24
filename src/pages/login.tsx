@@ -41,13 +41,13 @@ const EventView: NextPage = () => {
 	return (
 		<>
 			<div className="page-view flex flex-col justify-center">
-				<div className="bg-white max-w-[50rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
-					<p className="text-lg font-semibold text-slate-700 font-raleway mb-2">
+				<div className="bg-white max-w-[30rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
+					<p className="text-[22px] font-semibold text-slate-700 font-raleway mb-2">
 						Membership Portal Login
 					</p>
 					<form
 						onSubmit={handleSubmit(didSubmit)}
-						className="min-w-[25rem] flex flex-col font-inter justify-start p-3 pb-2 text-left"
+						className="min-w-[23rem] flex flex-col font-inter justify-start p-3 pb-2 text-left"
 					>
 						<label className="">
 							<p className="block text-sm font-medium text-slate-700">Email</p>
