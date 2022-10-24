@@ -56,9 +56,9 @@ const EventView: NextPage = () => {
 								placeholder="you@example.com"
 								id="email"
 								{...register("email", { required: true })}
-								className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"
+								className="peer px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"
 							/>
-							<p className="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
+							<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-sm">
 								Please provide a valid email address.
 							</p>
 						</label>
@@ -67,14 +67,18 @@ const EventView: NextPage = () => {
 							<input
 								type="text"
 								placeholder="abc123"
+								minLength={6}
+								maxLength={6}
 								id="shortID"
 								{...register("shortID", {
 									required: true,
-									pattern: /^\s*[a-zA-Z]{3}[0-9]{3}\s*$/,
+									pattern: /^[a-zA-Z]{3}[0-9]{3}$/,
+									minLength: 6,
+									maxLength: 6,
 								})}
-								className="px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"
+								className="peer px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"
 							/>
-							<p className="mt-2 invisible peer-invalid:visible text-pink-600 text-sm">
+							<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-sm">
 								Please provide a valid abc123.
 							</p>
 						</label>
@@ -84,7 +88,7 @@ const EventView: NextPage = () => {
 					</form>
 					<p className="text-center text-slate-600">
 						Not yet a member?{" "}
-						<a href="/register" className="text-slate-700 underline">
+						<a href={"/register"} className="text-slate-700 underline">
 							Register
 						</a>
 					</p>
