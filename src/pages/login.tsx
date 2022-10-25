@@ -10,19 +10,20 @@ const EventView: NextPage = () => {
 	const [isErrorOpen, setIsErrorOpen] = useState(false);
 	const [isWorkedOpen, setIsWorkedOpen] = useState(false);
 
-	let r = trpc.useMutation(["secured.validateLoginMatch"]);
+	let r = trpc.useMutation(["member.validateLogin"]);
+	let me = trpc.useQuery(["member.me"]);
 
 	const closeErrorModal = () => setIsErrorOpen(false);
 	const closeWorkedModal = () => setIsWorkedOpen(false);
 
 	const didSubmit = async (p: any) => {
 		let data = p;
-		let result = await r.mutateAsync({
+		let isMember = await r.mutateAsync({
 			email: data.email,
 			shortID: data.shortID,
 		});
 
-		if (result.isMember) {
+		if (isMember) {
 			// Do something
 			setCookie("acm_email", data.email);
 			setCookie("acm_shortID", data.shortID);
