@@ -12,10 +12,9 @@ const EventView: NextPage = () => {
 	const [isWorkedOpen, setIsSuccessOpen] = useState(false);
 	const [email, setEmail] = useState("");
 	const [shortID, setShortID] = useState("");
+	const me = trpc.useQuery(["member.me"]);
+	const loggedIn = trpc.useQuery(["member.loggedIn", { email, shortID }]);
 	const router = useRouter();
-
-	let me = trpc.useQuery(["member.me"]);
-	let loggedIn = trpc.useQuery(["member.loggedIn", { email, shortID }]);
 
 	// Sub-par navigation guard
 	if (me) {
