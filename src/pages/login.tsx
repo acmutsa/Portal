@@ -4,30 +4,42 @@ import { useForm } from "react-hook-form";
 import { setCookie, removeCookies } from "cookies-next";
 import { trpc } from "@/utils/trpc";
 import { Dialog, Transition } from "@headlessui/react";
+import { useRouter } from "next/router";
 
 const EventView: NextPage = () => {
 	const { register, handleSubmit, setValue } = useForm();
 	const [isErrorOpen, setIsErrorOpen] = useState(false);
-	const [isWorkedOpen, setIsWorkedOpen] = useState(false);
+	const [isWorkedOpen, setIsSuccessOpen] = useState(false);
+	const [email, setEmail] = useState("");
+	const [shortID, setShortID] = useState("");
+	const router = useRouter();
 
-	let r = trpc.useMutation(["member.validateLogin"]);
 	let me = trpc.useQuery(["member.me"]);
+	let loggedIn = trpc.useQuery(["member.loggedIn", { email, shortID }]);
 
+	// Sub-par navigation guard
+	if (me) {
+		router.replace("/");
+	} else {
+		// Remove invalid cookies
+		removeCookies("member_email");
+		removeCookies("member_shortID");
+	}
 	const closeErrorModal = () => setIsErrorOpen(false);
-	const closeWorkedModal = () => setIsWorkedOpen(false);
+	const closeSuccessModal = () => setIsSuccessOpen(false);
 
-	const didSubmit = async (p: any) => {
-		let data = p;
-		let isMember = await r.mutateAsync({
-			email: data.email,
-			shortID: data.shortID,
-		});
+	const didSubmit = async (formInput: any) => {
+		let data = formInput;
 
-		if (isMember) {
-			// Do something
-			setCookie("acm_email", data.email);
-			setCookie("acm_shortID", data.shortID);
-			setIsWorkedOpen(true);
+		// Store the email/shortID, then check if they're valid
+		setEmail(data.email);
+		setShortID(data.shortID);
+
+		if (loggedIn) {
+			// Setup cookies, open success modal
+			setCookie("member_email", data.email);
+			setCookie("member_shortID", data.shortID);
+			setIsSuccessOpen(true);
 		} else {
 			setIsErrorOpen(true);
 		}
@@ -35,8 +47,8 @@ const EventView: NextPage = () => {
 
 	useEffect(() => {
 		// TODO: consider removing this
-		removeCookies("acm_email");
-		removeCookies("acm_shortID");
+		removeCookies("member_email");
+		removeCookies("member_shortID");
 	}, []);
 
 	return (
@@ -149,7 +161,7 @@ const EventView: NextPage = () => {
 				</Dialog>
 			</Transition>
 			<Transition appear show={isWorkedOpen} as={Fragment}>
-				<Dialog as="div" className="relative z-10" onClose={() => closeWorkedModal()}>
+				<Dialog as="div" className="relative z-10" onClose={() => closeSuccessModal()}>
 					<Transition.Child
 						as={Fragment}
 						enter="ease-out duration-300"
@@ -187,7 +199,7 @@ const EventView: NextPage = () => {
 										<button
 											type="button"
 											className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-											onClick={() => closeWorkedModal()}
+											onClick={() => closeSuccessModal()}
 										>
 											Great!
 										</button>

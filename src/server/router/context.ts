@@ -23,8 +23,8 @@ export const createContextInner = async (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  **/
 export const createContext = async (opts: trpcNext.CreateNextContextOptions) => {
-	const shortID = opts?.req?.cookies.acm_shortID;
-	const email = opts?.req?.cookies.acm_email;
+	const shortID = opts?.req?.cookies.member_shortID;
+	const email = opts?.req?.cookies.member_email;
 
 	return {
 		shortID,
