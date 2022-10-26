@@ -3,7 +3,7 @@ import { createRouter } from "@/server/router/context";
 import { z } from "zod";
 
 export const memberRouter = createRouter()
-	.query("loggedIn", {
+	.mutation("loggedIn", {
 		input: z
 			.object({
 				email: z.string(),
@@ -25,21 +25,17 @@ export const memberRouter = createRouter()
 
 			let member = await ctx.prisma.member.findUnique({
 				where: {
-					shortID: shortID?.toLowerCase(),
+					shortID: shortID.toLowerCase(),
 				},
 			});
 
-			return member && member.email == email?.toLowerCase();
+			return member && member.email == email.toLowerCase();
 		},
 	})
 	.query("me", {
-		input: z
-			.object({
-				// Returns the full member data by default. Otherwise, returns true if anything matched.
-				full: z.boolean().default(true),
-			})
-			.nullish(),
 		async resolve({ ctx }) {
+			if (ctx?.shortID == null) return null;
+
 			let member = await ctx.prisma.member.findUnique({
 				where: {
 					shortID: ctx?.shortID?.toLowerCase(),

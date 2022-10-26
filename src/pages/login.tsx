@@ -1,44 +1,43 @@
 import type { NextPage } from "next";
-import { useState, Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { setCookie, removeCookies } from "cookies-next";
+import { deleteCookie, setCookie } from "cookies-next";
 import { trpc } from "@/utils/trpc";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
+import { useGlobalContext } from "@/components/state/global";
 
 const EventView: NextPage = () => {
 	const { register, handleSubmit, setValue } = useForm();
 	const [isErrorOpen, setIsErrorOpen] = useState(false);
 	const [isWorkedOpen, setIsSuccessOpen] = useState(false);
-	const [email, setEmail] = useState("");
-	const [shortID, setShortID] = useState("");
-	const me = trpc.useQuery(["member.me"]);
-	const loggedIn = trpc.useQuery(["member.loggedIn", { email, shortID }]);
+	const [globalState, setGlobalState] = useGlobalContext();
+	const loggedIn = trpc.useMutation(["member.loggedIn"]);
 	const router = useRouter();
 
 	// Sub-par navigation guard
-	if (me) {
-		router.replace("/");
-	} else {
-		// Remove invalid cookies
-		removeCookies("member_email");
-		removeCookies("member_shortID");
-	}
+	useEffect(() => {
+		if (globalState.loggedIn) {
+			router.replace("/member/status");
+		} else {
+			// Remove invalid cookies
+			deleteCookie("member_email");
+			deleteCookie("member_shortID");
+		}
+	}, []);
+
 	const closeErrorModal = () => setIsErrorOpen(false);
 	const closeSuccessModal = () => setIsSuccessOpen(false);
 
-	const didSubmit = async (formInput: any) => {
-		let data = formInput;
-
-		// Store the email/shortID, then check if they're valid
-		setEmail(data.email);
-		setShortID(data.shortID);
-
-		if (loggedIn) {
+	const didSubmit = async (data: any) => {
+		console.log("Checking login details");
+		let isLoggedIn = await loggedIn.mutateAsync({ email: data.email, shortID: data.shortID });
+		if (isLoggedIn) {
 			// Setup cookies, open success modal
 			setCookie("member_email", data.email);
 			setCookie("member_shortID", data.shortID);
 			setIsSuccessOpen(true);
+			setGlobalState({ ...globalState, loggedIn: true });
 		} else {
 			setIsErrorOpen(true);
 		}
@@ -46,8 +45,8 @@ const EventView: NextPage = () => {
 
 	useEffect(() => {
 		// TODO: consider removing this
-		removeCookies("member_email");
-		removeCookies("member_shortID");
+		deleteCookie("member_email");
+		deleteCookie("member_shortID");
 	}, []);
 
 	return (
@@ -198,7 +197,10 @@ const EventView: NextPage = () => {
 										<button
 											type="button"
 											className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-											onClick={() => closeSuccessModal()}
+											onClick={() => {
+												closeSuccessModal();
+												router.push("/member/status");
+											}}
 										>
 											Great!
 										</button>
