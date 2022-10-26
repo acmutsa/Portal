@@ -1,8 +1,11 @@
 import { FunctionComponent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useGlobalContext } from "@/components/state/global";
 
 const Navbar: FunctionComponent = () => {
+	const [globalState, setGlobalState] = useGlobalContext();
+
 	return (
 		<div className="h-[72px] w-full bg-primary-darker font-inter drop-shadow-lg text-white text-xl flex items-center">
 			<div className="flex-1 text-center">
@@ -16,8 +19,23 @@ const Navbar: FunctionComponent = () => {
 				</Link>
 			</div>
 			<div className="flex-1 flex justify-evenly">
-				<Link href={"/login"}>Login</Link>
-				<Link href={"/register"}>Register</Link>
+				{globalState.loggedIn
+					? [
+							<Link key={1} href={"/member/status"}>
+								Status
+							</Link>,
+							<Link key={2} href={"/logout"}>
+								Logout
+							</Link>,
+					  ]
+					: [
+							<Link key={1} href={"/login"}>
+								Login
+							</Link>,
+							<Link key={3} href={"/register"}>
+								Register
+							</Link>,
+					  ]}
 			</div>
 		</div>
 	);
