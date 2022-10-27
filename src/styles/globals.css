@@ -12,3 +12,27 @@
 	overflow-y: auto;
 	padding-bottom: 40px;
 }
+
+
+.under-hover {
+	display: inline-block;
+	position: relative;
+}
+
+.under-hover:after {
+	content: '';
+	position: absolute;
+	width: 100%;
+	transform: scaleX(0);
+	height: 2px;
+	bottom: 0;
+	left: 0;
+	background-color: #f15a22;
+	transform-origin: bottom right;
+	transition: transform 0.25s ease-out;
+}
+
+.under-hover:hover:after, .under-hover.force:after {
+	transform: scaleX(1);
+	transform-origin: bottom left;
+}
