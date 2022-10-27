@@ -19,13 +19,13 @@ const NewEventView: FunctionComponent = () => {
 		);
 	}
 
-	let r = trpc.useMutation(["admin.createEvent"]);
+	let createEvent = trpc.useMutation(["admin.createEvent"]);
 
 	const { register, handleSubmit, setValue } = useForm();
 	const didSubmit = async (p: any) => {
 		let data = p;
 
-		r.mutate(
+		createEvent.mutate(
 			{
 				eventName: data.eventName,
 				eventDescription: data.eventDescription,

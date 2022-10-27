@@ -52,7 +52,7 @@ export async function getStaticProps(urlParams: eventPageParams) {
 	const params = urlParams.params;
 	const revalTime = 2;
 
-	const event = await prisma.events.findUnique({
+	const event = await prisma.event.findUnique({
 		where: {
 			pageID: params.id.toLowerCase(),
 		},

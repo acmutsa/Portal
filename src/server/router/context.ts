@@ -23,7 +23,14 @@ export const createContextInner = async (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  **/
 export const createContext = async (opts: trpcNext.CreateNextContextOptions) => {
-	return await createContextInner({});
+	const shortID = opts?.req?.cookies.member_shortID;
+	const email = opts?.req?.cookies.member_email;
+
+	return {
+		shortID,
+		email,
+		...(await createContextInner({})),
+	};
 };
 
 type Context = trpc.inferAsyncReturnType<typeof createContext>;

@@ -19,7 +19,7 @@ interface EventServerProps {
 }
 
 export async function getStaticProps() {
-	let results = await prisma.events.findMany();
+	let results = await prisma.event.findMany();
 
 	return {
 		props: {

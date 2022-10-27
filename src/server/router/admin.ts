@@ -17,7 +17,7 @@ export const adminRouter = createRouter()
 		}),
 		async resolve({ input, ctx }) {
 			// TODO: add cookie validation here
-			let newEvent = await ctx.prisma.events.create({
+			let newEvent = await ctx.prisma.event.create({
 				data: {
 					name: input.eventName,
 					description: input.eventDescription,

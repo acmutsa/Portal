@@ -7,22 +7,42 @@ import superjson from "superjson";
 import type { AppRouter } from "@/server/router";
 import Navbar from "@/components/navbar";
 import Head from "next/head";
+import { GlobalContext, initialState } from "@/components/state/global";
+import { useEffect, useState } from "react";
+import { trpc } from "@/utils/trpc";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+	const [globalState, setGlobalState] = useState(initialState);
+	const loggedIn = trpc.useMutation(["member.loggedIn"]);
+
+	useEffect(() => {
+		loggedIn.mutate(null, {
+			onSuccess: (response) => {
+				setGlobalState({ ...globalState, loggedIn: response ?? false });
+			},
+		});
+	}, []);
+
 	return (
 		<>
 			<Head>
 				<title>ACM Membership Portal</title>
 			</Head>
-			<Navbar />
-			<div className="bg-[url('/img/bg.png')] bg-fixed bg-center bg-cover">
-				<Component {...pageProps} />
-				<p className="absolute bottom-0 w-full text-center text-[10px] mx-auto text-white">
-					Made with &lt;/&gt; @ ACM UTSA
-					<br />© Association of Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
-					Reserved.
-				</p>
-			</div>
+			<GlobalContext.Provider value={[globalState, setGlobalState]}>
+				<Navbar />
+				<div
+					className={`${
+						globalState.background ? "bg-[url('/img/bg.png')]" : "bg-white"
+					} bg-fixed bg-center bg-cover`}
+				>
+					<Component {...pageProps} />
+					<p className="absolute bottom-0 w-full text-center text-[10px] mx-auto text-white">
+						Made with &lt;/&gt; @ ACM UTSA
+						<br />© Association of Computing Machinery at UTSA {new Date().getFullYear()}. All
+						Rights Reserved.
+					</p>
+				</div>
+			</GlobalContext.Provider>
 		</>
 	);
 };

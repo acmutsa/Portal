@@ -10,7 +10,7 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Events {
+model Event {
     id            String   @id @default(cuid())
     name          String
     description   String
@@ -25,14 +25,17 @@ model Events {
     hasBeenForced Boolean  @default(false)
     forcedIsOpen  Boolean  @default(false)
     pageID        String   @unique @default("")
+    checkins      Checkin[]
 }
 
-model Checkins {
-    id         String  @id @default(cuid())
-    member     Member  @relation(fields: [memberID], references: [id])
+model Checkin {
+    eventID    String
     memberID   String
+    event      Event   @relation(fields: [eventID], references: [id])
+    member     Member  @relation(fields: [memberID], references: [id])
     isInPerson Boolean
-    feedback   String
+    feedback   String?
+    @@id([eventID, memberID])
 }
 
 model Member {
@@ -42,7 +45,7 @@ model Member {
     shortID            String      @unique
     attendanceCount    Int
     joinDate           DateTime
-    checkins           Checkins[]
+    checkins           Checkin[]
     data               MemberData?
     extendedMemberData String
 }
@@ -76,7 +79,3 @@ model MemberData {
     otherIdentity      String?
     address            String?
 }
-
-// model Example {
-//     id String @id @default(cuid())
-// }
