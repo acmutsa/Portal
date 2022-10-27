@@ -5,7 +5,7 @@ export const eventsRouter = createRouter()
 	.query("getCurrent", {
 		input: z.object({}).nullish(),
 		async resolve({ ctx }) {
-			return await ctx.prisma.events.findMany({
+			return await ctx.prisma.event.findMany({
 				where: {
 					eventStart: {
 						gte: new Date(),
@@ -19,7 +19,7 @@ export const eventsRouter = createRouter()
 	})
 	.query("getAll", {
 		async resolve({ ctx }) {
-			return await ctx.prisma.events.findMany({
+			return await ctx.prisma.event.findMany({
 				orderBy: {
 					eventStart: "asc",
 				},

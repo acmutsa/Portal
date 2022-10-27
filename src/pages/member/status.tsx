@@ -52,7 +52,7 @@ interface ServerSideProps {
 }
 
 export async function getServerSideProps() {
-	let events = await prisma.events.findMany();
+	let events = await prisma.event.findMany();
 
 	return {
 		props: {
