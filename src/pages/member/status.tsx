@@ -1,8 +1,9 @@
-import type { NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import { Disclosure, Transition } from "@headlessui/react";
 import { BsChevronDown } from "react-icons/bs";
 import { ReactNode } from "react";
 import { prisma } from "@/server/db/client";
+import { deleteCookie } from "cookies-next";
 
 const getDisclosure = (title: ReactNode | string, description: ReactNode | string) => {
 	return (
@@ -50,17 +51,60 @@ interface SimpleCheckin {
 interface ServerSideProps {
 	checkins: string;
 }
+const login_redirect_response = {
+	redirect: {
+		destination: "/login",
+	},
+};
 
-export async function getServerSideProps() {
-	let events = await prisma.event.findMany();
+export async function getServerSideProps<ServerSideProps>({ req, res }: GetServerSidePropsContext) {
+	// Access the member's authentication details
+	const shortID = req.cookies.member_shortID;
+	const email = req.cookies.member_email;
+
+	// If the shortID is not present, reject and redirect the user to the login page
+	if (!shortID || !email) return login_redirect_response;
+
+	const member = await prisma.member.findFirst({
+		where: {
+			shortID: shortID,
+			email: email,
+		},
+	});
+
+	// Check if the member exists
+	if (!member) {
+		// If not, delete their cookies and redirect them
+		deleteCookie("member_email", { req, res });
+		deleteCookie("member_shortID", { req, res });
+		return login_redirect_response;
+	}
+
+	// Otherwise, grab their checkins and pass into the component
+	let checkins = await prisma.checkin.findMany({
+		where: {
+			member: {
+				shortID: shortID,
+			},
+		},
+		select: {
+			event: {
+				select: {
+					// Select ONLY the checkins name and start time.
+					name: true,
+					eventStart: true,
+				},
+			},
+		},
+	});
 
 	return {
 		props: {
 			checkins: JSON.stringify(
-				events.map((event) => ({
-					eventName: event.name,
-					eventDate: event.eventStart.toLocaleDateString(),
-					points: Math.floor(Math.random() * 3) + 1,
+				checkins.map((checkin) => ({
+					eventName: checkin.event.name,
+					eventDate: checkin.event.eventStart.toLocaleDateString(),
+					points: 1,
 				}))
 			),
 		},
