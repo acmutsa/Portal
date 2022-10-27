@@ -5,7 +5,7 @@ import { deleteCookie, setCookie } from "cookies-next";
 import { trpc } from "@/utils/trpc";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
-import { useGlobalContext } from "@/components/state/global";
+import { useGlobalContext } from "@/components/common/GlobalContext";
 
 const EventView: NextPage = () => {
 	const { register, handleSubmit, setValue } = useForm();

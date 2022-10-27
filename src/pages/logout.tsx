@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { useEffect } from "react";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
-import { useGlobalContext } from "@/components/state/global";
+import { useGlobalContext } from "@/components/common/GlobalContext";
 
 const Logout: NextPage = () => {
 	const router = useRouter();

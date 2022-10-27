@@ -1,0 +1,55 @@
+import { useMemo } from "react";
+import { absUrl } from "@/utils/helpers";
+import { OGProperties } from "@/components/common/OpenGraph";
+
+type OGImage = {
+	alt: string;
+	type: "image/jpeg" | "image/png";
+	url: string;
+	width?: string;
+	height?: string;
+};
+
+type PageOgData = Omit<OGProperties, "image" | "card" | "site_name"> & {
+	card?: OGProperties["card"];
+	image?: OGImage | null;
+	suffix?: boolean;
+};
+
+export const useOpenGraph = (data: PageOgData) => {
+	// If the image is not defined, assume a default image using the NPB background.
+	if (data.image === undefined)
+		data.image = {
+			url: "/img/bg.png",
+			type: "image/png",
+			alt: "The North Paseo Building",
+		};
+
+	return useMemo<OGProperties>(() => {
+		return {
+			url: data.url,
+			// Provide a suffix to the title, but only if it's not disabled explicitly.
+			// Otherwise, always provide a default title.
+			title: data.title ? `${data.title}${data.suffix ?? false ? " | ACM-UTSA" : ""}` : "ACM-UTSA",
+			type: data.type,
+			author: data.author,
+			site_name: "ACM-UTSA",
+			description: data.description,
+			image: data.image
+				? {
+						type: data.image.type,
+						url: absUrl(data.image.url),
+						alt: data.image.alt || "",
+						height: data.image.height || "720",
+						width: data.image.width || "420",
+				  }
+				: null,
+			card: data.card || data.image ? "summary_large_image" : "summary",
+			section: data.section,
+			modified_time: data.modified_time,
+			published_time: data.published_time,
+		};
+	}, [data]);
+};
+
+export default useOpenGraph;
