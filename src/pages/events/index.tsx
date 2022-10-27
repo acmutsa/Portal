@@ -52,7 +52,7 @@ const Events: NextPage<EventServerProps> = ({ results }) => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view pt-10">
+			<div className="page-view bg-darken pt-10">
 				{results.map((event) => {
 					return (
 						<EventHeader

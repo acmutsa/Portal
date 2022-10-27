@@ -28,7 +28,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 	const { id } = router.query;
 	if (serverProps.found) {
 		return (
-			<div className="page-view pt-[20px]">
+			<div className="page-view bg-darken pt-[20px]">
 				<div className="bg-white max-w-[800px] mx-auto min-h-[400px] rounded-xl text-center flex flex-col items-center justify-center p-[10px]">
 					<h1 className="text-5xl font-extrabold font-raleway">Thanks For Attending</h1>
 					<h1 className="text-5xl font-extrabold font-raleway">{serverProps.name}!</h1>

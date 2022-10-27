@@ -134,7 +134,7 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
 	const progress: number = Math.min(1, points / requiredPoints);
 
 	return (
-		<div className="page-view flex justify-center py-20">
+		<div className="page-view bg-darken flex justify-center py-20">
 			<div className="w-[40rem]">
 				<div className="p-3 my-4 bg-white rounded-lg shadow">
 					<div className="flex justify-between mb-1">

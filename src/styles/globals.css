@@ -8,11 +8,20 @@
 .page-view {
 	min-height: calc(100vh - 72px);
 	width: 100%;
-	background-color: rgba(0, 0, 0, 0.4);
 	overflow-y: auto;
-	padding-bottom: 40px;
 }
 
+.page-view.bg-darken {
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.footer {
+	padding-top: 40px;
+}
+
+.no-footer ~ .footer {
+	display: none;
+}
 
 .under-hover {
 	display: inline-block;

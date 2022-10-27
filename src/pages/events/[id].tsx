@@ -64,7 +64,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 					<meta name="theme-color" content="#179BD5" />
 					<meta name="twitter:card" content="summary_large_image" />
 				</Head>
-				<div className="page-view pt-[20px]">
+				<div className="page-view bg-darken pt-[20px]">
 					<EventHeader
 						title={serverProps.name || ""}
 						imageURL={serverProps.headerImage || ""}
