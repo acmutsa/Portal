@@ -149,7 +149,7 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
 					</div>
 					<div className="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
 						<div
-							className="bg-blue-600 h-full rounded-full min-w-[1rem]"
+							className="bg-blue-600 h-full rounded-full min-w-[1rem] max-w-full"
 							style={{ width: `${(progress * 100).toFixed(0)}%` }}
 						/>
 					</div>
@@ -166,7 +166,7 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
 									<th scope="col" className="py-3 px-6">
 										Date
 									</th>
-									<th scope="col" className="py-3 px-6">
+									<th scope="col" className="py-3 px-6 text-center">
 										Points
 									</th>
 								</tr>
@@ -181,7 +181,9 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
 											{checkin.eventName}
 										</th>
 										<td className="py-4 px-6">{checkin.eventDate}</td>
-										<td className="py-4 px-6 text-semibold text-center">{checkin.points}</td>
+										<td className="py-4 px-6 text-semibold text-center">
+											+{checkin.points.toFixed(1)}
+										</td>
 									</tr>
 								))}
 							</tbody>
