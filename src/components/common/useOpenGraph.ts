@@ -10,10 +10,11 @@ type OGImage = {
 	height?: string;
 };
 
-type PageOgData = Omit<OGProperties, "image" | "card" | "site_name"> & {
+type PageOgData = Omit<OGProperties, "image" | "card" | "site_name" | "type"> & {
 	card?: OGProperties["card"];
 	image?: OGImage | null;
 	suffix?: boolean;
+	type?: "website" | "article";
 };
 
 export const useOpenGraph = (data: PageOgData) => {
@@ -31,7 +32,7 @@ export const useOpenGraph = (data: PageOgData) => {
 			// Provide a suffix to the title, but only if it's not disabled explicitly.
 			// Otherwise, always provide a default title.
 			title: data.title ? `${data.title}${data.suffix ?? false ? " | ACM-UTSA" : ""}` : "ACM-UTSA",
-			type: data.type,
+			type: data.type ?? "website",
 			author: data.author,
 			site_name: "ACM-UTSA",
 			description: data.description,
