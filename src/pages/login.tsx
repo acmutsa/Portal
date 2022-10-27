@@ -5,7 +5,10 @@ import { deleteCookie, setCookie } from "cookies-next";
 import { trpc } from "@/utils/trpc";
 import { Dialog, Transition } from "@headlessui/react";
 import { useRouter } from "next/router";
-import { useGlobalContext } from "@/components/state/global";
+import { useGlobalContext } from "@/components/common/GlobalContext";
+import useOpenGraph from "@/components/common/useOpenGraph";
+import OpenGraph from "@/components/common/OpenGraph";
+import Head from "next/head";
 
 const EventView: NextPage = () => {
 	const { register, handleSubmit, setValue } = useForm();
@@ -14,6 +17,13 @@ const EventView: NextPage = () => {
 	const [globalState, setGlobalState] = useGlobalContext();
 	const loggedIn = trpc.useMutation(["member.loggedIn"]);
 	const router = useRouter();
+
+	const ogp = useOpenGraph({
+		description:
+			"Login to your ACM-UTSA Member account to view your membership progress and check in to ongoing events.",
+		title: "Login",
+		url: "/login",
+	});
 
 	// Sub-par navigation guard
 	useEffect(() => {
@@ -51,6 +61,10 @@ const EventView: NextPage = () => {
 
 	return (
 		<>
+			<Head>
+				<title>{ogp.title}</title>
+				<OpenGraph properties={ogp} />
+			</Head>
 			<div className="page-view flex flex-col justify-center">
 				<div className="bg-white max-w-[30rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
 					<p className="text-[22px] font-semibold text-slate-700 font-raleway mb-2">

@@ -5,7 +5,10 @@ export interface GlobalContextProps {
 	background: boolean;
 }
 
-export const initialState: GlobalContextProps = { loggedIn: false, background: true };
+export const initialState: GlobalContextProps = {
+	loggedIn: false,
+	background: true,
+};
 export const GlobalContext = createContext<[GlobalContextProps, Dispatch<GlobalContextProps>]>([
 	initialState,
 	() => {},

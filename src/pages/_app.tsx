@@ -5,9 +5,8 @@ import { withTRPC } from "@trpc/next";
 import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import type { AppRouter } from "@/server/router";
-import Navbar from "@/components/navbar";
-import Head from "next/head";
-import { GlobalContext, initialState } from "@/components/state/global";
+import Navbar from "@/components/Navbar";
+import { GlobalContext, initialState } from "@/components/common/GlobalContext";
 import { useEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
 
@@ -25,9 +24,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
 	return (
 		<>
-			<Head>
-				<title>ACM Membership Portal</title>
-			</Head>
 			<GlobalContext.Provider value={[globalState, setGlobalState]}>
 				<Navbar />
 				<div

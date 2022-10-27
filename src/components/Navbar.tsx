@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useGlobalContext } from "@/components/state/global";
+import { useGlobalContext } from "@/components/common/GlobalContext";
 import { useRouter } from "next/router";
 
 interface HighlightProps {
