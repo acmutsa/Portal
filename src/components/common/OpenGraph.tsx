@@ -9,8 +9,8 @@ export type OGProperties = {
 		alt: string;
 		type: "image/jpeg" | "image/png";
 		url: string;
-		width: string;
-		height: string;
+		width: number;
+		height: number;
 	} | null;
 	author?: string;
 	section?: string;
@@ -55,8 +55,8 @@ const OpenGraph = ({ properties }: { properties: OGProperties }) => {
 				<>
 					<meta property="og:image" content={image.url} />
 					<meta property="og:image:secure_url" content={image.url.replace("http://", "https://")} />
-					<meta property="og:image:width" content={image.width} />
-					<meta property="og:image:height" content={image.height} />
+					<meta property="og:image:width" content={image.width.toString()} />
+					<meta property="og:image:height" content={image.height.toString()} />
 					<meta property="og:image:alt" content={image.alt} />
 					<meta property="og:image:type" content={image.type} />
 					<meta name="twitter:image" content={image.url} />

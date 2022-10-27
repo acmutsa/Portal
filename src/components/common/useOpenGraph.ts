@@ -6,8 +6,8 @@ type OGImage = {
 	alt: string;
 	type: "image/jpeg" | "image/png";
 	url: string;
-	width?: string;
-	height?: string;
+	width?: number;
+	height?: number;
 };
 
 type PageOgData = Omit<OGProperties, "image" | "card" | "site_name" | "type"> & {
@@ -24,6 +24,8 @@ export const useOpenGraph = (data: PageOgData) => {
 			url: "/img/bg.png",
 			type: "image/png",
 			alt: "The North Paseo Building",
+			height: 819,
+			width: 1430,
 		};
 
 	return useMemo<OGProperties>(() => {
@@ -34,15 +36,15 @@ export const useOpenGraph = (data: PageOgData) => {
 			title: data.title ? `${data.title}${data.suffix ?? false ? " | ACM-UTSA" : ""}` : "ACM-UTSA",
 			type: data.type ?? "website",
 			author: data.author,
-			site_name: "ACM-UTSA",
+			site_name: "The Association of Computing Machinery at UTSA Student Chapter",
 			description: data.description,
 			image: data.image
 				? {
 						type: data.image.type,
 						url: absUrl(data.image.url),
 						alt: data.image.alt || "",
-						height: data.image.height || "720",
-						width: data.image.width || "420",
+						height: data.image.height || 720,
+						width: data.image.width || 420,
 				  }
 				: null,
 			card: data.card || data.image ? "summary_large_image" : "summary",
