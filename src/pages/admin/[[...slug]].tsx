@@ -84,8 +84,8 @@ const Admin: NextPage = () => {
 			<div className="col-span-4 [&>*]:cursor-pointer md:col-span-3 lg:col-span-2 py-[1.5rem] border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
 				{sideNavElements.map((element) => (
 					<div
-						className={`p-4 grid grid-cols-3 v text-zinc-${
-							element.page === CurrentPage ? "900" : "600"
+						className={`p-4 grid grid-cols-3 v ${
+							element.page === CurrentPage ? "text-zinc-900" : "text-zinc-600"
 						} hover:text-zinc-900`}
 						onClick={() => swapPage(element.page)}
 					>
@@ -98,7 +98,7 @@ const Admin: NextPage = () => {
 					</div>
 				))}
 			</div>
-			<div className="col-span-8 md:col-span-9 lg:col-span-10 p-5 pt-[3rem] h-full w-full">
+			<div className="col-span-8 md:col-span-9 lg:col-span-10 p-5 pt-[3rem] h-full w-full bg-zinc-100">
 				<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
 			</div>
 		</div>
