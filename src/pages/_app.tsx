@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar";
 import { GlobalContext, initialState } from "@/components/common/GlobalContext";
 import { useEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
+import Head from "next/head";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
@@ -24,6 +25,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
 	return (
 		<>
+			<Head>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+			</Head>
 			<GlobalContext.Provider value={[globalState, setGlobalState]}>
 				<Navbar />
 				<div

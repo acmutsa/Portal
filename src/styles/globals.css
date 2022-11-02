@@ -16,6 +16,11 @@
 	padding-bottom: 60px;
 }
 
+.pv-darken {
+	background-color: rgba(0, 0, 0, 0.4);
+	padding-bottom: 60px;
+}
+
 .footer {
 	padding-top: 40px;
 }
