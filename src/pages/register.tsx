@@ -3,6 +3,7 @@ import { Widget } from "@typeform/embed-react";
 import { useRouter } from "next/router";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
+import Disclosure from "@/components/util/Disclosure";
 import Head from "next/head";
 
 const Join: NextPage = () => {
@@ -20,7 +21,7 @@ const Join: NextPage = () => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view">
+			<div className="page-view bg-darken">
 				<div className="w-full max-w-[1024px] h-full flex flex-col items-center mx-auto">
 					<Widget
 						className="w-full h-full"
@@ -30,6 +31,7 @@ const Join: NextPage = () => {
 							console.log(e);
 						}}
 					/>
+					<Disclosure />
 				</div>
 			</div>
 		</>
