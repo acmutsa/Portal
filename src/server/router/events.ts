@@ -76,11 +76,12 @@ export const eventsRouter = createRouter()
 				return allEvents;
 			}, Object.create(null));
 
+			// TODO: Fix the type any on week
 			return orderedWeekKeys
 				.map((week) => `${week.getMonth() + 1}/${week.getDate()}`)
 				.map((week) => ({
 					label: week,
-					count: (grouped[week] || []).map((week) => week.count).reduce(sum, 0),
+					count: (grouped[week] || []).map((week: any) => week.count).reduce(sum, 0),
 				}));
 		},
 	});
