@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import OpenGraph from "@/components/common/OpenGraph";
 import useOpenGraph from "@/components/common/useOpenGraph";
+import Disclosure from "@/components/util/Disclosure";
 
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({
@@ -44,6 +45,7 @@ const Home: NextPage = () => {
 						</div>
 					</div>
 				</div>
+				<Disclosure />
 			</div>
 		</>
 	);
