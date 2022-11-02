@@ -29,14 +29,16 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<div
 					className={`${
 						globalState.background ? "bg-[url('/img/bg.png')]" : "bg-white"
-					} bg-fixed bg-center bg-cover`}
+					} bg-fixed bg-center bg-cover h-[calc(100vh-72px)] overflow-y-auto`}
 				>
 					<Component {...pageProps} />
-					<p className="footer absolute bottom-0 w-full text-center text-[10px] mx-auto text-white">
-						Made with &lt;/&gt; @ ACM UTSA
-						<br />© Association of Computing Machinery at UTSA {new Date().getFullYear()}. All
-						Rights Reserved.
-					</p>
+					<div className="w-full bg-red-500">
+						<p className={`footer w-full text-center text-[10px] mx-auto text-white`}>
+							Made with &lt;/&gt; @ ACM UTSA
+							<br />© Association of Computing Machinery at UTSA {new Date().getFullYear()}. All
+							Rights Reserved.
+						</p>
+					</div>
 				</div>
 			</GlobalContext.Provider>
 		</>

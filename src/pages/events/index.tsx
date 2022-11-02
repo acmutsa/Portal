@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import EventHeader from "@/components/events/EventHeader";
+import EventHeader from "@/components/events/AltEventHeader";
 import { prisma } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
