@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import EventHeader from "@/components/events/EventHeader";
 import EventDescription from "@/components/events/EventDescription";
+import Disclosure from "@/components/util/Disclosure";
 import { prisma } from "@/server/db/client";
 
 interface eventPageParams {
@@ -79,6 +80,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 						calanderLink={callink}
 						eventID={typeof id === "string" ? id : "error"}
 					/>
+					<Disclosure />
 				</div>
 			</>
 		);

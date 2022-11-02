@@ -9,6 +9,7 @@ import Navbar from "@/components/Navbar";
 import { GlobalContext, initialState } from "@/components/common/GlobalContext";
 import { useEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
+import Head from "next/head";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
@@ -24,19 +25,17 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
 	return (
 		<>
+			<Head>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+			</Head>
 			<GlobalContext.Provider value={[globalState, setGlobalState]}>
 				<Navbar />
 				<div
 					className={`${
 						globalState.background ? "bg-[url('/img/bg.png')]" : "bg-white"
-					} bg-fixed bg-center bg-cover`}
+					} bg-fixed bg-center bg-cover h-[calc(100vh-72px)] overflow-y-auto`}
 				>
 					<Component {...pageProps} />
-					<p className="footer absolute bottom-0 w-full text-center text-[10px] mx-auto text-white">
-						Made with &lt;/&gt; @ ACM UTSA
-						<br />© Association of Computing Machinery at UTSA {new Date().getFullYear()}. All
-						Rights Reserved.
-					</p>
 				</div>
 			</GlobalContext.Provider>
 		</>

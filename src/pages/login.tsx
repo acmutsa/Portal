@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
+import Disclosure from "@/components/util/Disclosure";
 import Head from "next/head";
 
 const EventView: NextPage = () => {
@@ -118,6 +119,7 @@ const EventView: NextPage = () => {
 						</a>
 					</p>
 				</div>
+				<Disclosure />
 			</div>
 			<Transition appear show={isErrorOpen} as={Fragment}>
 				<Dialog as="div" className="relative z-10" onClose={() => closeErrorModal()}>
