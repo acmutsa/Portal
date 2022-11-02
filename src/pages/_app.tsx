@@ -32,7 +32,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 					} bg-fixed bg-center bg-cover`}
 				>
 					<Component {...pageProps} />
-					<p className="absolute bottom-0 w-full text-center text-[10px] mx-auto text-white">
+					<p className="footer absolute bottom-0 w-full text-center text-[10px] mx-auto text-white">
 						Made with &lt;/&gt; @ ACM UTSA
 						<br />© Association of Computing Machinery at UTSA {new Date().getFullYear()}. All
 						Rights Reserved.

@@ -8,11 +8,28 @@ interface HighlightProps {
 	router: any;
 	route: string;
 	href?: string;
+	logic?: "equals" | "starts-with";
 	children: JSX.Element | JSX.Element[] | string;
 }
 
-const NavbarItem: FunctionComponent<HighlightProps> = ({ router, route, children, href }) => {
-	const highlight = route == router.route;
+const NavbarItem: FunctionComponent<HighlightProps> = ({
+	router,
+	route,
+	children,
+	href,
+	logic,
+}) => {
+	let highlight = false;
+	switch (logic) {
+		case "starts-with":
+			if (router.route.startsWith(route)) highlight = true;
+			break;
+		case "equals":
+		default:
+			if (router.route == route) highlight = true;
+			break;
+	}
+
 	return (
 		<Link href={href ?? route}>
 			<a className={`under-hover ${highlight ? "force" : ""}`}>{children}</a>
@@ -23,6 +40,27 @@ const NavbarItem: FunctionComponent<HighlightProps> = ({ router, route, children
 const Navbar: FunctionComponent = () => {
 	const [globalState, setGlobalState] = useGlobalContext();
 	const router = useRouter();
+
+	let right_navbar_elements = globalState.loggedIn
+		? [
+				<NavbarItem key={1} router={router} route={"/member/status"}>
+					Status
+				</NavbarItem>,
+				<Link key={2} href={"/logout"}>
+					<a className="under-hover">Logout</a>
+				</Link>,
+				<NavbarItem key={3} router={router} route={"/admin"} logic="starts-with">
+					Admin
+				</NavbarItem>,
+		  ]
+		: [
+				<NavbarItem key={1} router={router} route={"/login"}>
+					Login
+				</NavbarItem>,
+				<NavbarItem key={2} router={router} route={"/register"}>
+					Register
+				</NavbarItem>,
+		  ];
 
 	return (
 		<div className="h-[72px] w-full bg-primary-darker font-inter drop-shadow-lg text-white text-xl flex items-center">
@@ -41,27 +79,7 @@ const Navbar: FunctionComponent = () => {
 					</div>
 				</Link>
 			</div>
-			<div className="flex-1 flex justify-evenly">
-				{globalState.loggedIn
-					? [
-							<NavbarItem key={1} router={router} route={"/member/status"}>
-								Status
-							</NavbarItem>,
-							<Link key={2} href={"/logout"}>
-								<a className="under-hover">Logout</a>
-							</Link>,
-					  ]
-					: [
-							<NavbarItem key={1} router={router} route={"/login"}>
-								Login
-							</NavbarItem>,
-							<Link key={2} href={"/register"}>
-								<NavbarItem router={router} route={"/register"}>
-									Register
-								</NavbarItem>
-							</Link>,
-					  ]}
-			</div>
+			<div className="flex-1 flex justify-evenly">{right_navbar_elements}</div>
 		</div>
 	);
 };

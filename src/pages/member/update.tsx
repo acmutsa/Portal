@@ -1,11 +1,7 @@
 import type { NextPage } from "next";
 
 const Status: NextPage = () => {
-	return (
-		<div className="page-view">
-			<h1>Update Member</h1>
-		</div>
-	);
+	return <h1>Update Member</h1>;
 };
 
 export default Status;

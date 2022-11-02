@@ -7,3 +7,5 @@ export const absUrl = (path: string): string => {
 
 	return `${appUrl}/${path}`;
 };
+
+export const sum = (a: number, b: number) => a + b;

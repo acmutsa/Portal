@@ -19,7 +19,7 @@ const Home: NextPage = () => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view pt-[25vh]">
+			<div className="page-view bg-darken pt-[25vh]">
 				<div className="w-full max-w-[1024px] h-full flex flex-col items-center mx-auto">
 					<div className="flex flex-col items-center justify-start w-[25rem] bg-white rounded">
 						<div className="shrink relative bottom-[5rem] h-[4.5rem]">

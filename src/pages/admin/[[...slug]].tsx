@@ -10,101 +10,95 @@ import NewMemberView from "@/components/admin/NewMemberView";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 
-enum viewType {
-	dashboard = "dashboard",
-	members = "members",
-	events = "events",
-	newEvent = "newEvent",
-	newMember = "newMember",
+enum AdminView {
+	dashboard,
+	members,
+	events,
+	newEvent,
+	newMember,
 }
+
+const sideNavElements = [
+	{
+		icon: AiOutlineDashboard,
+		page: AdminView.dashboard,
+		text: "Dashboard",
+	},
+	{
+		icon: CgProfile,
+		page: AdminView.members,
+		text: "Members",
+	},
+	{
+		icon: BsCalendarRange,
+		page: AdminView.events,
+		text: "Events",
+	},
+];
+
+const inferFromPath = (path: string): [FunctionComponent, AdminView] => {
+	switch (path) {
+		case "/admin/events/":
+			return [EventView, AdminView.events];
+		case "/admin/members/":
+			return [MemberView, AdminView.members];
+		case "/admin/events/new/":
+			return [NewEventView, AdminView.newEvent];
+		case "/admin/members/new/":
+			return [NewMemberView, AdminView.newMember];
+		case "/admin/":
+		default:
+			return [DashView, AdminView.dashboard];
+	}
+};
 
 const Admin: NextPage = () => {
 	const router = useRouter();
 	let path =
 		router.asPath.charAt(router.asPath.length - 1) != "/" ? router.asPath + "/" : router.asPath;
 
-	const swapPage = (view: viewType) => {
+	const swapPage = (view: AdminView) => {
+		CurrentPage = view;
 		switch (view) {
-			case viewType.dashboard:
+			case AdminView.dashboard:
 				router.push("/admin/", undefined, { shallow: true });
 				break;
-			case viewType.members:
+			case AdminView.members:
 				router.push("/admin/members/", undefined, { shallow: true });
 				break;
-			case viewType.events:
+			case AdminView.events:
 				router.push("/admin/events/", undefined, { shallow: true });
 				break;
-			case viewType.newEvent:
+			case AdminView.newEvent:
 				router.push("/admin/events/new/", undefined, { shallow: true });
 				break;
-			case viewType.newMember:
+			case AdminView.newMember:
 				router.push("/admin/members/new/", undefined, { shallow: true });
 				break;
 		}
 	};
 
-	let ElementToShow: FunctionComponent | null = null;
-
-	switch (path) {
-		case "/admin/events/":
-			ElementToShow = EventView;
-			break;
-		case "/admin/members/":
-			ElementToShow = MemberView;
-			break;
-		case "/admin/":
-			ElementToShow = DashView;
-			break;
-		case "/admin/events/new/":
-			ElementToShow = NewEventView;
-			break;
-		case "/admin/members/new/":
-			ElementToShow = NewMemberView;
-			break;
-	}
-
+	let [ElementToShow, CurrentPage] = inferFromPath(path);
 	return (
-		<div className="page-view flex items-center justify-center">
-			<div className="bg-white w-full max-w-[2000px] h-[90%] rounded-none mx-[5px] grid grid-cols-5 overflow-x-hidden">
-				<div className="bg-zinc-100 font-opensans text-lg font-semibold m-[5px] ">
-					<div className="w-full h-[50px] grid md:grid-cols-2 grid-cols-1 gap-1 text-base mb-[0.25rem] px-[5px]">
-						<button
-							className="flex items-center justify-center w-full h-full rounded-sm bg-primary-lighter text-white"
-							onClick={() => swapPage(viewType.newEvent)}
-						>
-							<BsCalendarRange className="mr-[5px]" />
-							New Event
-						</button>{" "}
-						<button
-							className="flex items-center justify-center w-full h-full rounded-sm bg-primary-lighter text-white"
-							onClick={() => swapPage(viewType.newMember)}
-						>
-							<CgProfile className="mr-[5px]" />
-							New Member
-						</button>
+		<div className="page-view w-full min-h-full bg-white grid grid-cols-12">
+			<div className="col-span-4 [&>*]:cursor-pointer md:col-span-3 lg:col-span-2 py-[1.5rem] border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
+				{sideNavElements.map((element) => (
+					<div
+						className={`p-4 grid grid-cols-3 v ${
+							element.page === CurrentPage ? "text-zinc-900" : "text-zinc-600"
+						} hover:text-zinc-900`}
+						onClick={() => swapPage(element.page)}
+					>
+						<div className=" col-span-1 m-auto">
+							<element.icon />
+						</div>
+						<div className="col-span-2 justify-self-start">
+							<span>{element.text}</span>
+						</div>
 					</div>
-					<button
-						className="flex items-center justify-center w-full h-[4em]  hover:bg-zinc-200"
-						onClick={() => swapPage(viewType.dashboard)}
-					>
-						<AiOutlineDashboard className="mr-[5px]" />
-						Dashboard
-					</button>
-					<button
-						className="flex items-center justify-center w-full h-[4em] hover:bg-zinc-200"
-						onClick={() => swapPage(viewType.members)}
-					>
-						<CgProfile className="mr-[5px]" />
-						Members
-					</button>
-					<button
-						className="flex items-center justify-center w-full h-[4em] hover:bg-zinc-200"
-						onClick={() => swapPage(viewType.events)}
-					>
-						<BsCalendarRange className="mr-[5px]" />
-						Events
-					</button>
-				</div>
+				))}
+			</div>
+			<div className="col-span-8 md:col-span-9 lg:col-span-10 p-5 pt-[3rem] h-full w-full bg-zinc-100">
 				<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
 			</div>
 		</div>

@@ -65,7 +65,7 @@ const EventView: NextPage = () => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view flex flex-col justify-center">
+			<div className="page-view bg-darken flex flex-col justify-center">
 				<div className="bg-white max-w-[30rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
 					<p className="text-[22px] font-semibold text-slate-700 font-raleway mb-2">
 						Membership Portal Login
