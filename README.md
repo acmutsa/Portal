@@ -1,4 +1,4 @@
-# 📜 Portal
+# 🌀 Portal
 
 ACM UTSA's in-house membership portal and database system
 
