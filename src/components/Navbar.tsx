@@ -32,7 +32,9 @@ const NavbarItem: FunctionComponent<HighlightProps> = ({
 
 	return (
 		<Link href={href ?? route}>
-			<a className={`under-hover ${highlight ? "force" : ""}`}>{children}</a>
+			<a className={`under-hover ${highlight ? "force" : ""} mx-[15px] font-sans text-[14px]`}>
+				{children}
+			</a>
 		</Link>
 	);
 };
@@ -47,39 +49,39 @@ const Navbar: FunctionComponent = () => {
 					Status
 				</NavbarItem>,
 				<Link key={2} href={"/logout"}>
-					<a className="under-hover">Logout</a>
+					<a className="under-hover mx-[15px] text-[14px] font-sans">Logout</a>
 				</Link>,
-				<NavbarItem key={3} router={router} route={"/admin"} logic="starts-with">
-					Admin
-				</NavbarItem>,
 		  ]
 		: [
 				<NavbarItem key={1} router={router} route={"/login"}>
-					Login
+					<span className="mx-[15px] text-[14px] font-sans">Login</span>
 				</NavbarItem>,
 				<NavbarItem key={2} router={router} route={"/register"}>
-					Register
+					<span className="mx-[15px] text-[14px] font-sans">Register</span>
 				</NavbarItem>,
 		  ];
 
 	return (
-		<div className="h-[72px] w-full bg-primary-darker font-inter drop-shadow-lg text-white text-xl flex items-center">
-			<div className="flex-1 flex justify-evenly text-center">
-				<NavbarItem router={router} route={"/"}>
-					Home
-				</NavbarItem>
-				<NavbarItem router={router} route={"/events"}>
-					Events
-				</NavbarItem>
+		<div className="h-[72px] p-[5px] w-full bg-primary-darker font-inter drop-shadow-lg text-white text-xl">
+			<div className="grid grid-cols-2 max-w-[1140px] h-full w-full mx-auto">
+				<div className="flex items-center">
+					<Link href="/">
+						<div className="h-full flex items-center cursor-pointer">
+							<Image src="/img/logo.png" width={40} height={40} />
+							<h1 className="ml-[5px] font-bold">Portal</h1>
+						</div>
+					</Link>
+				</div>
+				<div className="flex items-center justify-end">
+					<NavbarItem router={router} route={"/"}>
+						Home
+					</NavbarItem>
+					<NavbarItem router={router} route={"/events"}>
+						Events
+					</NavbarItem>
+					{right_navbar_elements}
+				</div>
 			</div>
-			<div className="flex-2">
-				<Link href={"/"}>
-					<div className="flex justify-center relative top-[1.2rem] hover:translate-y-1 cursor-pointer hover:scale-[110%] transition-transform">
-						<Image width={100} height={100} quality={100} loading={"eager"} src={"/img/logo.png"} />
-					</div>
-				</Link>
-			</div>
-			<div className="flex-1 flex justify-evenly">{right_navbar_elements}</div>
 		</div>
 	);
 };
