@@ -49,9 +49,6 @@ const Navbar: FunctionComponent = () => {
 				<Link key={2} href={"/logout"}>
 					<a className="under-hover">Logout</a>
 				</Link>,
-				<NavbarItem key={3} router={router} route={"/admin"} logic="starts-with">
-					Admin
-				</NavbarItem>,
 		  ]
 		: [
 				<NavbarItem key={1} router={router} route={"/login"}>
