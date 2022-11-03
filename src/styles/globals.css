@@ -5,6 +5,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body,
+html {
+	background-color: #0c2340;
+}
+
 .page-view {
 	min-height: calc(100vh - 72px);
 	width: 100%;
