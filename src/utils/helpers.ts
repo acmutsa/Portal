@@ -37,7 +37,7 @@ export const getDates = (step: number, startDate: Date, endDate: Date | null = n
 	if (weekday)
 		moveToNearestWeekday(startDate, weekday);
 
-	// If not specified, the endDate is assume to be today. The end date is not guaranteed to be in the returned array.
+	// If not specified, the endDate is assumed to be today. The end date is not guaranteed to be in the returned array.
 	endDate = endDate ?? new Date();
 
 	const weeks = Math.floor(differenceInDays(endDate, startDate) / 7);
