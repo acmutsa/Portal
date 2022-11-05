@@ -58,7 +58,7 @@ const Events: NextPage<EventServerProps> = ({ results }) => {
 				<OpenGraph properties={ogp} />
 			</Head>
 			<div className="page-view bg-darken">
-				<div className="grid grid-cols-9 p-3 lg:p-[4rem] w-full lg:w-[85%] mx-auto">
+				<div className="grid p-1 pt-[2rem] grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 w-full md:w-[90%] mx-auto">
 					{results.map((event) => {
 						return (
 							<EventCard

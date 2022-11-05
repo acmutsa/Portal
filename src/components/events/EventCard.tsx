@@ -66,7 +66,7 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 	const isEventPast = isPast(endDate);
 
 	return (
-		<div className="rounded-xl col-span-full lg:col-span-3 m-3 ">
+		<div className="rounded-xl col-span-3 m-3 ">
 			<div
 				className={`overflow-hidden h-[10rem] rounded-t-xl bg-center bg-cover bg-no-repeat ${
 					isEventPast ? "grayscale" : ""
