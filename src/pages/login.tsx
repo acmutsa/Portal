@@ -1,11 +1,11 @@
-import type { NextPage } from "next";
-import { Fragment, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { deleteCookie, setCookie } from "cookies-next";
-import { trpc } from "@/utils/trpc";
-import { Dialog, Transition } from "@headlessui/react";
-import { useRouter } from "next/router";
-import { useGlobalContext } from "@/components/common/GlobalContext";
+import type {NextPage} from "next";
+import {Fragment, useEffect, useState} from "react";
+import {useForm} from "react-hook-form";
+import {setCookie} from "cookies-next";
+import {trpc} from "@/utils/trpc";
+import {Dialog, Transition} from "@headlessui/react";
+import {useRouter} from "next/router";
+import {useGlobalContext} from "@/components/common/GlobalContext";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Disclosure from "@/components/util/Disclosure";
@@ -28,14 +28,11 @@ const EventView: NextPage = () => {
 
 	// Sub-par navigation guard
 	useEffect(() => {
-		if (globalState.loggedIn) {
+		// TODO: Improve navigation guards to not show login page at all before redirecting when logged in.
+		if (globalState.loggedIn && !isWorkedOpen) {
 			router.replace("/member/status");
-		} else {
-			// Remove invalid cookies
-			deleteCookie("member_email");
-			deleteCookie("member_shortID");
 		}
-	}, []);
+	}, [globalState]);
 
 	const closeErrorModal = () => setIsErrorOpen(false);
 	const closeSuccessModal = () => setIsSuccessOpen(false);
@@ -53,12 +50,6 @@ const EventView: NextPage = () => {
 			setIsErrorOpen(true);
 		}
 	};
-
-	useEffect(() => {
-		// TODO: consider removing this
-		deleteCookie("member_email");
-		deleteCookie("member_shortID");
-	}, []);
 
 	return (
 		<>
