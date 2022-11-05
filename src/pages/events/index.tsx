@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import EventHeader from "@/components/events/AltEventHeader";
+import EventCard from "@/components/events/EventCard";
 import { prisma } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
@@ -61,7 +61,7 @@ const Events: NextPage<EventServerProps> = ({ results }) => {
 				<div className="grid grid-cols-9 p-3 lg:p-[4rem] w-full lg:w-[85%] mx-auto">
 					{results.map((event) => {
 						return (
-							<EventHeader
+							<EventCard
 								key={event.id}
 								title={event.title}
 								startDate={new Date(event.eventStart)}
