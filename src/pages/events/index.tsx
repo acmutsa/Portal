@@ -8,6 +8,7 @@ import Head from "next/head";
 // TODO: Clean up types, and make this less awful to read. I'm sorry.
 
 interface SerializedEvent {
+	id: string;
 	title: string;
 	imageURL: string;
 	eventHost: string;
@@ -22,7 +23,11 @@ interface EventServerProps {
 }
 
 export async function getStaticProps() {
-	let results = await prisma.event.findMany();
+	let results = await prisma.event.findMany({
+		orderBy: {
+			eventStart: "desc",
+		},
+	});
 
 	return {
 		props: {
@@ -52,20 +57,22 @@ const Events: NextPage<EventServerProps> = ({ results }) => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-darken pt-10">
-				{results.map((event) => {
-					return (
-						<EventHeader
-							key={event.title}
-							startDate={new Date(event.eventStart)}
-							endDate={new Date(event.eventEnd)}
-							eventHost={event.eventHost}
-							title={event.title}
-							imageURL={event.imageURL}
-							location={event.location}
-						/>
-					);
-				})}
+			<div className="page-view bg-darken">
+				<div className="grid grid-cols-9 p-3 lg:p-[4rem] w-full lg:w-[85%] mx-auto">
+					{results.map((event) => {
+						return (
+							<EventHeader
+								key={event.id}
+								title={event.title}
+								startDate={new Date(event.eventStart)}
+								endDate={new Date(event.eventEnd)}
+								eventHost={event.eventHost}
+								imageURL={event.imageURL}
+								location={event.location}
+							/>
+						);
+					})}
+				</div>
 			</div>
 		</>
 	);
