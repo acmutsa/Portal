@@ -8,6 +8,7 @@ import {
 	isPast,
 	isSameDay,
 } from "date-fns";
+import { BsFillArrowRightCircleFill } from "react-icons/bs";
 
 interface EventHeaderProps {
 	title: string;
@@ -74,7 +75,7 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 				style={{ backgroundImage: `url(${imageURL})` }}
 			/>
 			<div className="bg-white rounded-b-xl">
-				<div className="flex flex-col align-middle p-2 justify-between">
+				<div className="flex flex-col align-middle p-2 pb-0 justify-between">
 					<span className="inline-flex text-xl text-slate-800 font-extrabold font-raleway">
 						{title}
 						{isOngoing ? ping : null}
@@ -82,7 +83,17 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 					<span className="text-sm ml-0.5 -mt-1 justify-self-end font-inter text-slate-700">
 						{timeText}
 					</span>
-					<span className="font-medium pt-"></span>
+					<div className="grid grid-cols-3 text-center mt-2 [&>*]:pb-2 text-slate-900 font-inter">
+						<div className="p-1">
+							<a href="/thing1">RSVP</a>
+						</div>
+						<div className="border-slate-200 border-x-2 p-1">
+							<a href="/thing2">Details</a>
+						</div>
+						<div className="p-1">
+							<a href="/thing3">Check-in</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
