@@ -101,15 +101,17 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 					>
 						{timeText}
 					</time>
-					<div className="grid grid-cols-3 text-center mt-2 [&>*]:pb-2 text-slate-900 font-inter">
+					<div className="grid grid-cols-3 text-center mt-2 [&>*]:cursor-pointer hover:[&>*]:text-sky-700 [&>*]:pb-2 text-slate-900 font-medium font-inter">
 						<div className="p-1">
-							<a href="/thing1">RSVP</a>
+							<a href="#" className="">
+								RSVP
+							</a>
 						</div>
 						<div className="border-slate-200 border-x-2 p-1">
-							<a href="/thing2">Details</a>
+							<a href="#">Details</a>
 						</div>
 						<div className="p-1">
-							<a href="/thing3">Check-in</a>
+							<a href="#">Check-in</a>
 						</div>
 					</div>
 				</div>
