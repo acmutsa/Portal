@@ -57,3 +57,7 @@ html {
 	transform: scaleX(1);
 	transform-origin: bottom left;
 }
+
+.grayscale {
+	-webkit-transition : -webkit-filter 100ms linear
+}

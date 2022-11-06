@@ -1,4 +1,6 @@
 import { FunctionComponent, useEffect, useState } from "react";
+import { AiOutlineBell, AiFillBell } from "react-icons/ai";
+
 import {
 	addDays,
 	format,
@@ -8,7 +10,7 @@ import {
 	isPast,
 	isSameDay,
 } from "date-fns";
-import { BsFillArrowRightCircleFill } from "react-icons/bs";
+import { useBoolean } from "usehooks-ts";
 
 interface EventHeaderProps {
 	title: string;
@@ -65,12 +67,13 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 	const isOngoing = startDate < now && now < endDate;
 	const timeText = getTimeText(now, startDate, endDate);
 	const isEventPast = isPast(endDate);
+	const { value: isLiked, toggle: toggleLiked } = useBoolean(false);
 
 	return (
-		<div className="rounded-xl col-span-3 m-3 ">
+		<div className="rounded-xl col-span-3 m-3">
 			<div
 				className={`overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 bg-center bg-cover bg-no-repeat ${
-					isEventPast ? "grayscale" : ""
+					isEventPast ? "hover:grayscale-0 grayscale" : ""
 				}`}
 				style={{ backgroundImage: `url(${imageURL})` }}
 			/>
@@ -79,10 +82,25 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 					<span className="inline-flex text-xl text-slate-800 font-extrabold font-raleway">
 						{title}
 						{isOngoing ? ping : null}
+						<div
+							className="text-[22px] text-red-600 ml-auto my-auto cursor-pointer p-1"
+							onClick={toggleLiked}
+						>
+							{!isEventPast ? (
+								isLiked ? (
+									<AiFillBell />
+								) : (
+									<AiOutlineBell className="text-zinc-900" />
+								)
+							) : null}
+						</div>
 					</span>
-					<span className="text-sm ml-0.5 -mt-1 justify-self-end font-inter text-slate-700">
+					<time
+						dateTime={startDate.toISOString()}
+						className="text-sm ml-0.5 -mt-1 justify-self-end font-inter text-slate-700"
+					>
 						{timeText}
-					</span>
+					</time>
 					<div className="grid grid-cols-3 text-center mt-2 [&>*]:pb-2 text-slate-900 font-inter">
 						<div className="p-1">
 							<a href="/thing1">RSVP</a>
