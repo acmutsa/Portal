@@ -47,15 +47,15 @@ const Navbar: FunctionComponent = () => {
 					Status
 				</NavbarItem>,
 				<Link key={2} href={"/logout"}>
-					<a className="under-hover mx-4">Logout</a>
+					<a className="under-hover">Logout</a>
 				</Link>,
 		  ]
 		: [
 				<NavbarItem key={1} router={router} route={"/login"}>
-					<span className="mx-4">Login</span>
+					<span>Login</span>
 				</NavbarItem>,
 				<NavbarItem key={2} router={router} route={"/register"}>
-					<span className="mx-4">Register</span>
+					<span>Register</span>
 				</NavbarItem>,
 		  ];
 
@@ -64,13 +64,13 @@ const Navbar: FunctionComponent = () => {
 			<div className="grid grid-cols-2 h-full w-full max-w-[1140px] mx-auto">
 				<div className="flex items-center">
 					<Link href="/">
-						<div className="h-full flex items-center cursor-pointer">
+						<div className="h-full mx-1 sm:mx-2 flex items-center cursor-pointer">
 							<Image src="/img/logo.png" width={40} height={40} />
 							<h1 className="ml-1 font-bold">Portal</h1>
 						</div>
 					</Link>
 				</div>
-				<div className="flex items-center justify-end font-sans text-[14px]">
+				<div className="flex items-center justify-end font-sans text-[14px] [&>*]:mx-2 [&>*]:md:mx-4">
 					<NavbarItem router={router} route={"/"}>
 						Home
 					</NavbarItem>
