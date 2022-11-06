@@ -68,7 +68,7 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 	return (
 		<div className="rounded-xl col-span-3 m-3 ">
 			<div
-				className={`overflow-hidden h-[10rem] rounded-t-xl bg-center bg-cover bg-no-repeat ${
+				className={`overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 bg-center bg-cover bg-no-repeat ${
 					isEventPast ? "grayscale" : ""
 				}`}
 				style={{ backgroundImage: `url(${imageURL})` }}
@@ -82,6 +82,7 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 					<span className="text-sm ml-0.5 -mt-1 justify-self-end font-inter text-slate-700">
 						{timeText}
 					</span>
+					<span className="font-medium pt-"></span>
 				</div>
 			</div>
 		</div>
