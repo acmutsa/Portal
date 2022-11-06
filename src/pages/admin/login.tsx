@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import LoginForm from "@/components/admin/loginForm";
+import LoginForm from "@/components/admin/LoginForm";
 import { setCookie } from "cookies-next";
 
 const Login: NextPage = () => {
