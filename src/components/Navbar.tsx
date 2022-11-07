@@ -64,8 +64,8 @@ const Navbar: FunctionComponent = () => {
 			];
 	else
 		dynamicNavbarElements = [
-			<div className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
-			<div className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
+			<div key={1} className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
+			<div key={2} className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
 		];
 
 	return (

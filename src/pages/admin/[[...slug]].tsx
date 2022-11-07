@@ -84,6 +84,7 @@ const Admin: NextPage = () => {
 			<div className="col-span-4 [&>*]:cursor-pointer md:col-span-3 lg:col-span-2 py-[1.5rem] border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
 				{sideNavElements.map((element) => (
 					<div
+						key={element.text}
 						className={`p-4 grid grid-cols-3 v ${
 							element.page === CurrentPage ? "text-zinc-900" : "text-zinc-600"
 						} hover:text-zinc-900`}
