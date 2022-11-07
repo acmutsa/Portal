@@ -11,6 +11,7 @@ import {
 	isSameDay,
 } from "date-fns";
 import { useBoolean } from "usehooks-ts";
+import Link from "next/link";
 
 interface EventHeaderProps {
 	title: string;
@@ -19,6 +20,7 @@ interface EventHeaderProps {
 	startDate: Date;
 	endDate: Date;
 	location: string;
+	pageID: string;
 }
 
 const ping = (
@@ -45,13 +47,14 @@ const getTimeText = (now: Date, start: Date, end: Date): string => {
 	return `${front}${format(start, "E h:mma")} to ${format(end, "EEE h:mma")}`;
 };
 
-const EventHeader: FunctionComponent<EventHeaderProps> = ({
+const EventCard: FunctionComponent<EventHeaderProps> = ({
 	title,
 	imageURL,
 	eventHost,
 	startDate,
 	endDate,
 	location,
+	pageID,
 }) => {
 	const [now, setDate] = useState(new Date()); // Save the current date to be able to trigger an update
 
@@ -67,22 +70,30 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 	const isOngoing = startDate < now && now < endDate;
 	const timeText = getTimeText(now, startDate, endDate);
 	const isEventPast = isPast(endDate);
-	const { value: isLiked, toggle: toggleLiked } = useBoolean(false);
+	// TODO: Implement like/notification/etc. system
+	// const { value: isLiked, toggle: toggleLiked } = useBoolean(false);
+	const eventURL = `/events/${pageID}`;
 
 	return (
 		<div className="rounded-xl col-span-3 m-3">
-			<div
-				className={`overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 bg-center bg-cover bg-no-repeat ${
-					isEventPast ? "hover:grayscale-0 grayscale" : ""
-				}`}
-				style={{ backgroundImage: `url(${imageURL})` }}
-			/>
+			<Link href={eventURL}>
+				<div
+					className={`cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 bg-center bg-cover bg-no-repeat ${
+						isEventPast ? "hover:grayscale-0 grayscale" : ""
+					}`}
+					style={{ backgroundImage: `url(${imageURL})` }}
+				/>
+			</Link>
 			<div className="bg-white rounded-b-xl">
 				<div className="flex flex-col align-middle p-2 pb-0 justify-between">
 					<span className="inline-flex text-xl text-slate-800 font-extrabold font-raleway">
-						{title}
-						{isOngoing ? ping : null}
-						<div
+						<Link href={eventURL}>
+							<a className="inline-flex cursor-pointer">
+								{title}
+								{isOngoing ? ping : null}
+							</a>
+						</Link>
+						{/*<div
 							className="text-[22px] text-red-600 ml-auto my-auto cursor-pointer p-1"
 							onClick={toggleLiked}
 						>
@@ -93,7 +104,7 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 									<AiOutlineBell className="text-zinc-900" />
 								)
 							) : null}
-						</div>
+						</div>*/}
 					</span>
 					<time
 						dateTime={startDate.toISOString()}
@@ -103,14 +114,18 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 					</time>
 					<div className="grid grid-cols-3 text-center mt-2 [&>*]:cursor-pointer hover:[&>*]:text-sky-700 [&>*]:pb-2 text-slate-900 font-medium font-inter">
 						<div className="p-1">
+							{/* TODO: Figure out what to do with this button. */}
 							<a href="#" className="">
 								RSVP
 							</a>
 						</div>
 						<div className="border-slate-200 border-x-2 p-1">
-							<a href="#">Details</a>
+							<Link href={eventURL}>
+								<a>Details</a>
+							</Link>
 						</div>
 						<div className="p-1">
+							{/* TODO: Working Check-in flow */}
 							<a href="#">Check-in</a>
 						</div>
 					</div>
@@ -120,4 +135,4 @@ const EventHeader: FunctionComponent<EventHeaderProps> = ({
 	);
 };
 
-export default EventHeader;
+export default EventCard;

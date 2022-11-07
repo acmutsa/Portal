@@ -4,6 +4,7 @@ import { prisma } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
+import type { Event } from "@prisma/client";
 
 // TODO: Clean up types, and make this less awful to read. I'm sorry.
 
@@ -16,6 +17,7 @@ interface SerializedEvent {
 	eventStart: string;
 	eventEnd: string;
 	location: string;
+	pageID: string;
 }
 
 interface EventServerProps {
@@ -33,6 +35,7 @@ export async function getStaticProps() {
 		props: {
 			results: results.map((result) => ({
 				id: result.id,
+				pageID: result.pageID,
 				title: result.name,
 				imageURL: result.headerImage,
 				location: result.location,
@@ -63,6 +66,7 @@ const Events: NextPage<EventServerProps> = ({ results }) => {
 						return (
 							<EventCard
 								key={event.id}
+								pageID={event.pageID}
 								title={event.title}
 								startDate={new Date(event.eventStart)}
 								endDate={new Date(event.eventEnd)}
