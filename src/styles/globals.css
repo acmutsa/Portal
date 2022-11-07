@@ -61,3 +61,14 @@ html {
 .grayscale {
 	-webkit-transition : -webkit-filter 100ms linear
 }
+
+table {
+	@apply w-full;
+	font-family: "Inter", arial, sans-serif;
+	border-collapse: collapse;
+}
+
+td, th {
+	@apply text-left p-2;
+	border: 1px solid #dddddd;
+}
