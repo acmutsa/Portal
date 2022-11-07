@@ -5,32 +5,55 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { trpc } from "@/utils/trpc";
 import type { Event } from "@prisma/client";
 
 const columnHelper = createColumnHelper<Event>();
 
+const formatDateCell = (value: Date) => {
+	const hoverText = format(value, "EEEE, LLL do, yyyy");
+	const shortText = format(value, "y/MM/dd h:mm:dda");
+	return (
+		<span className="whitespace-nowrap" title={hoverText}>
+			{shortText}
+		</span>
+	);
+};
+
 const columns = [
 	columnHelper.accessor("name", {
 		header: "Name",
+		size: 200,
 	}),
 	columnHelper.accessor("description", {
 		header: "Description",
+		minSize: 200,
+		maxSize: 500,
+		cell: (info) => (
+			<div className="text-ellipsis overflow-hidden max-h-[5rem]">{info.getValue()}</div>
+		),
 	}),
 	columnHelper.accessor("organization", {
 		header: "Org.",
+		minSize: 30,
+		size: 30,
 	}),
 	columnHelper.accessor("eventStart", {
 		header: "Start",
+		cell: (info) => formatDateCell(info.getValue()),
 	}),
 	columnHelper.accessor("eventEnd", {
 		header: "End",
+		cell: (info) => formatDateCell(info.getValue()),
 	}),
 	columnHelper.accessor("formOpen", {
 		header: "Form Open",
+		cell: (info) => formatDateCell(info.getValue()),
 	}),
 	columnHelper.accessor("formClose", {
 		header: "Form Close",
+		cell: (info) => formatDateCell(info.getValue()),
 	}),
 ];
 
@@ -41,6 +64,8 @@ const EventView: FunctionComponent = () => {
 		data: events.isSuccess ? events.data : [],
 		columns,
 		getCoreRowModel: getCoreRowModel(),
+		columnResizeMode: "onChange",
+		enableColumnResizing: true,
 	});
 
 	return (
@@ -58,10 +83,25 @@ const EventView: FunctionComponent = () => {
 						{table.getHeaderGroups().map((headerGroup) => (
 							<tr key={headerGroup.id}>
 								{headerGroup.headers.map((header) => (
-									<th key={header.id}>
+									<th
+										{...{
+											key: header.id,
+											colSpan: header.colSpan,
+											style: {
+												width: header.getSize(),
+											},
+										}}
+									>
 										{header.isPlaceholder
 											? null
 											: flexRender(header.column.columnDef.header, header.getContext())}
+										<div
+											{...{
+												onMouseDown: header.getResizeHandler(),
+												onTouchStart: header.getResizeHandler(),
+												className: `resizer ${header.column.getIsResizing() ? "isResizing" : ""}`,
+											}}
+										/>
 									</th>
 								))}
 							</tr>
@@ -71,7 +111,16 @@ const EventView: FunctionComponent = () => {
 						{table.getRowModel().rows.map((row) => (
 							<tr key={row.id}>
 								{row.getVisibleCells().map((cell) => (
-									<td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+									<td
+										{...{
+											key: cell.id,
+											style: {
+												width: cell.column.getSize(),
+											},
+										}}
+									>
+										{flexRender(cell.column.columnDef.cell, cell.getContext())}
+									</td>
 								))}
 							</tr>
 						))}
