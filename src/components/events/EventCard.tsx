@@ -112,19 +112,17 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 					>
 						{timeText}
 					</time>
-					<div className="grid grid-cols-3 text-center mt-2 [&>*]:cursor-pointer hover:[&>*]:text-sky-700 [&>*]:pb-2 text-slate-900 font-medium font-inter">
-						<div className="p-1">
+					<div className="card-buttongroup grid grid-cols-3 text-center mt-2 text-slate-900 font-medium font-inter">
+						<div>
 							{/* TODO: Figure out what to do with this button. */}
-							<a href="#" className="">
-								RSVP
-							</a>
+							<a href="#">RSVP</a>
 						</div>
-						<div className="border-slate-200 border-x-2 p-1">
+						<div>
 							<Link href={eventURL}>
 								<a>Details</a>
 							</Link>
 						</div>
-						<div className="p-1">
+						<div>
 							{/* TODO: Working Check-in flow */}
 							<a href="#">Check-in</a>
 						</div>
