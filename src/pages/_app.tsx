@@ -18,7 +18,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	useEffect(() => {
 		loggedIn.mutate(null, {
 			onSuccess: (response) => {
-				setGlobalState({ ...globalState, loggedIn: response ?? false });
+				setGlobalState({ ...globalState, loggedIn: response ?? false, ready: true });
 			},
 		});
 	}, []);

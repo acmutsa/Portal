@@ -41,23 +41,32 @@ const Navbar: FunctionComponent = () => {
 	const [globalState, setGlobalState] = useGlobalContext();
 	const router = useRouter();
 
-	let dynamicNavbarElements = globalState.loggedIn
-		? [
+	let dynamicNavbarElements = [];
+
+	if (globalState.ready)
+		if (globalState.loggedIn)
+			dynamicNavbarElements = [
 				<NavbarItem key={1} router={router} route={"/member/status"}>
 					Status
 				</NavbarItem>,
 				<Link key={2} href={"/logout"}>
 					<a className="under-hover">Logout</a>
 				</Link>,
-		  ]
-		: [
+			];
+		else
+			dynamicNavbarElements = [
 				<NavbarItem key={1} router={router} route={"/login"}>
 					<span>Login</span>
 				</NavbarItem>,
 				<NavbarItem key={2} router={router} route={"/register"}>
 					<span>Register</span>
 				</NavbarItem>,
-		  ];
+			];
+	else
+		dynamicNavbarElements = [
+			<div className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
+			<div className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
+		];
 
 	return (
 		<div className="h-[4.5rem] p-1 w-full bg-primary-darker font-inter drop-shadow-lg text-white text-xl">
