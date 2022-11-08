@@ -7,6 +7,7 @@ import Disclosure from "@/components/util/Disclosure";
 import { prisma } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
+import { generateGoogleCalendarLink } from "@/utils/helpers";
 
 interface eventPageParams {
 	params: { id: string };
@@ -42,20 +43,18 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 	});
 
 	if (serverProps.found) {
-		const calendarLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${serverProps.name?.replaceAll(
-			" ",
-			"+"
-		)}&details=Join+us+for+${serverProps.name?.replaceAll(" ", "+") + "!"}&dates=${new Date(
-			serverProps.startDate || ""
-		)
-			.toISOString()
-			.replaceAll(":", "")
-			.replaceAll(".", "")
-			.replaceAll("-", "")}/${new Date(serverProps.endDate || "")
-			.toISOString()
-			.replaceAll(":", "")
-			.replaceAll(".", "")
-			.replaceAll("-", "")}&location=${serverProps.location?.replaceAll(" ", "+")}`;
+		/*
+		* TODO: Location has to be a concrete location on Google Maps
+		*   The description should integrate the characteristics of the event (where/when).
+		*  */
+		const calendarLink = generateGoogleCalendarLink(
+			serverProps.name!,
+			serverProps.description ?? `Come join us for ${serverProps.name}`,
+			serverProps.location!,
+			new Date(serverProps.startDate!),
+			new Date(serverProps.endDate!)
+		);
+
 		return (
 			<>
 				<Head>
