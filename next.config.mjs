@@ -26,6 +26,15 @@ export const nextConfig = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  // TODO: Remove this once we don't use external images
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.*'
+      }
+    ]
+  }
 };
 
 export default defineNextConfig(nextConfig);

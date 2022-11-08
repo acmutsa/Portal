@@ -1,17 +1,8 @@
 import { FunctionComponent, useEffect, useState } from "react";
-import { AiOutlineBell, AiFillBell } from "react-icons/ai";
 
-import {
-	addDays,
-	format,
-	formatDistanceStrict,
-	formatRelative,
-	isBefore,
-	isPast,
-	isSameDay,
-} from "date-fns";
-import { useBoolean } from "usehooks-ts";
+import { addDays, format, formatDistanceStrict, formatRelative, isBefore, isPast, isSameDay } from "date-fns";
 import Link from "next/link";
+import Image from "next/image";
 
 interface EventHeaderProps {
 	title: string;
@@ -77,12 +68,10 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 	return (
 		<div className="rounded-xl col-span-3 m-3">
 			<Link href={eventURL}>
-				<div
-					className={`cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 bg-center bg-cover bg-no-repeat ${
-						isEventPast ? "hover:grayscale-0 grayscale" : ""
-					}`}
-					style={{ backgroundImage: `url(${imageURL})` }}
-				/>
+					<div className={`relative cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 ${
+						isEventPast ? "hover:grayscale-0 grayscale" : ""}`}>
+						<Image src={imageURL} layout='fill' objectFit='cover'  />
+					</div>
 			</Link>
 			<div className="bg-white rounded-b-xl">
 				<div className="flex flex-col align-middle p-2 pb-0 justify-between">
