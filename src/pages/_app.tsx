@@ -10,15 +10,40 @@ import { GlobalContext, initialState } from "@/components/common/GlobalContext";
 import { useEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
+import NProgress from "nprogress";
+import 'nprogress/nprogress.css'
+import { useRouter } from "next/router";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
 	const loggedIn = trpc.useMutation(["member.loggedIn"]);
 
+	const router = useRouter();
+	useEffect(() => {
+		const handleStart = (url: string) => {
+			console.log(`Loading: ${url}`)
+			NProgress.start()
+		}
+
+		const handleStop = () => {
+			NProgress.done()
+		}
+
+		router.events.on('routeChangeStart', handleStart)
+		router.events.on('routeChangeComplete', handleStop)
+		router.events.on('routeChangeError', handleStop)
+
+		return () => {
+			router.events.off('routeChangeStart', handleStart)
+			router.events.off('routeChangeComplete', handleStop)
+			router.events.off('routeChangeError', handleStop)
+		}
+	}, [router])
+
 	useEffect(() => {
 		loggedIn.mutate(null, {
 			onSuccess: (response) => {
-				setGlobalState({ ...globalState, loggedIn: response ?? false });
+				setGlobalState({ ...globalState, loggedIn: response ?? false, ready: true });
 			},
 		});
 	}, []);
