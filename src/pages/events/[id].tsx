@@ -10,9 +10,9 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { SiGooglecalendar } from "react-icons/si";
-import QRCode from "react-qr-code";
 import { formatRelative, lightFormat } from "date-fns";
 import BigEventHeader from "@/components/events/BigEventHeader";
+import QRCode from "react-qr-code";
 
 interface eventPageParams {
 	params: { id: string };
@@ -32,6 +32,8 @@ interface eventPageServerProps {
 	endDate: string | null;
 	qrcodeData: string;
 }
+
+const isSSR = () => typeof window === `undefined`;
 
 const EventView: NextPage<eventPageServerProps> = (props) => {
 	const router = useRouter();
@@ -115,7 +117,7 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 										Add To Google Calendar
 									</button>
 								</a>
-								<QRCode className="mx-auto scale-75" value={props.qrcodeData} />
+								{!isSSR() ? <QRCode className="mx-auto scale-75" value={props.qrcodeData} /> : null}
 							</div>
 						</div>
 					</div>
