@@ -48,7 +48,6 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	});
 
 	if (props.found) {
-		// TODO: Improve description to include where/what/when details.
 		const formatString = 'h:mmaaaaaa';
 		const startString = lightFormat(new Date(props.startDate!), formatString);
 		const endString = lightFormat(new Date(props.endDate!), formatString);

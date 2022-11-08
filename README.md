@@ -17,7 +17,7 @@ ACM UTSA's in-house membership portal and database system.
 - [Chart.js][chartjs]
 - [Prettier][prettier]
 
-See [`package.json`\^](./package.json) for all other requirements.
+See [`package.json`](./package.json) for all other requirements.
 
 ## Installation
 
@@ -41,7 +41,7 @@ Prisma, our choice of Database ORM, requires a database to operate upon for near
 working on this project, contact the appropriate officer to acquire the Database URL.
 
 The database URL should be placed in `.env` in the root directory:
-```dotenv
+```shell
 DATABASE_URL=postgresql://{username}:{password}@{domain}:{port}/{database}
 ```
 Under no circumstances should this file be removed from `.gitignore` and committed to *any branch*.
