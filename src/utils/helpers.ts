@@ -65,10 +65,10 @@ export const generateGoogleCalendarLink = (start: Date, end: Date, title: string
 
   const params = new URLSearchParams(removeEmpty({
     'action': 'TEMPLATE',
-    'text': title?.replaceAll(" ", "+"),
-    'details': description?.replaceAll(" ", "+"),
+    'text': title,
+    'details': description,
     'dates': `${startString}/${endString}`,
-    'location': location?.replaceAll(" ", "+")
+    'location': location
   }))
-  return `https://calendar.google.com/calendar/render${params.toString()}`;
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
 };

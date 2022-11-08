@@ -11,6 +11,7 @@ import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { SiGooglecalendar } from "react-icons/si";
 import QRCode from "react-qr-code";
+import { lightFormat } from "date-fns";
 
 interface eventPageParams {
 	params: { id: string };
@@ -47,14 +48,16 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	});
 
 	if (props.found) {
-		// The location option has to be a concrete location on Google Maps.
-		// Thus, while available, it is not included in the link.
 		// TODO: Improve description to include where/what/when details.
+		const formatString = 'h:mmaaaaaa';
+		const startString = lightFormat(new Date(props.startDate!), formatString);
+		const endString = lightFormat(new Date(props.endDate!), formatString);
 		const calendarLink = generateGoogleCalendarLink(
 			new Date(props.startDate!),
 			new Date(props.endDate!),
-			props.name!,
-			props.description ?? `Come join us for ${props.name}`
+			props.name,
+			`Location: ${props.location}\nWhen: ${startString} to ${endString}\n\n${props.description ?? `Come join us for ${props.name}`}`,
+			props.location
 		);
 
 		return (
