@@ -106,3 +106,7 @@ td, th {
 .card-buttongroup > *:not(:last-child) {
 	@apply border-slate-200 border-r-2;
 }
+
+.disclosure-symbol {
+	font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
+}
