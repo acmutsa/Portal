@@ -47,16 +47,14 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	});
 
 	if (props.found) {
-		/*
-		* TODO: Location has to be a concrete location on Google Maps
-		*   The description should integrate the characteristics of the event (where/when).
-		*  */
+		// The location option has to be a concrete location on Google Maps.
+		// Thus, while available, it is not included in the link.
+		// TODO: Improve description to include where/what/when details.
 		const calendarLink = generateGoogleCalendarLink(
-			props.name!,
-			props.description ?? `Come join us for ${props.name}`,
-			props.location!,
 			new Date(props.startDate!),
-			new Date(props.endDate!)
+			new Date(props.endDate!),
+			props.name!,
+			props.description ?? `Come join us for ${props.name}`
 		);
 
 		return (

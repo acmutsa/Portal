@@ -54,11 +54,21 @@ export const getDates = (step: number, startDate: Date, endDate: Date | null = n
 
 export const sum = (a: number, b: number) => a + b;
 
-export const generateGoogleCalendarLink = (title: string, description: string, location: string, start: Date, end: Date) => {
-  title = title.replaceAll(" ", "+");
-  description = description.replaceAll(" ", "+");
-  location = location.replaceAll(" ", "+");
+const removeEmpty = (object: Record<string, string | null | undefined>): {[k: string]: string} => {
+  const filteredEntries: [string, string][] = Object.entries(object).filter((kv): kv is [string, string] => kv[1] != null);
+  return Object.fromEntries(filteredEntries);
+}
+
+export const generateGoogleCalendarLink = (start: Date, end: Date, title: string | null = null, description: string | null = null, location: string | null = null) => {
   const startString = new Date(start || "").toISOString().replace(/[^\w\s]/gi, '');
   const endString = new Date(end || "").toISOString().replace(/[^\w\s]/gi, '');
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${description}&dates=${startString}/${endString}&location=${location}`;
+
+  const params = new URLSearchParams(removeEmpty({
+    'action': 'TEMPLATE',
+    'text': title?.replaceAll(" ", "+"),
+    'details': description?.replaceAll(" ", "+"),
+    'dates': `${startString}/${endString}`,
+    'location': location?.replaceAll(" ", "+")
+  }))
+  return `https://calendar.google.com/calendar/render${params.toString()}`;
 };
