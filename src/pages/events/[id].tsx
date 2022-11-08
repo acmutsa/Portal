@@ -37,7 +37,7 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	const { id } = router.query;
 
 	const ogp = useOpenGraph({
-		title: props.name ?? "Something",
+		title: (props.name ?? "Something") + " | ACM",
 		description: `Come and join ${props.organization} for ${props.name}!`,
 		image: props.headerImage
 			? {
