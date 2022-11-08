@@ -11,6 +11,7 @@ import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { SiGooglecalendar } from "react-icons/si";
 import QRCode from "react-qr-code";
+import BigEventHeader from "@/components/events/BigEventHeader";
 
 interface eventPageParams {
 	params: { id: string };
@@ -38,19 +39,21 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	const ogp = useOpenGraph({
 		title: props.name ?? "Something",
 		description: `Come and join ${props.organization} for ${props.name}!`,
-		image: props.headerImage ? {
-			url: props.headerImage,
-			alt: "",
-			type: "image/png"
-		} : null,
+		image: props.headerImage
+			? {
+					url: props.headerImage,
+					alt: "",
+					type: "image/png",
+			  }
+			: null,
 		url: `/events/${id}`,
 	});
 
 	if (props.found) {
 		/*
-		* TODO: Location has to be a concrete location on Google Maps
-		*   The description should integrate the characteristics of the event (where/when).
-		*  */
+		 * TODO: Location has to be a concrete location on Google Maps
+		 *   The description should integrate the characteristics of the event (where/when).
+		 *  */
 		const calendarLink = generateGoogleCalendarLink(
 			props.name!,
 			props.description ?? `Come join us for ${props.name}`,
@@ -66,27 +69,29 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 					<OpenGraph properties={ogp} />
 				</Head>
 				<div className="page-view bg-darken pt-5">
-					<div
-						className="bg-white mx-auto min-h-[400px] rounded-xl max-w-[1200px]"
-					>
-						<div
-							className="flex items-center justify-center overflow-hidden rounded-l-xl bg-cover bg-no-repeat"
-							style={{ backgroundImage: `url(${props.headerImage})` }}
-						/>
-					</div>
+					<BigEventHeader
+						title={props.name || "Error"}
+						imageURL={props.headerImage || "Error"}
+						hostOrg={props.organization || "ACM"}
+						startDate={new Date(props.startDate!) || new Date()}
+						endDate={new Date(props.endDate!) || new Date()}
+						location={props.location || "Error"}
+					/>
 					<div className="mt-5 bg-white mx-auto max-w-[1200px] min-h-[25rem] rounded-xl p-3">
 						<div className="grid grid-cols-4 w-full min-h-[25rem]">
 							<div className="col-span-3 pr-4 py-5">
 								<div className="prose prose-md max-w-none font-raleway font-semibold">
 									<h2 className="border-b-2 mb-1">Description</h2>
-									<ReactMarkdown remarkPlugins={[remarkGfm]}>{props.description ?? ""}</ReactMarkdown>
+									<ReactMarkdown remarkPlugins={[remarkGfm]}>
+										{props.description ?? ""}
+									</ReactMarkdown>
 									<h2 className="border-b-2 mb-1">About ACM</h2>
 									<p>
-										ACM is the premier organization on campus for students interested in technology. ACM
-										is dedicated to providing members with opportunities for professional, academic, and
-										social growth outside the classroom in order to prepare students for their career in
-										tech or fuel their interest in the tech field. Anyone who has an interest in
-										technology can join ACM.
+										ACM is the premier organization on campus for students interested in technology.
+										ACM is dedicated to providing members with opportunities for professional,
+										academic, and social growth outside the classroom in order to prepare students
+										for their career in tech or fuel their interest in the tech field. Anyone who
+										has an interest in technology can join ACM.
 									</p>
 								</div>
 							</div>
@@ -103,10 +108,7 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 										Add To Google Calendar
 									</button>
 								</a>
-								<QRCode
-									className="mx-auto scale-75"
-									value={props.qrcodeData}
-								/>
+								<QRCode className="mx-auto scale-75" value={props.qrcodeData} />
 							</div>
 						</div>
 					</div>
@@ -121,7 +123,6 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 
 const revalidationTime = 2;
 export async function getStaticProps({ params }: eventPageParams) {
-
 	const event = await prisma.event.findUnique({
 		where: {
 			pageID: params.id.toLowerCase(),
@@ -147,7 +148,7 @@ export async function getStaticProps({ params }: eventPageParams) {
 			location: event.location,
 			startDate: event.eventStart.toString(),
 			endDate: event.eventEnd.toString(),
-			qrcodeData: absUrl(`/check-in/${params.id}`)
+			qrcodeData: absUrl(`/check-in/${params.id}`),
 		},
 		// Next.js will attempt to re-generate the page:
 		// - When a request comes in
