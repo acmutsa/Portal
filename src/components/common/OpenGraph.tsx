@@ -62,6 +62,7 @@ const OpenGraph = ({ properties }: { properties: OGProperties }) => {
 					<meta name="twitter:image" content={image.url} />
 				</>
 			)}
+			<meta name="theme-color" content="#179BD5" />
 			<meta name="twitter:card" content={card} />
 			<meta name="twitter:url" content={url} />
 			<meta name="twitter:domain" content="portal.acmutsa.org" />

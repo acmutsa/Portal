@@ -5,6 +5,8 @@ import EventHeader from "@/components/events/EventHeader";
 import EventDescription from "@/components/events/EventDescription";
 import Disclosure from "@/components/util/Disclosure";
 import { prisma } from "@/server/db/client";
+import useOpenGraph from "@/components/common/useOpenGraph";
+import OpenGraph from "@/components/common/OpenGraph";
 
 interface eventPageParams {
 	params: { id: string };
@@ -27,8 +29,20 @@ interface eventPageServerProps {
 const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 	const router = useRouter();
 	const { id } = router.query;
+
+	const ogp = useOpenGraph({
+		title: serverProps.name ?? "Something",
+		description: `Come and join ${serverProps.organization} for ${serverProps.name}!`,
+		image: serverProps.headerImage ? {
+			url: serverProps.headerImage,
+			alt: "",
+			type: "image/png"
+		} : null,
+		url: `/events/${id}`,
+	});
+
 	if (serverProps.found) {
-		const callink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${serverProps.name?.replaceAll(
+		const calendarLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${serverProps.name?.replaceAll(
 			" ",
 			"+"
 		)}&details=Join+us+for+${serverProps.name?.replaceAll(" ", "+") + "!"}&dates=${new Date(
@@ -45,25 +59,8 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 		return (
 			<>
 				<Head>
-					<title>{serverProps.name + " | ACM"}</title>
-					<meta property="og:title" content={serverProps.name + " | ACM"} />
-					<meta property="og:type" content="website" />
-					<meta
-						property="og:url"
-						content={`https://portal.acmutsa.org/events/${typeof id === "string" ? id : "error"}`}
-					/>
-					<meta
-						property="og:description"
-						content={`Come and join ${serverProps.organization} for ${serverProps.name}!`}
-					/>
-					<meta
-						property="og:image"
-						content={
-							serverProps.headerImage || "https://portal.acmutsa.org/img/default-thumbnail.png"
-						}
-					/>
-					<meta name="theme-color" content="#179BD5" />
-					<meta name="twitter:card" content="summary_large_image" />
+					<title>{ogp.title}</title>
+					<OpenGraph properties={ogp} />
 				</Head>
 				<div className="page-view bg-darken pt-[20px]">
 					<EventHeader
@@ -77,7 +74,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 					<br />
 					<EventDescription
 						description={serverProps.description || `Come and join us for ${serverProps.name}!`}
-						calanderLink={callink}
+						calanderLink={calendarLink}
 						eventID={typeof id === "string" ? id : "error"}
 					/>
 					<Disclosure />
@@ -91,7 +88,7 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 
 export async function getStaticProps(urlParams: eventPageParams) {
 	const params = urlParams.params;
-	const revalTime = 2;
+	const revalidationTime = 2;
 
 	const event = await prisma.event.findUnique({
 		where: {
@@ -104,7 +101,7 @@ export async function getStaticProps(urlParams: eventPageParams) {
 			props: {
 				found: false,
 			},
-			revalidate: revalTime,
+			revalidate: revalidationTime,
 		};
 	}
 
@@ -122,7 +119,7 @@ export async function getStaticProps(urlParams: eventPageParams) {
 		// Next.js will attempt to re-generate the page:
 		// - When a request comes in
 		// - At most once every 10 seconds
-		revalidate: revalTime, // In seconds
+		revalidate: revalidationTime, // In seconds
 	};
 }
 
