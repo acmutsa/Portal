@@ -21,11 +21,11 @@ export const useOpenGraph = (data: PageOgData) => {
 	// If the image is not defined, assume a default image using the NPB background.
 	if (data.image === undefined)
 		data.image = {
-			url: "/img/bg.png",
+			url: "/img/default-thumbnail.png",
 			type: "image/png",
-			alt: "The North Paseo Building",
-			height: 819,
-			width: 1430,
+			alt: "The ACM-UTSA Logo",
+			height: 1920,
+			width: 1080,
 		};
 
 	return useMemo<OGProperties>(() => {
@@ -51,6 +51,8 @@ export const useOpenGraph = (data: PageOgData) => {
 			section: data.section,
 			modified_time: data.modified_time,
 			published_time: data.published_time,
+			labels: data.labels,
+			theme_color: data.theme_color
 		};
 	}, [data]);
 };

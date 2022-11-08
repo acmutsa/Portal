@@ -1,7 +1,5 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import EventHeader from "@/components/events/AltEventHeader";
-import EventDescription from "@/components/events/EventDescription";
 import { prisma } from "@/server/db/client";
 import Link from "next/link";
 
