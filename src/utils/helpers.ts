@@ -72,3 +72,11 @@ export const generateGoogleCalendarLink = (start: Date, end: Date, title: string
   }))
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 };
+
+export function ltrim(input: string, characters: string) {
+  let start = 0;
+  while (input[start] !== undefined && characters.indexOf(input[start]) >= 0) {
+    start += 1;
+  }
+  return input.substring(start);
+}

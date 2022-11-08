@@ -11,7 +11,7 @@ import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { SiGooglecalendar } from "react-icons/si";
 import QRCode from "react-qr-code";
-import { lightFormat } from "date-fns";
+import { formatRelative, lightFormat } from "date-fns";
 
 interface eventPageParams {
 	params: { id: string };
@@ -36,6 +36,9 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	const router = useRouter();
 	const { id } = router.query;
 
+	const startDate = props.startDate ? new Date(props.startDate) : null;
+	const endDate = props.endDate ? new Date(props.endDate) : null;
+
 	const ogp = useOpenGraph({
 		title: props.name ?? "Something",
 		description: `Come and join ${props.organization} for ${props.name}!`,
@@ -45,12 +48,16 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 			type: "image/png"
 		} : null,
 		url: `/events/${id}`,
+		labels: props.found ? [
+			["Where", props.location!],
+			["When", formatRelative(startDate!, new Date())]
+		] : undefined
 	});
 
 	if (props.found) {
 		const formatString = 'h:mmaaaaaa';
-		const startString = lightFormat(new Date(props.startDate!), formatString);
-		const endString = lightFormat(new Date(props.endDate!), formatString);
+		const startString = lightFormat(startDate!, formatString);
+		const endString = lightFormat(endDate!, formatString);
 		const calendarLink = generateGoogleCalendarLink(
 			new Date(props.startDate!),
 			new Date(props.endDate!),

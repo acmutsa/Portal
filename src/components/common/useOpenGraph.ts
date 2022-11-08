@@ -51,6 +51,8 @@ export const useOpenGraph = (data: PageOgData) => {
 			section: data.section,
 			modified_time: data.modified_time,
 			published_time: data.published_time,
+			labels: data.labels,
+			theme_color: data.theme_color
 		};
 	}, [data]);
 };

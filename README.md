@@ -26,7 +26,7 @@ See [`package.json`](./package.json) for all other requirements.
 
 This project uses `yarn` for package management. Install `yarn` with `npm` via `npm install --global yarn`.
 
-This project requires credentials to run properly. See [Database](#Database)
+This project requires credentials to run properly. See [Database](#Database).
 
 ## Development
 
@@ -35,13 +35,16 @@ For easy development, `yarn run dev` will start Next.js with hot-reloading & err
 Build for production with `yarn run build` for a production-ready version of the site.
 To execute it locally, execute `yarn run start`. Features like hot-reloading will not be available.
 
+Analysis of package sizes in a built website can be conducted with `yarn run analyze`; this will build like `yarn run build`,
+but will generate (and open) build reports useful for understanding the site's webpack size.
+
 ## Database
 
 Prisma, our choice of Database ORM, requires a database to operate upon for nearly all interactions. If you are an ACM Officer
 working on this project, contact the appropriate officer to acquire the Database URL.
 
 The database URL should be placed in `.env` in the root directory:
-```shell
+```env
 DATABASE_URL=postgresql://{username}:{password}@{domain}:{port}/{database}
 ```
 Under no circumstances should this file be removed from `.gitignore` and committed to *any branch*.
@@ -65,7 +68,7 @@ services:
       - db:/var/lib/postgresql/data
 volumes:
   db:
-    driver: local
+    driver: local   
 ```
 
 Paste the above inside a `docker-compose.yml` file (anywhere), then execute `docker-compose up -d` to run it in the background.
