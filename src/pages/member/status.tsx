@@ -173,7 +173,7 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
               </tr>
               </thead>
               <tbody>
-              {checkins.map((checkin) => (
+              {checkins.length > 0 ? checkins.map((checkin) => (
                 <tr className="[&>*]:py-2 [&>*]:px-3 [&>*]:md:py-4 [&>*]:md:px-6 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <td
                     scope="row"
@@ -186,7 +186,11 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
                     +{checkin.points.toFixed(1)}
                   </td>
                 </tr>
-              ))}
+              )) : <tr>
+                <td colSpan={3}>
+                  You have not checked in to any events yet.
+                </td>
+              </tr>}
               </tbody>
             </table>
           </div>
