@@ -75,8 +75,7 @@ export const generateGoogleCalendarLink = (start: Date, end: Date, title: string
 
 export function ltrim(input: string, characters: string) {
   let start = 0;
-  // @ts-ignore TODO: Fix this type error properly. Type guards, maybe?
-  while (input[start] !== undefined && characters.indexOf(input[start]) >= 0) {
+  while (input[start] !== undefined && characters.indexOf(input[start]!) >= 0) {
     start += 1;
   }
   return input.substring(start);
