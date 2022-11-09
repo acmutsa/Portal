@@ -28,8 +28,10 @@ const EventView: NextPage<eventPageServerProps> = (serverProps) => {
 		return (
 			<div className="page-view bg-darken pt-[20px]">
 				<div className="bg-white max-w-[800px] mx-auto min-h-[400px] rounded-xl text-center flex flex-col items-center justify-center p-[10px]">
-					<h1 className="text-5xl font-extrabold font-raleway">Thanks For Attending</h1>
-					<h1 className="text-5xl font-extrabold font-raleway">{serverProps.name}!</h1>
+					<h1 className="text-5xl font-extrabold font-inter">Thanks For Attending</h1>
+					<h1 className="text-5xl font-extrabold font-inter">
+						<span className="text-primary-lighter">{serverProps.name}</span>!
+					</h1>
 					<button className="h-[50px] w-full bg-primary-darker text-white rounded-lg font-semibold mx-[5px] mb-[5px] max-w-[300px] mt-[40px]">
 						Check-in
 					</button>

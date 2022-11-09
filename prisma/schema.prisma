@@ -11,30 +11,32 @@ datasource db {
 }
 
 model Event {
-    id            String   @id @default(cuid())
+    id            String    @id @default(cuid())
     name          String
     description   String
     organization  String
     headerImage   String
     location      String
-    createdAt     DateTime @default(now())
+    createdAt     DateTime  @default(now())
     eventStart    DateTime
     eventEnd      DateTime
     formOpen      DateTime
     formClose     DateTime
-    hasBeenForced Boolean  @default(false)
-    forcedIsOpen  Boolean  @default(false)
-    pageID        String   @unique @default("")
+    hasBeenForced Boolean   @default(false)
+    forcedIsOpen  Boolean   @default(false)
+    pageID        String    @unique @default("")
     checkins      Checkin[]
 }
 
 model Checkin {
     eventID    String
     memberID   String
-    event      Event   @relation(fields: [eventID], references: [id])
-    member     Member  @relation(fields: [memberID], references: [id])
+    event      Event    @relation(fields: [eventID], references: [id])
+    member     Member   @relation(fields: [memberID], references: [id])
     isInPerson Boolean
     feedback   String?
+    timestamp  DateTime @default(now())
+
     @@id([eventID, memberID])
 }
 

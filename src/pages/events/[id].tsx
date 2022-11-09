@@ -43,7 +43,7 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	const endDate = props.endDate ? new Date(props.endDate) : null;
 
 	const ogp = useOpenGraph({
-		title: props.name ?? "Something",
+		title: (props.name ?? "Something") + " | ACM",
 		description: `Come and join ${props.organization} for ${props.name}!`,
 		image: props.headerImage
 			? {
