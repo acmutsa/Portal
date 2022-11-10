@@ -10,7 +10,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { SiGooglecalendar } from "react-icons/si";
-import { formatRelative, lightFormat } from "date-fns";
+import { format, lightFormat } from "date-fns";
 import BigEventHeader from "@/components/events/BigEventHeader";
 import QRCode from "react-qr-code";
 import NoSSR from "@/components/common/NoSSR";
@@ -53,8 +53,8 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 			: null,
 		url: `/events/${id}`,
 		labels: props.found ? [
-			["Where", props.location!],
-			["When", formatRelative(startDate!, new Date())]
+			["When", format(startDate!, "E, MM/dd/yyyy h:mma")],
+			["Where", props.location!]
 		] : undefined
 	});
 
