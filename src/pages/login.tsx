@@ -60,8 +60,8 @@ const EventView: NextPage = () => {
 			<div className="page-view bg-darken flex justify-center">
 				<div className="my-auto px-3">
 					<div className="bg-white max-w-[25rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
-						<p className="text-lg md:text-xl font-semibold text-slate-700 font-raleway mb-2">
-							Membership Portal Login
+						<p className="text-lg md:text-[22px] tracking-wide md:tracking-normal font-semibold text-slate-700 font-raleway mb-2">
+							Membership Portal
 						</p>
 						<form
 							onSubmit={handleSubmit(didSubmit)}
@@ -74,11 +74,8 @@ const EventView: NextPage = () => {
 									placeholder="you@example.com"
 									id="email"
 									{...register("email", { required: true })}
-									className="peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300 placeholder-slate-400
-									disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
-									focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md md:text-base focus:ring-1
-									invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500
-									focus:invalid:ring-pink-500 disabled:shadow-none"
+									className="login peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300
+									 block w-full rounded-md md:text-base placeholder-slate-400"
 								/>
 								<p className="mb-1 text-base invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
 									Please provide a valid email address.
@@ -98,11 +95,8 @@ const EventView: NextPage = () => {
 										minLength: 6,
 										maxLength: 6,
 									})}
-									className="peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300 placeholder-slate-400
-									disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
-									focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md md:text-base focus:ring-1
-									invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500
-									focus:invalid:ring-pink-500 disabled:shadow-none"
+									className="login peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300
+									 block w-full rounded-md md:text-base placeholder-slate-400"
 								/>
 								<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
 									Please provide a valid abc123.
