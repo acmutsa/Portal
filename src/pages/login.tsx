@@ -68,7 +68,7 @@ const EventView: NextPage = () => {
 							className="min-w-[20rem] sm:w-full flex flex-col font-inter justify-start p-1 pb-2 text-left"
 						>
 							<label className="">
-								<p className="block text-sm md:text-base font-medium text-slate-700">Email</p>
+								<p className="block tracking-wide text-sm md:text-base font-medium text-slate-700">Email</p>
 								<input
 									type="email"
 									placeholder="you@example.com"
@@ -82,7 +82,7 @@ const EventView: NextPage = () => {
 								</p>
 							</label>
 							<label>
-								<span className="block text-sm font-medium text-slate-700">myUTSA ID</span>
+								<span className="block text-sm md:text-base font-medium text-slate-700">myUTSA ID</span>
 								<input
 									type="text"
 									placeholder="abc123"

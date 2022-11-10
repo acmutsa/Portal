@@ -13,6 +13,7 @@ import { SiGooglecalendar } from "react-icons/si";
 import { formatRelative, lightFormat } from "date-fns";
 import BigEventHeader from "@/components/events/BigEventHeader";
 import QRCode from "react-qr-code";
+import NoSSR from "@/components/common/NoSSR";
 
 interface eventPageParams {
 	params: { id: string };
@@ -32,8 +33,6 @@ interface eventPageServerProps {
 	endDate: string | null;
 	qrcodeData: string;
 }
-
-const isSSR = () => typeof window === `undefined`;
 
 const EventView: NextPage<eventPageServerProps> = (props) => {
 	const router = useRouter();
@@ -117,7 +116,9 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 										Add To Google Calendar
 									</button>
 								</a>
-								{!isSSR() ? <QRCode className="mx-auto scale-75" value={props.qrcodeData} /> : null}
+								<NoSSR>
+									<QRCode className="mx-auto scale-75" value={props.qrcodeData} />
+								</NoSSR>
 							</div>
 						</div>
 					</div>
