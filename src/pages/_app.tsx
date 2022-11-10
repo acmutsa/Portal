@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
 import NProgress from "nprogress";
-import 'nprogress/nprogress.css'
+import "nprogress/nprogress.css";
 import { useRouter } from "next/router";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
@@ -21,23 +21,23 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	const router = useRouter();
 	useEffect(() => {
 		const handleStart = (url: string) => {
-			NProgress.start()
-		}
+			NProgress.start();
+		};
 
 		const handleStop = () => {
-			NProgress.done()
-		}
+			NProgress.done();
+		};
 
-		router.events.on('routeChangeStart', handleStart)
-		router.events.on('routeChangeComplete', handleStop)
-		router.events.on('routeChangeError', handleStop)
+		router.events.on("routeChangeStart", handleStart);
+		router.events.on("routeChangeComplete", handleStop);
+		router.events.on("routeChangeError", handleStop);
 
 		return () => {
-			router.events.off('routeChangeStart', handleStart)
-			router.events.off('routeChangeComplete', handleStop)
-			router.events.off('routeChangeError', handleStop)
-		}
-	}, [router])
+			router.events.off("routeChangeStart", handleStart);
+			router.events.off("routeChangeComplete", handleStop);
+			router.events.off("routeChangeError", handleStop);
+		};
+	}, [router]);
 
 	useEffect(() => {
 		loggedIn.mutate(null, {
@@ -50,7 +50,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	return (
 		<>
 			<Head>
-				<meta name="viewport" content="width=device-width, initial-scale=1" />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			</Head>
 			<GlobalContext.Provider value={[globalState, setGlobalState]}>
 				<Navbar />

@@ -14,6 +14,7 @@ import { format, lightFormat } from "date-fns";
 import BigEventHeader from "@/components/events/BigEventHeader";
 import QRCode from "react-qr-code";
 import NoSSR from "@/components/common/NoSSR";
+import { env } from "@/env/server.mjs";
 
 interface eventPageParams {
 	params: { id: string };
@@ -52,21 +53,25 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 			  }
 			: null,
 		url: `/events/${id}`,
-		labels: props.found ? [
-			["When", format(startDate!, "E, MM/dd/yyyy h:mma")],
-			["Where", props.location!]
-		] : undefined
+		labels: props.found
+			? [
+					["When", format(startDate!, "E, MM/dd/yyyy h:mma")],
+					["Where", props.location!],
+			  ]
+			: undefined,
 	});
 
 	if (props.found) {
-		const formatString = 'h:mmaaaaaa';
+		const formatString = "h:mmaaaaaa";
 		const startString = lightFormat(startDate!, formatString);
 		const endString = lightFormat(endDate!, formatString);
 		const calendarLink = generateGoogleCalendarLink(
 			new Date(props.startDate!),
 			new Date(props.endDate!),
 			props.name,
-			`Location: ${props.location}\nWhen: ${startString} to ${endString}\n\n${props.description ?? `Come join us for ${props.name}`}`,
+			`Location: ${props.location}\nWhen: ${startString} to ${endString}\n\n${
+				props.description ?? `Come join us for ${props.name}`
+			}`,
 			props.location
 		);
 
@@ -131,7 +136,7 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	}
 };
 
-const revalidationTime = 2;
+const revalidationTime = env.EVENT_PAGE_REVALIDATION_TIME;
 export async function getStaticProps({ params }: eventPageParams) {
 	const event = await prisma.event.findUnique({
 		where: {
