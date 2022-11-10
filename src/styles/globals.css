@@ -47,7 +47,7 @@ html {
 	height: 2px;
 	bottom: 0;
 	left: 0;
-	background-color: #f15a22;
+	@apply bg-accent;
 	transform-origin: bottom right;
 	transition: transform 0.25s ease-out;
 }
@@ -86,8 +86,7 @@ td, th {
 }
 
 .resizer.isResizing {
-	background: #f15a22;
-	opacity: 0.9;
+	@apply bg-accent opacity-90;
 }
 
 @media (hover: hover) {
