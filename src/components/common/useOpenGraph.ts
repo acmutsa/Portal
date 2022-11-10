@@ -36,7 +36,7 @@ export const useOpenGraph = (data: PageOgData) => {
 			title: data.title ? `${data.title}${data.suffix ?? false ? " | ACM-UTSA" : ""}` : "ACM-UTSA",
 			type: data.type ?? "website",
 			author: data.author,
-			site_name: "The Association of Computing Machinery at UTSA Student Chapter",
+			site_name: "ACM UTSA",
 			description: data.description,
 			image: data.image
 				? {
@@ -52,7 +52,7 @@ export const useOpenGraph = (data: PageOgData) => {
 			modified_time: data.modified_time,
 			published_time: data.published_time,
 			labels: data.labels,
-			theme_color: data.theme_color
+			theme_color: data.theme_color,
 		};
 	}, [data]);
 };
