@@ -79,8 +79,8 @@ const OpenGraph = ({
       {
         labels && labels.map(([label, data], index) => {
           return <>
-            <meta name={`twitter:label${index + 1}`} content={label} />
-            <meta name={`twitter:data${index + 1}`} content={data} />
+            <meta key={index * 2} name={`twitter:label${index + 1}`} content={label} />
+            <meta key={index * 2 + 1} name={`twitter:data${index + 1}`} content={data} />
           </>;
         })
       }

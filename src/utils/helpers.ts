@@ -1,5 +1,10 @@
 import { differenceInDays } from "date-fns";
 
+export function pluralize(count: number) {
+  return count != 1 ? "s" : "";
+}
+
+
 export const absUrl = (path: string): string => {
   path = path.trim();
   if (path.startsWith("http")) return path;

@@ -47,7 +47,7 @@ html {
 	height: 2px;
 	bottom: 0;
 	left: 0;
-	background-color: #f15a22;
+	@apply bg-accent;
 	transform-origin: bottom right;
 	transition: transform 0.25s ease-out;
 }
@@ -86,8 +86,7 @@ td, th {
 }
 
 .resizer.isResizing {
-	background: #f15a22;
-	opacity: 0.9;
+	@apply bg-accent opacity-90;
 }
 
 @media (hover: hover) {
@@ -109,4 +108,11 @@ td, th {
 
 .disclosure-symbol {
 	font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
+}
+
+input.login {
+	@apply disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
+	focus:border-sky-500 focus:ring-sky-500  focus:ring-1
+	invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500
+	focus:invalid:ring-pink-500 disabled:shadow-none;
 }

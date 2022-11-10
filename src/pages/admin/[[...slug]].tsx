@@ -36,7 +36,7 @@ const sideNavElements = [
 	},
 ];
 
-const inferFromPath = (path: string): [FunctionComponent, AdminView] => {
+const inferFromPath = (path: string): [FunctionComponent | null, AdminView | null] => {
 	switch (path) {
 		case "/admin/events/":
 			return [EventView, AdminView.events];
@@ -47,8 +47,9 @@ const inferFromPath = (path: string): [FunctionComponent, AdminView] => {
 		case "/admin/members/new/":
 			return [NewMemberView, AdminView.newMember];
 		case "/admin/":
-		default:
 			return [DashView, AdminView.dashboard];
+		default:
+				return [null, null];
 	}
 };
 
@@ -79,6 +80,7 @@ const Admin: NextPage = () => {
 	};
 
 	let [ElementToShow, CurrentPage] = inferFromPath(path);
+
 	return (
 		<div className="page-view w-full min-h-full bg-white grid grid-cols-12">
 			<div className="col-span-4 [&>*]:cursor-pointer md:col-span-3 lg:col-span-2 py-[1.5rem] border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
@@ -99,8 +101,8 @@ const Admin: NextPage = () => {
 					</div>
 				))}
 			</div>
-			<div className="col-span-8 md:col-span-9 lg:col-span-10 p-5 pt-[3rem] h-full w-full bg-zinc-100">
-				<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
+			<div className="col-span-8 md:col-span-9 lg:col-span-10 p-5 pt-[1rem] h-full w-full bg-zinc-100">
+				<div className="col-span-4">{ElementToShow  ? <ElementToShow /> : null}</div>
 			</div>
 		</div>
 	);

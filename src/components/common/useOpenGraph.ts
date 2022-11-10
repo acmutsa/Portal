@@ -24,8 +24,8 @@ export const useOpenGraph = (data: PageOgData) => {
 			url: "/img/default-thumbnail.png",
 			type: "image/png",
 			alt: "The ACM-UTSA Logo",
-			height: 1920,
-			width: 1080,
+			width: 1920,
+			height: 1080,
 		};
 
 	return useMemo<OGProperties>(() => {
