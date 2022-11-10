@@ -69,7 +69,7 @@ const Navbar: FunctionComponent = () => {
 		];
 
 	return (
-		<div className="h-[4.5rem] p-1 w-full bg-primary-darker font-inter drop-shadow-lg text-white text-xl">
+		<div className="h-[4.5rem] p-1 w-full bg-primary-darker font-inter drop-shadow-lg text-white text-xl fixed">
 			<div className="grid grid-cols-2 h-full w-full max-w-[1140px] mx-auto">
 				<div className="flex items-center">
 					<Link href="/">
