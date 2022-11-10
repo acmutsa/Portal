@@ -57,58 +57,69 @@ const EventView: NextPage = () => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-darken flex flex-col justify-center">
-				<div className="bg-white max-w-[30rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
-					<p className="text-[22px] font-semibold text-slate-700 font-raleway mb-2">
-						Membership Portal Login
-					</p>
-					<form
-						onSubmit={handleSubmit(didSubmit)}
-						className="min-w-[23rem] flex flex-col font-inter justify-start p-3 pb-2 text-left"
-					>
-						<label className="">
-							<p className="block text-sm font-medium text-slate-700">Email</p>
-							<input
-								type="email"
-								placeholder="you@example.com"
-								id="email"
-								{...register("email", { required: true })}
-								className="peer px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"
-							/>
-							<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-sm">
-								Please provide a valid email address.
-							</p>
-						</label>
-						<label>
-							<span className="block text-sm font-medium text-slate-700">myUTSA ID</span>
-							<input
-								type="text"
-								placeholder="abc123"
-								minLength={6}
-								maxLength={6}
-								id="shortID"
-								{...register("shortID", {
-									required: true,
-									pattern: /^[a-zA-Z]{3}[0-9]{3}$/,
-									minLength: 6,
-									maxLength: 6,
-								})}
-								className="peer px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500 focus:invalid:ring-pink-500 disabled:shadow-none"
-							/>
-							<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-sm">
-								Please provide a valid abc123.
-							</p>
-						</label>
-						<button className="bg-sky-500 focus:bg-sky-600 hover:bg-sky-600 px-5 outline-none py-2.5 text-sm leading-5 rounded-md font-semibold text-white">
-							Login
-						</button>
-					</form>
-					<p className="text-center text-slate-600">
-						Not yet a member?{" "}
-						<a href={"/register"} className="text-slate-700 underline">
-							Register
-						</a>
-					</p>
+			<div className="page-view bg-darken flex justify-center">
+				<div className="my-auto px-3">
+					<div className="bg-white max-w-[25rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
+						<p className="text-lg md:text-xl font-semibold text-slate-700 font-raleway mb-2">
+							Membership Portal Login
+						</p>
+						<form
+							onSubmit={handleSubmit(didSubmit)}
+							className="min-w-[20rem] sm:w-full flex flex-col font-inter justify-start p-1 pb-2 text-left"
+						>
+							<label className="">
+								<p className="block text-sm md:text-base font-medium text-slate-700">Email</p>
+								<input
+									type="email"
+									placeholder="you@example.com"
+									id="email"
+									{...register("email", { required: true })}
+									className="peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300 placeholder-slate-400
+									disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
+									focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md md:text-base focus:ring-1
+									invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500
+									focus:invalid:ring-pink-500 disabled:shadow-none"
+								/>
+								<p className="mb-1 text-base invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
+									Please provide a valid email address.
+								</p>
+							</label>
+							<label>
+								<span className="block text-sm font-medium text-slate-700">myUTSA ID</span>
+								<input
+									type="text"
+									placeholder="abc123"
+									minLength={6}
+									maxLength={6}
+									id="shortID"
+									{...register("shortID", {
+										required: true,
+										pattern: /^[a-zA-Z]{3}[0-9]{3}$/,
+										minLength: 6,
+										maxLength: 6,
+									})}
+									className="peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300 placeholder-slate-400
+									disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
+									focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md md:text-base focus:ring-1
+									invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500
+									focus:invalid:ring-pink-500 disabled:shadow-none"
+								/>
+								<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
+									Please provide a valid abc123.
+								</p>
+							</label>
+							<button className="bg-sky-500 focus:bg-sky-600 hover:bg-sky-600 px-5 outline-none py-2 mt-1.5 md:mt-0 sm:py-2.5 text-sm
+							 leading-5 rounded-md font-semibold text-white">
+								Login
+							</button>
+						</form>
+						<p className="text-center text-slate-600 text-sm md:text-base">
+							Not yet a member?{" "}
+							<a href={"/register"} className="text-slate-700 underline">
+								Register
+							</a>
+						</p>
+					</div>
 				</div>
 				<Disclosure />
 			</div>
@@ -137,7 +148,8 @@ const EventView: NextPage = () => {
 								leaveFrom="opacity-100 scale-100"
 								leaveTo="opacity-0 scale-95"
 							>
-								<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+								<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left
+								 align-middle shadow-xl transition-all">
 									<Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
 										Invalid Login
 									</Dialog.Title>
@@ -153,7 +165,9 @@ const EventView: NextPage = () => {
 									<div className="w-full mt-4 flex">
 										<button
 											type="button"
-											className="align	-self-end inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+											className="align	-self-end inline-flex justify-center rounded-md border border-transparent
+											bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none
+											focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
 											onClick={() => closeErrorModal()}
 										>
 											Got it!

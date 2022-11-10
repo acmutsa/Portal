@@ -156,7 +156,7 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
           </div>
         </div>
         <div className="p-3 my-4 bg-white rounded-lg shadow">
-          <div className="text-md md:text-xl font-inter px-1 pb-2">Membership Status</div>
+          <div className="md:text-xl font-inter px-1 pb-2">Membership Status</div>
           <div className="overflow-x-auto relative px-1">
             <table className="w-full text-xs md:text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
