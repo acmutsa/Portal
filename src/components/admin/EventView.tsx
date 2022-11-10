@@ -1,14 +1,10 @@
 import React, { FunctionComponent } from "react";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable
-} from "@tanstack/react-table";
+import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { trpc } from "@/utils/trpc";
 import type { Event } from "@prisma/client";
 import { pluralize } from "@/utils/helpers";
+import Stat from "@/components/common/Stat";
 
 const columnHelper = createColumnHelper<Event>();
 
@@ -69,68 +65,83 @@ const EventView: FunctionComponent = () => {
     enableColumnResizing: true
   });
 
+  const eventsTable = <table className="text-sm max-h-[150rem]">
+    <thead>
+    {table.getHeaderGroups().map((headerGroup) => (
+      <tr key={headerGroup.id}>
+        {headerGroup.headers.map((header) => (
+          <th
+            {...{
+              key: header.id,
+              colSpan: header.colSpan,
+              style: {
+                width: header.getSize()
+              }
+            }}
+          >
+            {header.isPlaceholder
+              ? null
+              : flexRender(header.column.columnDef.header, header.getContext())}
+            <div
+              {...{
+                onMouseDown: header.getResizeHandler(),
+                onTouchStart: header.getResizeHandler(),
+                className: `resizer ${header.column.getIsResizing() ? "isResizing" : ""}`
+              }}
+            />
+          </th>
+        ))}
+      </tr>
+    ))}
+    </thead>
+    <tbody>
+    {table.getRowModel().rows.map((row) => (
+      <tr key={row.id}>
+        {row.getVisibleCells().map((cell) => (
+          <td
+            {...{
+              key: cell.id,
+              style: {
+                width: cell.column.getSize()
+              }
+            }}
+          >
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </td>
+        ))}
+      </tr>
+    ))}
+    </tbody>
+  </table>;
+
   return (
     <div className="w-full h-full">
-      <div className="p-4 bg-white rounded">
+      <div className="flex w-full">
+        <div className="flex gap-10 justify-start my-2 p-4 bg-white border-zinc-200 border-[1px] rounded-lg">
+          {/* TODO: Create truly useful statistics or implement the logic behind these ones. */}
+          <Stat label="Total Events" value={events.data?.length} />
+          <Stat label="Upcoming Events" value={events.data?.length} />
+          <Stat label="Past Events" value={events.data?.length} />
+        </div>
+      </div>
+      <div className="p-4 bg-white rounded-lg border-zinc-200 border-[1px]">
         <div className="pb-2">
           {events.isSuccess ? (
             <div className="flex justify-start font-inter">
-              <span className="pl-1 text-lg tracking-wide text-zinc-800 font-bold">Events</span>
-              <span
-                className="ml-6 px-2 text-zinc-600 text-xs my-auto">viewing {events.data.length} event{pluralize(events.data.length)}</span>
+              <span className="text-lg tracking-wide text-zinc-800 font-bold">Events</span>
+              <span className="ml-2 px-2 text-zinc-600 text-xs my-auto">
+                viewing {events.data.length} event{pluralize(events.data.length)}
+              </span>
             </div>
           ) : (
             <div className="animate-pulse p-2 h-5 bg-gray-300 rounded-full dark:bg-gray-700 w-48" />
           )}
         </div>
-        <table className="text-sm">
-          <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  {...{
-                    key: header.id,
-                    colSpan: header.colSpan,
-                    style: {
-                      width: header.getSize()
-                    }
-                  }}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
-                  <div
-                    {...{
-                      onMouseDown: header.getResizeHandler(),
-                      onTouchStart: header.getResizeHandler(),
-                      className: `resizer ${header.column.getIsResizing() ? "isResizing" : ""}`
-                    }}
-                  />
-                </th>
-              ))}
-            </tr>
-          ))}
-          </thead>
-          <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  {...{
-                    key: cell.id,
-                    style: {
-                      width: cell.column.getSize()
-                    }
-                  }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-          </tbody>
-        </table>
+        <div className="overflow-scroll overflow-x-auto border-box ">
+          <div className="inline-block pb-1">
+            {eventsTable}
+          </div>
+        </div>
       </div>
     </div>
   );
