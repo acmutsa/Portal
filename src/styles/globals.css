@@ -8,12 +8,14 @@
 body,
 html {
 	background-color: #0c2340;
+	height: 100vh;
 }
 
 .page-view {
-	min-height: calc(100vh - 72px);
+	height: 100vh;
 	width: 100%;
 	overflow-y: auto;
+	padding-top: 72px;
 }
 
 .page-view.bg-darken {
@@ -59,7 +61,7 @@ html {
 }
 
 .grayscale {
-	-webkit-transition : -webkit-filter 100ms linear
+	-webkit-transition: -webkit-filter 100ms linear;
 }
 
 table {
@@ -68,7 +70,8 @@ table {
 	border-collapse: collapse;
 }
 
-td, th {
+td,
+th {
 	@apply text-left p-2 relative;
 	border: 1px solid #dddddd;
 }

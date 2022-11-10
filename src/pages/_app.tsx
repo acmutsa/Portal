@@ -57,7 +57,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<div
 					className={`${
 						globalState.background ? "bg-[url('/img/bg.png')]" : "bg-white"
-					} bg-fixed bg-center bg-cover h-[calc(100vh-72px)] overflow-y-auto`}
+					} bg-fixed bg-center bg-cover h-[calc(100vh)] overflow-y-auto`}
 				>
 					<Component {...pageProps} />
 				</div>
