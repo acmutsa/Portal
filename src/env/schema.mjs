@@ -9,7 +9,7 @@ export const serverSchema = z.object({
 	DATABASE_URL: z.string().url(),
 	ADMIN_UNAME: z.string(),
 	ADMIN_PASS: z.string(),
-	EVENT_PAGE_REVALIDATION_TIME: z.number().positive(),
+	EVENT_PAGE_REVALIDATION_TIME: z.string(),
 	NODE_ENV: z.enum(["development", "test", "production"]),
 });
 

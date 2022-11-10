@@ -136,7 +136,11 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	}
 };
 
-const revalidationTime = env.EVENT_PAGE_REVALIDATION_TIME;
+const revalidationTime =
+	parseInt(env.EVENT_PAGE_REVALIDATION_TIME) != NaN &&
+	parseInt(env.EVENT_PAGE_REVALIDATION_TIME) >= 0
+		? parseInt(env.EVENT_PAGE_REVALIDATION_TIME)
+		: 20;
 export async function getStaticProps({ params }: eventPageParams) {
 	const event = await prisma.event.findUnique({
 		where: {
