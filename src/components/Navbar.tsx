@@ -32,7 +32,7 @@ const NavbarItem: FunctionComponent<HighlightProps> = ({
 
 	return (
 		<Link href={href ?? route}>
-			<a className={`under-hover mx-4 ${highlight ? "force" : ""}`}>{children}</a>
+			<a className={`under-hover ${highlight ? "force" : ""}`}>{children}</a>
 		</Link>
 	);
 };
@@ -79,7 +79,7 @@ const Navbar: FunctionComponent = () => {
 						</div>
 					</Link>
 				</div>
-				<div className="flex items-center justify-end font-sans text-[14px] [&>*]:mx-2 [&>*]:md:mx-4">
+				<div className="flex items-center justify-end font-inter text-base [&>*]:mx-1.5 [&>*]:xs:mx-2 [&>*]:md:mx-4">
 					<NavbarItem router={router} route={"/"}>
 						Home
 					</NavbarItem>
