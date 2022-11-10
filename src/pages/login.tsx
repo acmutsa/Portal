@@ -14,7 +14,6 @@ import Head from "next/head";
 const EventView: NextPage = () => {
 	const { register, handleSubmit, setValue } = useForm();
 	const [isErrorOpen, setIsErrorOpen] = useState(false);
-	const [isWorkedOpen, setIsSuccessOpen] = useState(false);
 	const [globalState, setGlobalState] = useGlobalContext();
 	const loggedIn = trpc.useMutation(["member.loggedIn"]);
 	const router = useRouter();
@@ -29,13 +28,12 @@ const EventView: NextPage = () => {
 	// Sub-par navigation guard
 	useEffect(() => {
 		// TODO: Improve navigation guards to not show login page at all before redirecting when logged in.
-		if (globalState.loggedIn && !isWorkedOpen) {
+		if (globalState.loggedIn) {
 			router.replace("/member/status");
 		}
 	}, [globalState]);
 
 	const closeErrorModal = () => setIsErrorOpen(false);
-	const closeSuccessModal = () => setIsSuccessOpen(false);
 
 	const didSubmit = async (data: any) => {
 		console.log("Checking login details");
@@ -44,8 +42,8 @@ const EventView: NextPage = () => {
 			// Setup cookies, open success modal
 			setCookie("member_email", data.email);
 			setCookie("member_shortID", data.shortID);
-			setIsSuccessOpen(true);
 			setGlobalState({ ...globalState, loggedIn: true });
+			await router.push("/member/status");
 		} else {
 			setIsErrorOpen(true);
 		}
@@ -165,59 +163,6 @@ const EventView: NextPage = () => {
 											onClick={() => closeErrorModal()}
 										>
 											Got it!
-										</button>
-									</div>
-								</Dialog.Panel>
-							</Transition.Child>
-						</div>
-					</div>
-				</Dialog>
-			</Transition>
-			<Transition appear show={isWorkedOpen} as={Fragment}>
-				<Dialog as="div" className="relative z-10" onClose={() => closeSuccessModal()}>
-					<Transition.Child
-						as={Fragment}
-						enter="ease-out duration-300"
-						enterFrom="opacity-0"
-						enterTo="opacity-100"
-						leave="ease-in duration-200"
-						leaveFrom="opacity-100"
-						leaveTo="opacity-0"
-					>
-						<div className="fixed inset-0 bg-black bg-opacity-25" />
-					</Transition.Child>
-
-					<div className="fixed inset-0 overflow-y-auto">
-						<div className="flex min-h-full items-center justify-center p-4 text-center">
-							<Transition.Child
-								as={Fragment}
-								enter="ease-out duration-300"
-								enterFrom="opacity-0 scale-95"
-								enterTo="opacity-100 scale-100"
-								leave="ease-in duration-200"
-								leaveFrom="opacity-100 scale-100"
-								leaveTo="opacity-0 scale-95"
-							>
-								<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-									<Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-										Success!
-									</Dialog.Title>
-									<div className="mt-2">
-										<p className="text-sm text-gray-500">
-											You are now logged in! Thanks for being a member of ACM!
-										</p>
-									</div>
-
-									<div className="mt-4">
-										<button
-											type="button"
-											className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-											onClick={() => {
-												closeSuccessModal();
-												router.push("/member/status");
-											}}
-										>
-											Great!
 										</button>
 									</div>
 								</Dialog.Panel>

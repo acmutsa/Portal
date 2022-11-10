@@ -33,7 +33,7 @@ const Home: NextPage = () => {
 								objectFit="cover"
 							/>
 						</div>
-						<h1 className="text-5xl font-extrabold font-inter my-[10px] text-center text-primary-lighter relative bottom-[5rem]">
+						<h1 className="text-xl sm:text-3xl md:text-4xl font-extrabold font-inter my-[10px] text-center text-primary-lighter relative bottom-[5rem]">
 							Membership Portal
 						</h1>
 						<div className="grid grid-rows-3 grid-cols-1 gap-2 px-3 pb-4 w-full text-white font-semibold">
