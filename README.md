@@ -38,6 +38,14 @@ To execute it locally, execute `yarn run start`. Features like hot-reloading wil
 Analysis of package sizes in a built website can be conducted with `yarn run analyze`; this will build like `yarn run build`,
 but will generate (and open) build reports useful for understanding the site's webpack size.
 
+Lastly, some environment variables are required. In `.env`, define these variables (values are your choice, but must not be null):
+
+```dotenv
+ADMIN_UNAME=acm
+ADMIN_PASS=123
+EVENT_PAGE_REVALIDATION_TIME=2
+```
+
 ## Database
 
 Prisma, our choice of Database ORM, requires a database to operate upon for nearly all interactions. If you are an ACM Officer

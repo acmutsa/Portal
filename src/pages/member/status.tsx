@@ -4,6 +4,9 @@ import { BsChevronDown } from "react-icons/bs";
 import { ReactNode } from "react";
 import { prisma } from "@/server/db/client";
 import { deleteCookie } from "cookies-next";
+import OpenGraph from "@/components/common/OpenGraph";
+import Head from "next/head";
+import useOpenGraph from "@/components/common/useOpenGraph";
 
 const getDisclosure = (title: ReactNode | string, description: ReactNode | string) => {
   return (
@@ -130,12 +133,22 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
   const checkins: SimpleCheckin[] = JSON.parse(checkinsJSON);
   const requiredPoints = 15;
 
+  const ogp = useOpenGraph({
+    title: "Member Status",
+    description: "View your current membership status & check-in data.",
+    url: "/member/status"
+  });
+
   // Transform the returned data
   const points: number = checkins.map((event) => event.points).reduce((a, b) => a + b, 0);
   const progress: number = Math.min(1, points / requiredPoints);
 
-  return (
-    <div className="page-view bg-darken flex justify-center py-8 md:py-20">
+  return <>
+    <Head>
+      <title>{ogp.title}</title>
+      <OpenGraph properties={ogp} />
+    </Head>
+  <div className="page-view bg-darken flex justify-center py-8 md:py-20">
       <div className="w-[90%] md:w-[40rem]">
         <div className="p-3 my-4 bg-white rounded-lg shadow">
           <div className="flex justify-between mb-1">
@@ -200,7 +213,7 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
         </div>
       </div>
     </div>
-  );
+  </>
 };
 
 export default Status;
