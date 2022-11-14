@@ -25,14 +25,18 @@ export const createContextInner = async (opts: CreateContextOptions) => {
 export const createContext = async (opts: trpcNext.CreateNextContextOptions) => {
 	const shortID = opts?.req?.cookies.member_shortID;
 	const email = opts?.req?.cookies.member_email;
+	const admin_username = opts?.req?.cookies.admin_uname;
+	const admin_password = opts?.req?.cookies.admin_pass;
 
 	return {
 		shortID,
 		email,
+		admin_username,
+		admin_password,
 		...(await createContextInner({})),
 	};
 };
 
-type Context = trpc.inferAsyncReturnType<typeof createContext>;
+export type Context = trpc.inferAsyncReturnType<typeof createContext>;
 
 export const createRouter = () => trpc.router<Context>();

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createRouter } from "@/server/router/context";
 import { sum } from "@/utils/helpers";
+import { validateAdmin } from "@/server/router/admin";
 
 export const eventsRouter = createRouter()
 	.query("getCurrent", {
@@ -32,6 +33,8 @@ export const eventsRouter = createRouter()
 			startDate: z.date(),
 		}),
 		async resolve({ input, ctx }) {
+			await validateAdmin(ctx);
+
 			const events = (
 				await ctx.prisma.event.findMany({
 					where: {
@@ -84,4 +87,10 @@ export const eventsRouter = createRouter()
 					count: (grouped[week] || []).map((week: any) => week.count).reduce(sum, 0),
 				}));
 		},
+	})
+	.query("canCheckin", {
+		input: z.object({
+			eventId: z.string(),
+		}),
+		async resolve({ input, ctx }) {},
 	});
