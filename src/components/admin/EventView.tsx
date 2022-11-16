@@ -10,9 +10,10 @@ import type { Event } from "@prisma/client";
 import { formatDateCell, pluralize } from "@/utils/helpers";
 import Stat from "@/components/common/Stat";
 import VisibilityDropdown from "@/components/table/VisibilityDropdown";
+import { useRouter } from "next/router";
+import { RowActions } from "@/components/table/RowActions";
 
 const columnHelper = createColumnHelper<Event>();
-
 const columns = [
 	columnHelper.accessor("name", {
 		header: "Name",
@@ -51,10 +52,32 @@ const columns = [
 
 const EventView: FunctionComponent = () => {
 	const events = trpc.useQuery(["events.getAll"], { refetchOnWindowFocus: false });
+	const router = useRouter();
+
+	const triggerDelete = (id: string) => {
+		console.log(`Deleting Event ${id}`);
+	};
 
 	const table = useReactTable({
 		data: events.isSuccess ? events.data : [],
-		columns,
+		columns: [
+			...columns,
+			columnHelper.display({
+				id: "actions",
+				header: "Actions",
+				minSize: 200,
+				cell: (ctx) => (
+					<RowActions
+						onDelete={() => {
+							triggerDelete(ctx.row.original.id);
+						}}
+						onEdit={() => {
+							return router.push(`/admin/events/${ctx.row.original.id}`);
+						}}
+					/>
+				),
+			}),
+		],
 		getCoreRowModel: getCoreRowModel(),
 		columnResizeMode: "onChange",
 		enableColumnResizing: true,

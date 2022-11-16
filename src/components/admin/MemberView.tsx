@@ -11,6 +11,9 @@ import { trpc } from "@/utils/trpc";
 import Stat from "@/components/common/Stat";
 import { formatDateCell, pluralize } from "@/utils/helpers";
 import VisibilityDropdown from "@/components/table/VisibilityDropdown";
+import { RowActions } from "@/components/table/RowActions";
+import { useRouter } from "next/router";
+
 const columnHelper = createColumnHelper<Member>();
 
 const columns = [
@@ -37,9 +40,31 @@ const EventView: FunctionComponent = () => {
 		refetchOnWindowFocus: false,
 	});
 
+	const triggerDelete = (id: string) => {
+		console.log(`Deleting Member ${id}`);
+	};
+
+	const router = useRouter();
 	const table = useReactTable({
 		data: isSuccess ? members : [],
-		columns,
+		columns: [
+			...columns,
+			columnHelper.display({
+				id: "actions",
+				header: "Actions",
+				minSize: 200,
+				cell: (ctx) => (
+					<RowActions
+						onDelete={() => {
+							triggerDelete(ctx.row.original.id);
+						}}
+						onEdit={() => {
+							return router.push(`/admin/members/${ctx.row.original.id}`);
+						}}
+					/>
+				),
+			}),
+		],
 		getCoreRowModel: getCoreRowModel(),
 		columnResizeMode: "onChange",
 		enableColumnResizing: true,
