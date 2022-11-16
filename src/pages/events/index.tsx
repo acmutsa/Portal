@@ -4,7 +4,7 @@ import { prisma } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
-import type { Event } from "@prisma/client";
+import type { Event } from "prisma/prisma-client";
 
 // TODO: Clean up types, and make this less awful to read. I'm sorry.
 
@@ -33,7 +33,7 @@ export async function getStaticProps() {
 
 	return {
 		props: {
-			results: results.map((result) => ({
+			results: results.map((result: Event) => ({
 				id: result.id,
 				pageID: result.pageID,
 				title: result.name,
