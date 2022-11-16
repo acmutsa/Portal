@@ -116,7 +116,7 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 							</div>
 							<div className="border-l-2">
 								<h2 className="text-center font-bold">Actions</h2>
-								<Link href={`/check-in/${id}`}>
+								<Link href={`/events/${id}/check-in`}>
 									<button className="h-12 w-full bg-primary-darker text-white rounded-lg font-semibold m-2">
 										Check-in
 									</button>
@@ -170,7 +170,7 @@ export async function getStaticProps({ params }: eventPageParams) {
 			location: event.location,
 			startDate: event.eventStart.toString(),
 			endDate: event.eventEnd.toString(),
-			qrcodeData: absUrl(`/check-in/${params.id}`),
+			qrcodeData: absUrl(`/events/${params.id}/check-in`),
 		},
 		// Next.js will attempt to re-generate the page:
 		// - When a request comes in
