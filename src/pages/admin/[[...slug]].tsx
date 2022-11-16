@@ -49,7 +49,7 @@ const inferFromPath = (path: string): [FunctionComponent | null, AdminView | nul
 		case "/admin/":
 			return [DashView, AdminView.dashboard];
 		default:
-				return [null, null];
+			return [null, null];
 	}
 };
 
@@ -82,17 +82,17 @@ const Admin: NextPage = () => {
 	let [ElementToShow, CurrentPage] = inferFromPath(path);
 
 	return (
-		<div className="page-view w-full min-h-full bg-white grid grid-cols-12">
-			<div className="col-span-4 [&>*]:cursor-pointer md:col-span-3 lg:col-span-2 py-[1.5rem] border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
+		<div className="page-view w-full min-h-full bg-white flex flex-col md:flex-row w-[100vw]">
+			<div className="w-full md:w-52 lg:w-56 [&>*]:cursor-pointer md:col-span-3 py-2 md:py-6 border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
 				{sideNavElements.map((element) => (
 					<div
 						key={element.text}
-						className={`p-4 grid grid-cols-3 v ${
+						className={`w-52 mx-auto lg:w-full py-1.5 md:py-4 px-2 grid grid-cols-3 v ${
 							element.page === CurrentPage ? "text-zinc-900" : "text-zinc-600"
 						} hover:text-zinc-900`}
 						onClick={() => swapPage(element.page)}
 					>
-						<div className=" col-span-1 m-auto">
+						<div className="col-span-1 m-auto">
 							<element.icon />
 						</div>
 						<div className="col-span-2 justify-self-start">
@@ -101,8 +101,8 @@ const Admin: NextPage = () => {
 					</div>
 				))}
 			</div>
-			<div className="col-span-8 md:col-span-9 lg:col-span-10 p-5 pt-[1rem] h-full w-full bg-zinc-100">
-				<div className="col-span-4">{ElementToShow  ? <ElementToShow /> : null}</div>
+			<div className=" p-5 pt-[1rem] h-full w-full bg-zinc-100">
+				<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
 			</div>
 		</div>
 	);

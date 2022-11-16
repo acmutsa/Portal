@@ -68,7 +68,9 @@ const CheckinChart: FunctionComponent = () => {
 	return (
 		<>
 			{weeks.isSuccess ? (
-				<span className="p-2 tracking-wide text-zinc-800 font-medium font-inter">Checkins</span>
+				<span className="p-3 tracking-wide text-zinc-800 font-medium font-inter text-sm md:text-base">
+					Checkins
+				</span>
 			) : (
 				<div className="animate-pulse p-2 h-5 bg-gray-300 rounded-full dark:bg-gray-700 w-48" />
 			)}
