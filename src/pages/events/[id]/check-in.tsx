@@ -24,7 +24,7 @@ const EventView: NextPage<{ event: Event | null }> = ({ event }) => {
 			<div className="page-view bg-darken">
 				<div className="mt-10 max-w-[30rem] mx-auto bg-white rounded-lg text-center flex flex-col items-center justify-center">
 					<h1 className="text-2xl p-1.5 font-inter font-bold text-primary-darker">
-						Check in to <span className="text-primary-lighter">{event.name}</span>?
+						Thanks for attending <span className="text-primary-lighter">{event.name}</span>?
 					</h1>
 					<div className="px-4 mb-4 w-full max-w-[30rem] m-1">
 						<textarea
