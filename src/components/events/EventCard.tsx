@@ -1,6 +1,14 @@
 import { FunctionComponent, useEffect, useState } from "react";
 
-import { addDays, format, formatDistanceStrict, formatRelative, isBefore, isPast, isSameDay } from "date-fns";
+import {
+	addDays,
+	format,
+	formatDistanceStrict,
+	formatRelative,
+	isBefore,
+	isPast,
+	isSameDay,
+} from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
 

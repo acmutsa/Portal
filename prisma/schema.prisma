@@ -45,7 +45,6 @@ model Member {
     email              String      @unique
     name               String
     shortID            String      @unique
-    attendanceCount    Int
     joinDate           DateTime
     checkins           Checkin[]
     data               MemberData?
