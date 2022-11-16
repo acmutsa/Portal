@@ -20,7 +20,7 @@ const Logout: NextPage = () => {
 				<div className="text-center">
 					If you see this, something may have went wrong while logging you out.
 					<button
-						className="text-primary-lighter font-inter font-medium px-2"
+						className="text-primary-light font-inter font-medium px-2"
 						onClick={() => window.location.reload()}
 					>
 						Reload?

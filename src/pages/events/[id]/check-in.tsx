@@ -23,8 +23,8 @@ const EventView: NextPage<{ event: Event | null }> = ({ event }) => {
 		return (
 			<div className="page-view bg-darken">
 				<div className="mt-10 max-w-[30rem] mx-auto bg-white rounded-lg text-center flex flex-col items-center justify-center">
-					<h1 className="text-2xl p-1.5 font-inter font-bold text-primary-darker">
-						Thanks for attending <span className="text-primary-lighter">{event.name}</span>?
+					<h1 className="text-2xl p-1.5 font-inter font-bold text-primary-dark">
+						Thanks for attending <span className="text-primary-light">{event.name}</span>?
 					</h1>
 					<div className="px-4 mb-4 w-full max-w-[30rem] m-1">
 						<textarea
@@ -34,7 +34,7 @@ const EventView: NextPage<{ event: Event | null }> = ({ event }) => {
 					</div>
 
 					<h1 className="text-5xl font-extrabold font-inter"></h1>
-					<button className="h-[40px] mb-3 w-full bg-primary-darker font-inter text-white rounded font-semibold max-w-[15rem]">
+					<button className="h-[40px] mb-3 w-full bg-primary-dark font-inter text-white rounded font-semibold max-w-[15rem]">
 						Submit
 					</button>
 				</div>

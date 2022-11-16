@@ -35,7 +35,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = (props) => {
 					{...register("admin_pass", { required: true })}
 				/>
 				<div className="flex justify-start w-[75%] mt-[10px]">
-					<button className="bg-primary-lighter text-white h-[50px] w-[100px] rounded-xl font-bold flex items-center justify-center">
+					<button className="bg-primary-light text-white h-[50px] w-[100px] rounded-xl font-bold flex items-center justify-center">
 						Sign in <BsFillArrowRightCircleFill className="ml-[5px]" />
 					</button>
 				</div>

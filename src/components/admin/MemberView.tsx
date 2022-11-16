@@ -16,7 +16,6 @@ const columnHelper = createColumnHelper<Member>();
 const columns = [
 	columnHelper.accessor("id", {
 		header: "ID",
-		size: 210,
 	}),
 	columnHelper.accessor("name", {
 		header: "Name",
@@ -25,10 +24,6 @@ const columns = [
 	columnHelper.accessor("email", {
 		header: "Email Address",
 		size: 300,
-	}),
-	columnHelper.accessor("id", {
-		header: "ID",
-		size: 200,
 	}),
 	columnHelper.accessor("joinDate", {
 		header: "Join Date",
