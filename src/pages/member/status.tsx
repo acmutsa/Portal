@@ -128,7 +128,7 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
 				<OpenGraph properties={ogp} />
 			</Head>
 			<div className="page-view bg-darken flex justify-center py-8 md:py-20">
-				<div className="w-[90%] md:w-[40rem]">
+				<div className="w-[90%] max-w-[40rem]">
 					<div className="p-3 my-4 bg-white rounded-lg shadow">
 						<div className="flex justify-between mb-1">
 							<span className="text-[15px] font-inter text-slate-800 text-white">
