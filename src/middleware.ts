@@ -13,9 +13,16 @@ export function middleware(req: NextRequest) {
 				return NextResponse.rewrite(new URL("/admin/login?invalid", req.url));
 			}
 		}
+	} else if (
+		req.nextUrl.pathname.startsWith("/check-in") ||
+		req.nextUrl.pathname.startsWith("/checkin")
+	) {
+		return NextResponse.redirect(
+			new URL(`/events/${req.nextUrl.pathname.split("/")[2] || "notaevent"}/check-in`, req.url)
+		);
 	}
 }
 
 export const config = {
-	matcher: ["/admin/:path*", "/admin"],
+	matcher: ["/admin/:path*", "/admin", "/checkin/:path*", "/check-in/:path*"],
 };
