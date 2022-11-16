@@ -6,7 +6,7 @@ interface memberItem {
 	name: string;
 	email: string;
 	major: string;
-	shortID: string;
+	id: string;
 	classificaiton: string;
 	gradDate: string;
 	birthday: string;
@@ -27,7 +27,7 @@ const memberItemValidator = z.object({
 	name: z.string(),
 	email: z.string(),
 	major: z.string(),
-	shortID: z.string(),
+	id: z.string(),
 	classificaiton: z.string(),
 	gradDate: z.string(),
 	birthday: z.string(),
@@ -95,7 +95,7 @@ const parseMemberItem = async (data: any) => {
 					break;
 				case "vb1MVNAySRtc":
 					// abc123
-					memberToValidate.shortID = data[i].text;
+					memberToValidate.id = data[i].text;
 					break;
 				case "CWk9CXm7dmC2":
 					// classification
@@ -161,7 +161,7 @@ const parseMemberItem = async (data: any) => {
 				name: parsedData.data.name,
 				email: parsedData.data.email.toLowerCase(),
 				joinDate: new Date(),
-				shortID: parsedData.data.shortID.toLowerCase(),
+				id: parsedData.data.id.toLowerCase(),
 				extendedMemberData: "{}",
 				data: {
 					create: {

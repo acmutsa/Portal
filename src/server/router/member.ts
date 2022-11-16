@@ -7,7 +7,7 @@ import { getAllMembers } from "@/server/controllers/member";
 
 // Calling this method while passing your request context will ensure member credentials were provided.
 export const validateMember = async (ctx: Context) => {
-	if (ctx.email == null || ctx.shortID == null)
+	if (ctx.email == null || ctx.id == null)
 		throw new trpc.TRPCError({
 			code: "UNAUTHORIZED",
 			message:
@@ -16,7 +16,7 @@ export const validateMember = async (ctx: Context) => {
 
 	let member = await ctx.prisma.member.findUnique({
 		where: {
-			shortID: ctx.shortID.toLowerCase(),
+			id: ctx.id.toLowerCase(),
 		},
 	});
 
@@ -33,26 +33,26 @@ export const memberRouter = createRouter()
 		input: z
 			.object({
 				email: z.string(),
-				shortID: z.string(),
+				id: z.string(),
 			})
 			.nullish(),
 		output: z.boolean(),
 		async resolve({ input, ctx }) {
 			let email = ctx.email;
-			let shortID = ctx.shortID;
+			let id = ctx.id;
 
 			// If input is specified, use those automatically. Both won't be null/undefined by schema.
 			if (input) {
 				email = input.email;
-				shortID = input.shortID;
+				id = input.id;
 			} else {
 				// If either are nullish from context, we can't verify a login.
-				if (!email || !shortID) return false;
+				if (!email || !id) return false;
 			}
 
 			let member = await ctx.prisma.member.findUnique({
 				where: {
-					shortID: shortID.toLowerCase(),
+					id: id.toLowerCase(),
 				},
 			});
 
@@ -64,16 +64,17 @@ export const memberRouter = createRouter()
 			eventID: z.string(),
 		}),
 		async resolve({ ctx }) {
-			if (ctx?.shortID == null) return null;
+			if (ctx?.id == null) return null;
 
 			let member = await ctx.prisma.member.findUnique({
 				where: {
-					shortID: ctx?.shortID?.toLowerCase(),
+					id: ctx?.id?.toLowerCase(),
 				},
 			});
 
+			// TODO: Fix this. Something is probably not working right here...
 			if (member && member.email == ctx?.email?.toLowerCase()) {
-				let eventShortID = ctx?.shortID?.toLowerCase() || "error";
+				let eventShortID = ctx?.id?.toLowerCase() || "error";
 				let memberID = member?.id || "error";
 
 				let checkin = await ctx.prisma.checkin.findMany({
@@ -82,7 +83,7 @@ export const memberRouter = createRouter()
 							pageID: eventShortID,
 						},
 						member: {
-							shortID: memberID,
+							id: memberID,
 						},
 					},
 					take: 1,
@@ -114,11 +115,11 @@ export const memberRouter = createRouter()
 	})
 	.query("me", {
 		async resolve({ ctx }) {
-			if (ctx?.shortID == null) return null;
+			if (ctx?.id == null) return null;
 
 			let member = await ctx.prisma.member.findUnique({
 				where: {
-					shortID: ctx?.shortID?.toLowerCase(),
+					id: ctx?.id?.toLowerCase(),
 				},
 			});
 

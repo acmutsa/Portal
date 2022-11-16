@@ -9,7 +9,7 @@ const Logout: NextPage = () => {
 	const [globalState, setGlobalState] = useGlobalContext();
 	useEffect(() => {
 		deleteCookie("member_email");
-		deleteCookie("member_shortID");
+		deleteCookie("member_id");
 		setGlobalState({ ...globalState, member: false });
 		router.replace("/login");
 	}, []);

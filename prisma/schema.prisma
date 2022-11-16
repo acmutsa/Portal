@@ -41,10 +41,9 @@ model Checkin {
 }
 
 model Member {
-    id                 String      @id @default(cuid())
+    id                 String      @id
     email              String      @unique
     name               String
-    shortID            String      @unique
     joinDate           DateTime
     checkins           Checkin[]
     data               MemberData?
