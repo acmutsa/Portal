@@ -160,7 +160,7 @@ const NewEventView: FunctionComponent = () => {
 						</>
 					) : null}
 				</div>
-				<button className="bg-primary-lighter text-white h-[50px] w-[150px] ml-auto align-text-center rounded-full font-bold flex items-center justify-center align-center mt-[15px]">
+				<button className="bg-primary-light text-white h-[50px] w-[150px] ml-auto align-text-center rounded-full font-bold flex items-center justify-center align-center mt-[15px]">
 					Create Event <BsFillArrowRightCircleFill className="ml-[15px]" />
 				</button>
 			</form>

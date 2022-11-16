@@ -9,8 +9,10 @@ module.exports = {
 			},
 			colors: {
 				"accent": "#f15a22",
-				"primary-darker": "#0C2340",
-				"primary-lighter": "#179BD5",
+				"primary-dark": "#0C2340",
+				"primary-dark-hover": "#0f2c50",
+				"primary-light": "#179BD5",
+				"primary-light-hover": "#179BD5",
 				paper: "#faebd7",
 			},
 			fontFamily: {

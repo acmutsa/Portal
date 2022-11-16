@@ -1,28 +1,9 @@
 import type { NextPage } from "next";
 import EventCard from "@/components/events/EventCard";
-import { prisma } from "@/server/db/client";
+import { prisma, Event } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
-import type { Event } from "prisma/prisma-client";
-
-// TODO: Clean up types, and make this less awful to read. I'm sorry.
-
-interface SerializedEvent {
-	id: string;
-	title: string;
-	imageURL: string;
-	eventHost: string;
-	eventDescription?: string;
-	eventStart: string;
-	eventEnd: string;
-	location: string;
-	pageID: string;
-}
-
-interface EventServerProps {
-	results: Array<SerializedEvent>;
-}
 
 export async function getStaticProps() {
 	let results = await prisma.event.findMany({
@@ -32,22 +13,12 @@ export async function getStaticProps() {
 	});
 
 	return {
-		props: {
-			results: results.map((result: Event) => ({
-				id: result.id,
-				pageID: result.pageID,
-				title: result.name,
-				imageURL: result.headerImage,
-				location: result.location,
-				eventStart: result.eventStart.toString(),
-				eventEnd: result.eventEnd.toString(),
-			})),
-		},
+		props: { results },
 		revalidate: 60,
 	};
 }
 
-const Events: NextPage<EventServerProps> = ({ results }) => {
+const Events: NextPage<{ results: Event[] }> = ({ results }) => {
 	const ogp = useOpenGraph({
 		description: "Find all the latest events hosted by ACM-UTSA!",
 		title: "Events",
@@ -67,11 +38,11 @@ const Events: NextPage<EventServerProps> = ({ results }) => {
 							<EventCard
 								key={event.id}
 								pageID={event.pageID}
-								title={event.title}
-								startDate={new Date(event.eventStart)}
-								endDate={new Date(event.eventEnd)}
-								eventHost={event.eventHost}
-								imageURL={event.imageURL}
+								title={event.name}
+								startDate={event.eventStart}
+								endDate={event.eventEnd}
+								eventHost={event.organization}
+								imageURL={event.headerImage}
 								location={event.location}
 							/>
 						);
