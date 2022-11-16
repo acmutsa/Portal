@@ -162,7 +162,6 @@ const parseMemberItem = async (data: any) => {
 				email: parsedData.data.email.toLowerCase(),
 				joinDate: new Date(),
 				shortID: parsedData.data.shortID.toLowerCase(),
-				attendanceCount: 0,
 				extendedMemberData: "{}",
 				data: {
 					create: {
