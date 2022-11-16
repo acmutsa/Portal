@@ -9,50 +9,50 @@ import useOpenGraph from "@/components/common/useOpenGraph";
 import { validateMember } from "@/utils/server_helpers";
 
 const getDisclosure = (title: ReactNode | string, description: ReactNode | string) => {
-  return (
-    <div className="my-2 text-xs md:text-sm">
-      <Disclosure>
-        {({ open }) => (
-          <>
-            <Disclosure.Button
-              className="flex w-full justify-between rounded-lg bg-blue-100 px-4 py-2 text-left
+	return (
+		<div className="my-2 text-xs md:text-sm">
+			<Disclosure>
+				{({ open }) => (
+					<>
+						<Disclosure.Button
+							className="flex w-full justify-between rounded-lg bg-blue-100 px-4 py-2 text-left
 								font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring
 								focus-visible:ring-blue-500 focus-visible:ring-opacity-75"
-            >
-              <span>{title}</span>
-              <BsChevronDown
-                className={`ease-in-out transform transition-transform ${
-                  open ? "rotate-180" : ""
-                } h-5 w-5 text-blue-500`}
-              />
-            </Disclosure.Button>
-            <Transition
-              enter="transition duration-100 ease-out"
-              enterFrom="transform scale-95 opacity-0"
-              enterTo="transform scale-100 opacity-100"
-              leave="transition duration-75 ease-out"
-              leaveFrom="transform scale-100 opacity-100"
-              leaveTo="transform scale-95 opacity-0"
-            >
-              <Disclosure.Panel className="px-3 md:px-4 py-2 md:pt-4 text-gray-500">
-                {description}
-              </Disclosure.Panel>
-            </Transition>
-          </>
-        )}
-      </Disclosure>
-    </div>
-  );
+						>
+							<span>{title}</span>
+							<BsChevronDown
+								className={`ease-in-out transform transition-transform ${
+									open ? "rotate-180" : ""
+								} h-5 w-5 text-blue-500`}
+							/>
+						</Disclosure.Button>
+						<Transition
+							enter="transition duration-100 ease-out"
+							enterFrom="transform scale-95 opacity-0"
+							enterTo="transform scale-100 opacity-100"
+							leave="transition duration-75 ease-out"
+							leaveFrom="transform scale-100 opacity-100"
+							leaveTo="transform scale-95 opacity-0"
+						>
+							<Disclosure.Panel className="px-3 md:px-4 py-2 md:pt-4 text-gray-500">
+								{description}
+							</Disclosure.Panel>
+						</Transition>
+					</>
+				)}
+			</Disclosure>
+		</div>
+	);
 };
 
 interface SimpleCheckin {
-  eventName: string;
-  eventDate: string;
-  points: number;
+	eventName: string;
+	eventDate: string;
+	points: number;
 }
 
 interface ServerSideProps {
-  checkins: string;
+	checkins: string;
 }
 
 const login_redirect_response = {
@@ -94,9 +94,9 @@ export async function getServerSideProps<ServerSideProps>({ req, res }: GetServe
 }
 
 const disclosures = [
-  [
-    "How many points does a given event provide?",
-    <span>
+	[
+		"How many points does a given event provide?",
+		<span>
 			Most events provide one point. Some will provide more (hackathons), some will provide less
 			(minimum 0.5 points). Details of the event's points can be found on it's event page.
 		</span>,
@@ -108,8 +108,8 @@ const disclosures = [
 ];
 
 const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
-  const checkins: SimpleCheckin[] = JSON.parse(checkinsJSON);
-  const requiredPoints = 15;
+	const checkins: SimpleCheckin[] = JSON.parse(checkinsJSON);
+	const requiredPoints = 15;
 
 	const ogp = useOpenGraph({
 		title: "Member Status",
@@ -117,9 +117,9 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
 		url: "/member/status",
 	});
 
-  // Transform the returned data
-  const points: number = checkins.map((event) => event.points).reduce((a, b) => a + b, 0);
-  const progress: number = Math.min(1, points / requiredPoints);
+	// Transform the returned data
+	const points: number = checkins.map((event) => event.points).reduce((a, b) => a + b, 0);
+	const progress: number = Math.min(1, points / requiredPoints);
 
 	return (
 		<>
@@ -162,8 +162,11 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
 								</thead>
 								<tbody>
 									{checkins.length > 0 ? (
-										checkins.map((checkin) => (
-											<tr className="[&>*]:py-2 [&>*]:px-3 [&>*]:md:py-4 [&>*]:md:px-6 bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+										checkins.map((checkin, index) => (
+											<tr
+												key={index}
+												className="[&>*]:py-2 [&>*]:px-3 [&>*]:md:py-4 [&>*]:md:px-6 bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+											>
 												<td
 													scope="row"
 													className="font-medium text-gray-900 whitespace-nowrap dark:text-white"

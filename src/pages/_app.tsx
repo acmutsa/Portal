@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
-	const loggedIn = trpc.useMutation(["member.loggedIn"]);
+	const memberLoggedIn = trpc.useMutation(["member.loggedIn"]);
 
 	const router = useRouter();
 	useEffect(() => {
@@ -40,9 +40,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	}, [router]);
 
 	useEffect(() => {
-		loggedIn.mutate(null, {
+		memberLoggedIn.mutate(null, {
 			onSuccess: (response) => {
-				setGlobalState({ ...globalState, loggedIn: response ?? false, ready: true });
+				setGlobalState({ ...globalState, member: response ?? false, ready: true });
 			},
 		});
 	}, []);

@@ -44,7 +44,7 @@ const Navbar: FunctionComponent = () => {
 	let dynamicNavbarElements = [];
 
 	if (globalState.ready)
-		if (globalState.loggedIn)
+		if (globalState.member)
 			dynamicNavbarElements = [
 				<NavbarItem key={1} router={router} route={"/member/status"}>
 					Status
