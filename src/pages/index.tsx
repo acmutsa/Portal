@@ -20,10 +20,10 @@ const Home: NextPage = () => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-darken !pt-[25vh]">
-				<div className="w-full max-w-[1024px] h-full flex flex-col items-center mx-auto">
-					<div className="flex flex-col items-center justify-start w-[25rem] bg-white rounded border-2 border-primary-lighter">
-						<div className="shrink relative bottom-[5rem] h-[140px] w-[140px] rounded-full overflow-hidden border-2 border-primary-lighter bg-white">
+			<div className="page-view bg-darken !pt-40 md:!pt-44 lg:!pt-48">
+				<div className="w-full max-w-[1024px] h-full flex flex-col items-center mx-auto px-4">
+					<div className="flex flex-col items-center justify-start max-w-[25rem] w-full sm:w-[25rem] bg-white rounded border-2 border-primary-light">
+						<div className="shrink relative text-sm md:text-base bottom-[0em] h-[9em] w-[9em] rounded-full overflow-hidden border-2 border-primary-light bg-white">
 							<Image
 								className="drop-shadow-sm"
 								src={"/img/logo.png"}
@@ -31,24 +31,24 @@ const Home: NextPage = () => {
 								objectFit="cover"
 							/>
 						</div>
-						<h1 className="text-5xl font-extrabold font-inter my-[10px] text-center text-primary-lighter relative bottom-[5rem]">
+						<h1 className="text-4xl md:text-[2.75rem] md:leading-12  lg:text-5xl font-extrabold font-inter my-[10px] text-center text-primary-light relative bottom-[0rem]">
 							Membership
 							<br />
 							Portal
 						</h1>
-						<div className="grid grid-rows-3 grid-cols-1 gap-2 px-3 pb-4 w-full text-white font-semibold">
+						<div className="grid grid-rows-3 grid-cols-1 gap-2 px-3 py-4 w-full text-white font-semibold">
 							<Link href="/events/">
-								<button className="h-[3.125rem] w-full px-2 justify-self-center bg-primary-darker rounded">
+								<button className="h-12 w-full px-2 justify-self-center bg-primary-dark hover:bg-primary-dark-hover rounded">
 									Events
 								</button>
 							</Link>
-							<Link href="/register/">
-								<button className="h-[3.125rem] w-full justify-self-center bg-primary-darker rounded">
+							<Link href="/register">
+								<button className="h-12 w-full justify-self-center bg-primary-dark hover:bg-primary-dark-hover rounded">
 									Register
 								</button>
 							</Link>
-							<Link href="/member/status/" className="mx-2">
-								<button className="h-[3.125rem] w-full justify-self-center bg-primary-darker rounded">
+							<Link href="/member/status" className="mx-2">
+								<button className="h-12 w-full justify-self-center bg-primary-dark hover:bg-primary-dark-hover rounded">
 									Status
 								</button>
 							</Link>
