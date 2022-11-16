@@ -34,6 +34,7 @@ export const memberRouter = createRouter()
 				shortID: z.string(),
 			})
 			.nullish(),
+		output: z.boolean(),
 		async resolve({ input, ctx }) {
 			let email = ctx.email;
 			let shortID = ctx.shortID;
@@ -53,7 +54,7 @@ export const memberRouter = createRouter()
 				},
 			});
 
-			return member && member.email == email.toLowerCase();
+			return member != null && member.email == email.toLowerCase();
 		},
 	})
 	.mutation("checkin", {

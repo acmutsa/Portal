@@ -17,7 +17,9 @@ import { useRouter } from "next/router";
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
 	const memberLoggedIn = trpc.useMutation(["member.loggedIn"]);
+	const adminLoggedIn = trpc.useMutation(["admin.loggedIn"]);
 
+	// Setup progress bar router-based listeners
 	const router = useRouter();
 	useEffect(() => {
 		const handleStart = (url: string) => {
@@ -39,10 +41,20 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 		};
 	}, [router]);
 
+	// Check whether the user is logged in or not.
 	useEffect(() => {
+		adminLoggedIn.mutate(null, {
+			onSuccess: (response) => {
+				setGlobalState((previousGlobalState) => {
+					return { ...previousGlobalState, admin: response ?? false };
+				});
+			},
+		});
 		memberLoggedIn.mutate(null, {
 			onSuccess: (response) => {
-				setGlobalState({ ...globalState, member: response ?? false, ready: true });
+				setGlobalState((previousGlobalState) => {
+					return { ...previousGlobalState, member: response ?? false, ready: true };
+				});
 			},
 		});
 	}, []);

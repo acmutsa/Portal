@@ -43,26 +43,33 @@ const Navbar: FunctionComponent = () => {
 
 	let dynamicNavbarElements = [];
 
-	if (globalState.ready)
+	if (globalState.ready) {
 		if (globalState.member)
 			dynamicNavbarElements = [
-				<NavbarItem key={1} router={router} route={"/member/status"}>
+				<NavbarItem key={"status"} router={router} route={"/member/status"}>
 					Status
 				</NavbarItem>,
-				<Link key={2} href={"/logout"}>
+				<Link key={"logout"} href={"/logout"}>
 					<a className="under-hover">Logout</a>
 				</Link>,
 			];
 		else
 			dynamicNavbarElements = [
-				<NavbarItem key={1} router={router} route={"/login"}>
+				<NavbarItem key={"login"} router={router} route={"/login"}>
 					<span>Login</span>
 				</NavbarItem>,
-				<NavbarItem key={2} router={router} route={"/register"}>
+				<NavbarItem key={"register"} router={router} route={"/register"}>
 					<span>Register</span>
 				</NavbarItem>,
 			];
-	else
+
+		if (globalState.admin)
+			dynamicNavbarElements.push(
+				<NavbarItem key={"admin"} router={router} route={"/admin"} logic="starts-with">
+					<span>Admin</span>
+				</NavbarItem>
+			);
+	} else
 		dynamicNavbarElements = [
 			<div key={1} className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
 			<div key={2} className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
