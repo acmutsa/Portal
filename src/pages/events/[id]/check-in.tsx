@@ -22,7 +22,7 @@ const EventView: NextPage<{ event: Event | null }> = ({ event }) => {
 	if (event) {
 		return (
 			<div className="page-view bg-darken">
-				<div className="mt-10 mx-auto max-w-[30rem] mx-auto bg-white rounded-lg text-center flex flex-col items-center justify-center">
+				<div className="mt-10 max-w-[30rem] mx-auto bg-white rounded-lg text-center flex flex-col items-center justify-center">
 					<h1 className="text-2xl p-1.5 font-inter font-bold text-primary-darker">
 						Check in to <span className="text-primary-lighter">{event.name}</span>?
 					</h1>
