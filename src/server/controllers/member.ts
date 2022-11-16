@@ -25,3 +25,15 @@ export async function getMember(id: string): Promise<Member | null> {
 		},
 	});
 }
+
+/**
+ * Return all Members in the database.
+ * @param extended If true, eager-load the extended member data. Defaults to false.
+ */
+export async function getAllMembers(extended: boolean = false): Promise<Member[]> {
+	return await prisma.member.findMany({
+		include: {
+			data: extended,
+		},
+	});
+}

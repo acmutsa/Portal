@@ -1,4 +1,4 @@
-import { differenceInDays } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 
 export function pluralize(count: number) {
 	return count != 1 ? "s" : "";
@@ -107,3 +107,13 @@ export function ltrim(input: string, characters: string) {
 	}
 	return input.substring(start);
 }
+
+export const formatDateCell = (value: Date) => {
+	const hoverText = format(value, "EEEE, LLL do, yyyy 'at' h:mm:ss aaaa");
+	const shortText = format(value, "y/MM/dd h:mma z");
+	return (
+		<span className="whitespace-nowrap bg-slate-300 p-1 rounded-lg font-medium" title={hoverText}>
+			{shortText}
+		</span>
+	);
+};

@@ -2,6 +2,8 @@ import { Context, createRouter } from "@/server/router/context";
 
 import { z } from "zod";
 import * as trpc from "@trpc/server";
+import { validateAdmin } from "@/server/router/admin";
+import { getAllMembers } from "@/server/controllers/member";
 
 // Calling this method while passing your request context will ensure member credentials were provided.
 export const validateMember = async (ctx: Context) => {
@@ -122,5 +124,11 @@ export const memberRouter = createRouter()
 
 			if (member && member.email == ctx?.email?.toLowerCase()) return member;
 			return null;
+		},
+	})
+	.query("getAll", {
+		async resolve({ ctx }) {
+			await validateAdmin(ctx);
+			return getAllMembers();
 		},
 	});
