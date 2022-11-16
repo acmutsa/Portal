@@ -11,10 +11,24 @@ const Logout: NextPage = () => {
 		deleteCookie("member_email");
 		deleteCookie("member_shortID");
 		setGlobalState({ ...globalState, member: false });
-		router.replace("/");
+		router.replace("/login");
 	}, []);
 
-	return <>If you see this, something went wrong while logging you out.</>;
+	return (
+		<div className="page-view bg-darken">
+			<div className="late-fade-in bg-white p-1.5 mx-auto m-2 max-w-[20rem] rounded">
+				<div className="text-center">
+					If you see this, something may have went wrong while logging you out.
+					<button
+						className="text-primary-lighter font-inter font-medium px-2"
+						onClick={() => window.location.reload()}
+					>
+						Reload?
+					</button>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default Logout;
