@@ -1,7 +1,32 @@
-import { createRouter } from "@/server/router/context";
-import { resolve } from "path";
+import { Context, createRouter } from "@/server/router/context";
 
 import { z } from "zod";
+import * as trpc from "@trpc/server";
+import { validateAdmin } from "@/server/router/admin";
+import { getAllMembers } from "@/server/controllers/member";
+
+// Calling this method while passing your request context will ensure member credentials were provided.
+export const validateMember = async (ctx: Context) => {
+	if (ctx.email == null || ctx.shortID == null)
+		throw new trpc.TRPCError({
+			code: "UNAUTHORIZED",
+			message:
+				"Member-level credentials are required for this resource, whereas nothing was provided.",
+		});
+
+	let member = await ctx.prisma.member.findUnique({
+		where: {
+			shortID: ctx.shortID.toLowerCase(),
+		},
+	});
+
+	if (member == null || member.email != ctx.email.toLowerCase())
+		throw new trpc.TRPCError({
+			code: "UNAUTHORIZED",
+			message:
+				"Valid member-level credentials are required for this resource; what was provided was invalid.",
+		});
+};
 
 export const memberRouter = createRouter()
 	.mutation("loggedIn", {
@@ -11,6 +36,7 @@ export const memberRouter = createRouter()
 				shortID: z.string(),
 			})
 			.nullish(),
+		output: z.boolean(),
 		async resolve({ input, ctx }) {
 			let email = ctx.email;
 			let shortID = ctx.shortID;
@@ -30,7 +56,7 @@ export const memberRouter = createRouter()
 				},
 			});
 
-			return member && member.email == email.toLowerCase();
+			return member != null && member.email == email.toLowerCase();
 		},
 	})
 	.mutation("checkin", {
@@ -98,5 +124,11 @@ export const memberRouter = createRouter()
 
 			if (member && member.email == ctx?.email?.toLowerCase()) return member;
 			return null;
+		},
+	})
+	.query("getAll", {
+		async resolve({ ctx }) {
+			await validateAdmin(ctx);
+			return getAllMembers();
 		},
 	});

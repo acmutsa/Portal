@@ -103,6 +103,28 @@ If you do not have 100% confidence in what you are doing, you should not be atte
         - `npx` forces execution of the latest version of Prisma, ensuring the latest version (and not whatever is in
           your local installation) is used.
 
+## Separation of Server and Client
+
+With our client and server so closely outfitted together, it is important to know how easily
+the client may try to access resources it simply should not be attempting to. This is primarily
+when dealing with environment variables.
+
+Like most web applications, ours is provided credentials to the services it needs through
+environment variables; database URLs and such. A number of other important pieces of data are
+accessed here as well, such as the static administrator login and the environment type.
+
+Here is one simple example of how importing something in the wrong spot can lead to the client breaking.
+
+- `/member/status.tsx` includes `{ OpenGraph }` from `OpenGraph.tsx`
+- `OpenGraph.tsx` includes `{ ltrim }` from `utils/helpers.ts`
+- `utils/helpers.ts` contains `validateMember`, which has a type of `Member`, re-exported from `@prisma/client` inside `/server/db/client.ts`
+  - This is nothing more than a type, not a function or constant, used for the Typescript transpiler.
+- `/server/db/client.ts` uses the `NODE_ENV` environment variable provided to the server.
+
+The issue here is that `helpers.ts` contains methods that access server-side resources whilst being
+accessed by the client. If a server-side resource is being accessed, it should be moved to not
+be alongside client-side methods.
+
 [node-js]: https://nodejs.org/en/download/
 [next-js]: https://nextjs.org/
 [prisma]: https://www.prisma.io/

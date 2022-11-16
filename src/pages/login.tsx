@@ -12,10 +12,10 @@ import Disclosure from "@/components/util/Disclosure";
 import Head from "next/head";
 
 const EventView: NextPage = () => {
-	const { register, handleSubmit, setValue } = useForm();
+	const { register, handleSubmit } = useForm();
 	const [isErrorOpen, setIsErrorOpen] = useState(false);
 	const [globalState, setGlobalState] = useGlobalContext();
-	const loggedIn = trpc.useMutation(["member.loggedIn"]);
+	const memberLoggedIn = trpc.useMutation(["member.loggedIn"]);
 	const router = useRouter();
 
 	const ogp = useOpenGraph({
@@ -28,7 +28,7 @@ const EventView: NextPage = () => {
 	// Sub-par navigation guard
 	useEffect(() => {
 		// TODO: Improve navigation guards to not show login page at all before redirecting when logged in.
-		if (globalState.loggedIn) {
+		if (globalState.member) {
 			router.replace("/member/status");
 		}
 	}, [globalState]);
@@ -36,13 +36,12 @@ const EventView: NextPage = () => {
 	const closeErrorModal = () => setIsErrorOpen(false);
 
 	const didSubmit = async (data: any) => {
-		console.log("Checking login details");
-		let isLoggedIn = await loggedIn.mutateAsync({ email: data.email, shortID: data.shortID });
+		let isLoggedIn = await memberLoggedIn.mutateAsync({ email: data.email, shortID: data.shortID });
 		if (isLoggedIn) {
 			// Setup cookies, open success modal
 			setCookie("member_email", data.email);
 			setCookie("member_shortID", data.shortID);
-			setGlobalState({ ...globalState, loggedIn: true });
+			setGlobalState({ ...globalState, member: true });
 			await router.push("/member/status");
 		} else {
 			setIsErrorOpen(true);
@@ -66,7 +65,9 @@ const EventView: NextPage = () => {
 							className="min-w-[20rem] sm:w-full flex flex-col font-inter justify-start p-1 pb-2 text-left"
 						>
 							<label className="">
-								<p className="block tracking-wide text-sm md:text-base font-medium text-slate-700">Email</p>
+								<p className="block tracking-wide text-sm md:text-base font-medium text-slate-700">
+									Email
+								</p>
 								<input
 									type="email"
 									placeholder="you@example.com"
@@ -80,7 +81,9 @@ const EventView: NextPage = () => {
 								</p>
 							</label>
 							<label>
-								<span className="block text-sm md:text-base font-medium text-slate-700">myUTSA ID</span>
+								<span className="block text-sm md:text-base font-medium text-slate-700">
+									myUTSA ID
+								</span>
 								<input
 									type="text"
 									placeholder="abc123"
@@ -100,8 +103,10 @@ const EventView: NextPage = () => {
 									Please provide a valid abc123.
 								</p>
 							</label>
-							<button className="bg-sky-500 focus:bg-sky-600 hover:bg-sky-600 px-5 outline-none py-2 mt-1.5 md:mt-0 sm:py-2.5 text-sm
-							 leading-5 rounded-md font-semibold text-white">
+							<button
+								className="bg-sky-500 focus:bg-sky-600 hover:bg-sky-600 px-5 outline-none py-2 mt-1.5 md:mt-0 sm:py-2.5 text-sm
+							 leading-5 rounded-md font-semibold text-white"
+							>
 								Login
 							</button>
 						</form>
@@ -140,8 +145,10 @@ const EventView: NextPage = () => {
 								leaveFrom="opacity-100 scale-100"
 								leaveTo="opacity-0 scale-95"
 							>
-								<Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left
-								 align-middle shadow-xl transition-all">
+								<Dialog.Panel
+									className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left
+								 align-middle shadow-xl transition-all"
+								>
 									<Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
 										Invalid Login
 									</Dialog.Title>

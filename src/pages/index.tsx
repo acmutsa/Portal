@@ -26,8 +26,6 @@ const Home: NextPage = () => {
 						<div className="shrink relative bottom-[5rem] h-[140px] w-[140px] rounded-full overflow-hidden border-2 border-primary-lighter bg-white">
 							<Image
 								className="drop-shadow-sm"
-								width={150}
-								height={150}
 								src={"/img/logo.png"}
 								layout="fill"
 								objectFit="cover"

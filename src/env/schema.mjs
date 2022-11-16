@@ -6,11 +6,11 @@ import { z } from "zod";
  * This way you can ensure the app isn't built with invalid env vars.
  */
 export const serverSchema = z.object({
-	DATABASE_URL: z.string().url(),
 	ADMIN_UNAME: z.string(),
 	ADMIN_PASS: z.string(),
-	EVENT_PAGE_REVALIDATION_TIME: z.string(),
+	DATABASE_URL: z.string().url(),
 	NODE_ENV: z.enum(["development", "test", "production"]),
+	EVENT_PAGE_REVALIDATION_TIME: z.preprocess((n) => parseInt(z.string().parse(n), 10), z.number().positive().min(0)),
 });
 
 /**

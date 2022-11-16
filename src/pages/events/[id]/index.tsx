@@ -92,14 +92,20 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 					/>
 					<div className="mt-5 bg-white mx-auto max-w-[1200px] min-h-[25rem] rounded-xl p-3">
 						<div className="grid grid-cols-4 w-full min-h-[25rem]">
-							<div className="col-span-3 pr-4 py-5">
-								<div className="prose prose-md max-w-none font-raleway font-semibold">
+							<div className="col-span-3 pr-4 py-2">
+								<div className="mx-3 prose prose-md max-w-none font-raleway font-semibold">
 									<h2 className="border-b-2 mb-1">Description</h2>
-									<ReactMarkdown remarkPlugins={[remarkGfm]}>
-										{props.description ?? ""}
-									</ReactMarkdown>
-									<h2 className="border-b-2 mb-1">About ACM</h2>
-									<p>
+									{props.description !== null && props.description.length > 0 ? (
+										<ReactMarkdown className="ml-3 [&>*]:my-0" remarkPlugins={[remarkGfm]}>
+											{props.description!}
+										</ReactMarkdown>
+									) : (
+										<p className="ml-3 text-zinc-500 font-medium">
+											No description was provided for this event.
+										</p>
+									)}
+									<h2 className="border-b-2 mb-1 mt-4">About ACM</h2>
+									<p className="ml-3">
 										ACM is the premier organization on campus for students interested in technology.
 										ACM is dedicated to providing members with opportunities for professional,
 										academic, and social growth outside the classroom in order to prepare students
@@ -110,7 +116,7 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 							</div>
 							<div className="border-l-2">
 								<h2 className="text-center font-bold">Actions</h2>
-								<Link href={`/check-in/${id}`}>
+								<Link href={`/events/${id}/check-in`}>
 									<button className="h-12 w-full bg-primary-darker text-white rounded-lg font-semibold m-2">
 										Check-in
 									</button>
@@ -136,11 +142,8 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 	}
 };
 
-const revalidationTime =
-	parseInt(env.EVENT_PAGE_REVALIDATION_TIME) != NaN &&
-	parseInt(env.EVENT_PAGE_REVALIDATION_TIME) >= 0
-		? parseInt(env.EVENT_PAGE_REVALIDATION_TIME)
-		: 20;
+const revalidationTime = Math.max(env.EVENT_PAGE_REVALIDATION_TIME, 20);
+
 export async function getStaticProps({ params }: eventPageParams) {
 	const event = await prisma.event.findUnique({
 		where: {
@@ -167,7 +170,7 @@ export async function getStaticProps({ params }: eventPageParams) {
 			location: event.location,
 			startDate: event.eventStart.toString(),
 			endDate: event.eventEnd.toString(),
-			qrcodeData: absUrl(`/check-in/${params.id}`),
+			qrcodeData: absUrl(`/events/${params.id}/check-in`),
 		},
 		// Next.js will attempt to re-generate the page:
 		// - When a request comes in

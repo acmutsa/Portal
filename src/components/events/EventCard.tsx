@@ -1,6 +1,14 @@
 import { FunctionComponent, useEffect, useState } from "react";
 
-import { addDays, format, formatDistanceStrict, formatRelative, isBefore, isPast, isSameDay } from "date-fns";
+import {
+	addDays,
+	format,
+	formatDistanceStrict,
+	formatRelative,
+	isBefore,
+	isPast,
+	isSameDay,
+} from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -64,14 +72,18 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 	// TODO: Implement like/notification/etc. system
 	// const { value: isLiked, toggle: toggleLiked } = useBoolean(false);
 	const eventURL = `/events/${pageID}`;
+	const checkinURL = `${eventURL}/check-in`;
 
 	return (
 		<div className="rounded-xl col-span-3 m-3">
 			<Link href={eventURL}>
-					<div className={`relative cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 ${
-						isEventPast ? "hover:grayscale-0 grayscale" : ""}`}>
-						<Image src={imageURL} layout='fill' objectFit='cover'  />
-					</div>
+				<div
+					className={`relative cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 ${
+						isEventPast ? "hover:grayscale-0 grayscale" : ""
+					}`}
+				>
+					<Image src={imageURL} layout="fill" objectFit="cover" />
+				</div>
 			</Link>
 			<div className="bg-white rounded-b-xl">
 				<div className="flex flex-col align-middle p-2 pb-0 justify-between">
@@ -112,8 +124,9 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 							</Link>
 						</div>
 						<div>
-							{/* TODO: Working Check-in flow */}
-							<a href="#">Check-in</a>
+							<Link href={checkinURL}>
+								<a>Check-in</a>
+							</Link>
 						</div>
 					</div>
 				</div>
