@@ -26,8 +26,8 @@ const columns = [
 		header: "Email Address",
 		size: 300,
 	}),
-	columnHelper.accessor("shortID", {
-		header: "Short ID",
+	columnHelper.accessor("id", {
+		header: "ID",
 		size: 200,
 	}),
 	columnHelper.accessor("joinDate", {

@@ -36,11 +36,11 @@ const EventView: NextPage = () => {
 	const closeErrorModal = () => setIsErrorOpen(false);
 
 	const didSubmit = async (data: any) => {
-		let isLoggedIn = await memberLoggedIn.mutateAsync({ email: data.email, shortID: data.shortID });
+		let isLoggedIn = await memberLoggedIn.mutateAsync({ email: data.email, id: data.id });
 		if (isLoggedIn) {
 			// Setup cookies, open success modal
 			setCookie("member_email", data.email);
-			setCookie("member_shortID", data.shortID);
+			setCookie("member_id", data.id);
 			setGlobalState({ ...globalState, member: true });
 			await router.push("/member/status");
 		} else {
@@ -89,8 +89,8 @@ const EventView: NextPage = () => {
 									placeholder="abc123"
 									minLength={6}
 									maxLength={6}
-									id="shortID"
-									{...register("shortID", {
+									id="id"
+									{...register("id", {
 										required: true,
 										pattern: /^[a-zA-Z]{3}[0-9]{3}$/,
 										minLength: 6,
