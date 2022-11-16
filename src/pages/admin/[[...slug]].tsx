@@ -82,8 +82,8 @@ const Admin: NextPage = () => {
 	let [ElementToShow, CurrentPage] = inferFromPath(path);
 
 	return (
-		<div className="page-view w-full min-h-full bg-white flex flex-col md:flex-row w-[100vw]">
-			<div className="w-full md:w-52 lg:w-56 [&>*]:cursor-pointer md:col-span-3 py-2 md:py-6 border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
+		<div className="page-view bg-white flex flex-col md:flex-row w-[100vw]">
+			<div className="w-full md:min-w-[13rem] lg:min-w-[13.5rem] md:max-w-[14rem] [&>*]:cursor-pointer py-2 md:py-6 border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
 				{sideNavElements.map((element) => (
 					<div
 						key={element.text}
@@ -101,7 +101,7 @@ const Admin: NextPage = () => {
 					</div>
 				))}
 			</div>
-			<div className=" p-5 pt-[1rem] h-full w-full bg-zinc-100">
+			<div className="p-5 pt-[1rem] h-full w-full bg-zinc-100">
 				<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
 			</div>
 		</div>
