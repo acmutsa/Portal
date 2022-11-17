@@ -9,6 +9,8 @@ import NewEventView from "@/components/admin/NewEventView";
 import NewMemberView from "@/components/admin/NewMemberView";
 import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
+import EditEventView from "@/components/admin/EditEventView";
+import EditMemberView from "@/components/admin/EditMemberView";
 
 enum AdminView {
 	dashboard,
@@ -16,6 +18,8 @@ enum AdminView {
 	events,
 	newEvent,
 	newMember,
+	editEvent,
+	editMember,
 }
 
 const sideNavElements = [
@@ -37,20 +41,19 @@ const sideNavElements = [
 ];
 
 const inferFromPath = (path: string): [FunctionComponent | null, AdminView | null] => {
-	switch (path) {
-		case "/admin/events/":
-			return [EventView, AdminView.events];
-		case "/admin/members/":
-			return [MemberView, AdminView.members];
-		case "/admin/events/new/":
-			return [NewEventView, AdminView.newEvent];
-		case "/admin/members/new/":
-			return [NewMemberView, AdminView.newMember];
-		case "/admin/":
-			return [DashView, AdminView.dashboard];
-		default:
-			return [null, null];
+	if (path.startsWith("/admin/events/")) {
+		if (path.endsWith("/new/")) return [NewEventView, AdminView.newEvent];
+		if (path.endsWith("/admin/events/")) return [EventView, AdminView.events];
+		return [EditEventView, AdminView.editEvent];
 	}
+	if (path.startsWith("/admin/members/")) {
+		if (path.endsWith("/new/")) return [NewMemberView, AdminView.newMember];
+		if (path.endsWith("/admin/members/")) return [MemberView, AdminView.members];
+		return [EditMemberView, AdminView.editMember];
+	}
+	if (path.endsWith("/admin/")) return [DashView, AdminView.dashboard];
+
+	return [null, null];
 };
 
 const Admin: NextPage = () => {

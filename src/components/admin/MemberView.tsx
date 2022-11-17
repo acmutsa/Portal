@@ -13,6 +13,8 @@ import { formatDateCell, pluralize } from "@/utils/helpers";
 import VisibilityDropdown from "@/components/table/VisibilityDropdown";
 import { RowActions } from "@/components/table/RowActions";
 import { useRouter } from "next/router";
+import { BsPlus } from "react-icons/bs";
+import Link from "next/link";
 
 const columnHelper = createColumnHelper<Member>();
 
@@ -141,7 +143,13 @@ const EventView: FunctionComponent = () => {
 							</span>
 							<div className="grow" />
 							<div className="justify-self-end">
-								{/* TODO: Use the labels & default value options to disable form open/close & use the human format (not id) */}
+								<Link href="/admin/members/new">
+									<button className="inline-flex h-9 justify-center items-center align-middle mx-3 p-2 pr-4 bg-green-500 hover:bg-green-600 rounded-lg text-white font-inter font-medium">
+										<BsPlus className="h-6 w-6" />
+										New Member
+									</button>
+								</Link>
+								{/* TODO: Use the labels & default value options & use the human format (not id) */}
 								<VisibilityDropdown
 									onColumnChange={(visibilityState) => {
 										table.setState((prev) => ({ ...prev, columnVisibility: visibilityState }));
@@ -154,8 +162,8 @@ const EventView: FunctionComponent = () => {
 						<div className="animate-pulse p-2 h-5 bg-gray-300 rounded-full dark:bg-gray-700 w-48" />
 					)}
 				</div>
-				<div className="overflow-scroll overflow-x-auto border-box ">
-					<div className="inline-block pb-1">{membersTable}</div>
+				<div className="overflow-scroll overflow-x-auto border-box">
+					<div className="inline-block pb-1 w-full">{membersTable}</div>
 				</div>
 			</div>
 		</div>
