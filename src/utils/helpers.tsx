@@ -118,5 +118,9 @@ export const formatDateCell = (value: Date) => {
 	);
 };
 
+export function classNames(...classes: (string | null)[]) {
+	return classes.filter(Boolean).join(" ");
+}
+
 export const range = (start: number, stop: number, step: number = 1) =>
 	Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);

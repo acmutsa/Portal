@@ -4,6 +4,7 @@ import { BsCheck, BsExclamationCircle } from "react-icons/bs";
 import { HiOutlineSelector } from "react-icons/hi";
 import { ControllerFieldState, FieldValues } from "react-hook-form";
 import { ControllerRenderProps } from "react-hook-form/dist/types/controller";
+import { classNames } from "@/utils/helpers";
 
 interface Choice {
 	id: string;
@@ -18,10 +19,6 @@ interface CustomSelectProps {
 	choices: Choice[];
 	unselectedText?: string;
 	buttonClass?: string;
-}
-
-function classNames(...classes: string[]) {
-	return classes.filter(Boolean).join(" ");
 }
 
 export default function CustomSelect(props: CustomSelectProps) {

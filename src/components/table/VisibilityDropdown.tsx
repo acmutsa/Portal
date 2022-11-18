@@ -35,7 +35,7 @@ const VisibilityDropdown = ({ columns, onColumnChange }: VisibilityProps) => {
 					className="px-3 py-1.5 h-9 text-[15px] justify-center inline-flex shadow rounded-md bg-slate-100 hover:bg-slate-200
 				 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 focus-visible:ring-opacity-75"
 				>
-					Columns
+					<span className="pt-[1px]">Columns</span>
 					<HiOutlineSelector className="ml-1.5 -mr-1 mt-0.5 py-[1px] h-5 w-5" aria-hidden="true" />
 				</Listbox.Button>
 			</div>
