@@ -14,6 +14,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.3",
     "@prisma/client": "4.6.1",
+    "@tailwindcss/forms": "^0.5.3",
     "@tanstack/react-table": "^8.5.15",
     "@trpc/client": "^9.27.2",
     "@trpc/next": "^9.27.2",
@@ -27,6 +28,7 @@
     "cookies-next": "^2.1.1",
     "cssesc": "^3.0.0",
     "date-fns": "^2.29.3",
+    "flowbite-datepicker": "^1.2.2",
     "nanoid": "^4.0.0",
     "next": "12.3.1",
     "node": "~16.15.0",

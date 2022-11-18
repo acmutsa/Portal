@@ -1,0 +1,34 @@
+[
+  {
+    "id": "male",
+    "name": "Male"
+  },
+  {
+    "id": "woman",
+    "name": "Woman"
+  },
+  {
+    "id": "transgender-man",
+    "name": "Transgender Man"
+  },
+  {
+    "id": "transgender-woman",
+    "name": "Transgender Woman"
+  },
+  {
+    "id": "nonbinary",
+    "name": "Non-binary"
+  },
+  {
+    "id": "intersex",
+    "name": "Intersex"
+  },
+  {
+    "id": "other",
+    "name": "Other"
+  },
+  {
+    "id": "silent",
+    "name": "Prefer Not To Say"
+  }
+]

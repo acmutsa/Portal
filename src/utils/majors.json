@@ -1,0 +1,290 @@
+[
+  {
+    "name": "Computer Science",
+    "id": "computer-science"
+  },
+  {
+    "name": "Computer Engineering",
+    "id": "computer-engineering"
+  },
+  {
+    "name": "Data Analytics",
+    "id": "data-analytics"
+  },
+  {
+    "name": "Cyber Intelligence",
+    "id": "cyber-intelligence"
+  },
+  {
+    "name": "Statistics & Data Science",
+    "id": "statistics-data-science"
+  },
+  {
+    "name": "Information Technology",
+    "id": "information-technology"
+  },
+  {
+    "name": "Mathematics",
+    "id": "mathematics"
+  },
+  {
+    "name": "Marketing",
+    "id": "marketing"
+  },
+  {
+    "name": "Cyber Security",
+    "id": "cyber-security"
+  },
+  {
+    "name": "Artificial Intelligence",
+    "id": "artificial-intelligence"
+  },
+  {
+    "name": "Accounting",
+    "id": "accounting"
+  },
+  {
+    "name": "Applied Cyber Analytics",
+    "id": "applied-cyber-analytics"
+  },
+  {
+    "name": "Applied Data Science",
+    "id": "applied-data-science"
+  },
+  {
+    "name": "Applied Mathematics",
+    "id": "applied-mathematics"
+  },
+  {
+    "name": "Applied Statistics",
+    "id": "applied-statistics"
+  },
+  {
+    "name": "Architecture",
+    "id": "architecture"
+  },
+  {
+    "name": "Art",
+    "id": "art"
+  },
+  {
+    "name": "Art History",
+    "id": "art-history"
+  },
+  {
+    "name": "Biochemistry",
+    "id": "biochemistry"
+  },
+  {
+    "name": "Biology",
+    "id": "biology"
+  },
+  {
+    "name": "Biomedical Engineering",
+    "id": "biomedical-engineering"
+  },
+  {
+    "name": "Biotechnology",
+    "id": "biotechnology"
+  },
+  {
+    "name": "Business",
+    "id": "business"
+  },
+  {
+    "name": "Chemical Engineering",
+    "id": "chemical-engineering"
+  },
+  {
+    "name": "Chemistry",
+    "id": "chemistry"
+  },
+  {
+    "name": "Civil Engineering",
+    "id": "civil-engineering"
+  },
+  {
+    "name": "Communications",
+    "id": "communication"
+  },
+  {
+    "name": "Construction Science & Management",
+    "id": "construction-science"
+  },
+  {
+    "name": "Criminology & Criminal Justice",
+    "id": "criminal-justice"
+  },
+  {
+    "name": "Culture, Literacy & Language",
+    "id": "culture-literacy-language"
+  },
+  {
+    "name": "Early Childhood & Elementary Education",
+    "id": "childhood-elementary-education"
+  },
+  {
+    "name": "Economics",
+    "id": "economics"
+  },
+  {
+    "name": "Educational Leadership",
+    "id": "educational-leadership"
+  },
+  {
+    "name": "English",
+    "id": "english"
+  },
+  {
+    "name": "Environmental Science",
+    "id": "environmental-science"
+  },
+  {
+    "name": "Environmental Studies",
+    "id": "environmental-studies"
+  },
+  {
+    "name": "Facility Management",
+    "id": "facility-management"
+  },
+  {
+    "name": "Film & Media",
+    "id": "film-and-media"
+  },
+  {
+    "name": "Finance",
+    "id": "finance"
+  },
+  {
+    "name": "Geography & Environmental Sustainability",
+    "id": "geography-environmental-sustainability"
+  },
+  {
+    "name": "Geosciences",
+    "id": "geosciences"
+  },
+  {
+    "name": "Global Affairs",
+    "id": "global-affairs"
+  },
+  {
+    "name": "Health & Kinesiology",
+    "id": "health-kinesiology"
+  },
+  {
+    "name": "Health, Aging & Society",
+    "id": "health-aging-society"
+  },
+  {
+    "name": "History",
+    "id": "history"
+  },
+  {
+    "name": "Interior Design",
+    "id": "interior-design"
+  },
+  {
+    "name": "Kinesiology",
+    "id": "kinesiology"
+  },
+  {
+    "name": "Management",
+    "id": "management"
+  },
+  {
+    "name": "Mathematics Education",
+    "id": "mathematics-education"
+  },
+  {
+    "name": "Mechanical Engineering",
+    "id": "mechanical-engineering"
+  },
+  {
+    "name": "Microbiology & Immunology",
+    "id": "microbiology-immunology"
+  },
+  {
+    "name": "Multidisciplinary Science",
+    "id": "multidisciplinary-studies"
+  },
+  {
+    "name": "Music",
+    "id": "music"
+  },
+  {
+    "name": "Neuroscience",
+    "id": "neuroscience"
+  },
+  {
+    "name": "Nursing",
+    "id": "nursing"
+  },
+  {
+    "name": "Nutrition & Dietetics",
+    "id": "nutrition-and-dietetics"
+  },
+  {
+    "name": "Operations & Supply Chain Management",
+    "id": "operational-and-supply-chain-management"
+  },
+  {
+    "name": "Physics",
+    "id": "physics"
+  },
+  {
+    "name": "Philosophy",
+    "id": "philosophy"
+  },
+  {
+    "name": "Political Science",
+    "id": "political-science"
+  },
+  {
+    "name": "Politics & Law",
+    "id": "politics-and-law"
+  },
+  {
+    "name": "Pre-Dentistry",
+    "id": "pre-dentistry"
+  },
+  {
+    "name": "Pre-Law",
+    "id": "pre-law"
+  },
+  {
+    "name": "Pre-Medicine",
+    "id": "pre-med"
+  },
+  {
+    "name": "Psychology",
+    "id": "psychology"
+  },
+  {
+    "name": "Public Health",
+    "id": "public-health"
+  },
+  {
+    "name": "Real Estate",
+    "id": "real-estate"
+  },
+  {
+    "name": "Social Work",
+    "id": "social-work"
+  },
+  {
+    "name": "Sociology",
+    "id": "sociology"
+  },
+  {
+    "name": "Spanish",
+    "id": "spanish"
+  },
+  {
+    "name": "Urban & Regional Planning",
+    "id": "urban-regional-planning"
+  },
+  {
+    "name": "Women’s Gender & Sexuality Studies (BA)",
+    "id": "womens-gender-and-sexuality-studies"
+  }
+]
