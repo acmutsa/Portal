@@ -104,7 +104,7 @@ const Admin: NextPage = () => {
 					</div>
 				))}
 			</div>
-			<div className="p-5 pt-[1rem] h-full w-full bg-zinc-100">
+			<div className="p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-scroll relative bg-zinc-100">
 				<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
 			</div>
 		</div>
