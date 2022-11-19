@@ -1,3 +1,24 @@
 {
-    "organizations": ["ACM", "ACM-W", "Rowdy Creators", "ICPC", "Coding in Color"]
+  "organizations": [
+    {
+      "id": "acm",
+      "name": "ACM"
+    },
+    {
+      "id": "acm-w",
+      "name": "ACM-W"
+    },
+    {
+      "id": "rowdy-creators",
+      "name": "Rowdy Creators"
+    },
+    {
+      "id": "icpc",
+      "name": "ICPC"
+    },
+    {
+      "id": "coding-in-color",
+      "name": "Coding in Color"
+    }
+  ]
 }
