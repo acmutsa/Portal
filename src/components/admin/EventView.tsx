@@ -157,7 +157,7 @@ const EventView: FunctionComponent = () => {
 							<div className="grow" />
 							<div className="justify-self-end">
 								<Link href="/admin/events/new">
-									<button className="inline-flex h-9 justify-center items-center align-middle mx-3 p-2 pr-4 bg-green-500 hover:bg-green-600 rounded-lg text-white font-inter font-medium">
+									<button className="inline-flex h-9 justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-white font-inter font-medium">
 										<BsPlus className="h-6 w-6" />
 										New Event
 									</button>
