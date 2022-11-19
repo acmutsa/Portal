@@ -1,13 +1,12 @@
 import { FunctionComponent, useEffect, useState } from "react";
 import public_config from "@/config/public_config.json";
-import { BsExclamationCircle, BsImage } from "react-icons/bs";
+import { BsImage } from "react-icons/bs";
 import { Controller, useForm } from "react-hook-form";
 import { trpc } from "@/utils/trpc";
 import CustomSelect from "@/components/forms/CustomSelect";
 import { Switch } from "@headlessui/react";
 import { classNames } from "@/utils/helpers";
 import AdvancedInput from "@/components/forms/AdvancedInput";
-import { FaRegFileImage } from "react-icons/all";
 
 const NewEventView: FunctionComponent = () => {
 	const organizations = public_config.organizations;
@@ -101,7 +100,7 @@ const NewEventView: FunctionComponent = () => {
 										<AdvancedInput
 											label="Header Image URL"
 											placeholder="https://i.imgur.com/kUK771p.jpeg"
-											InlineIcon={FaRegFileImage}
+											InlineIcon={BsImage}
 											type="url"
 											register={register("imageURL", {
 												required: { value: true, message: "Required." },
