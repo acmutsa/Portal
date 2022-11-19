@@ -1,44 +1,58 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import public_config from "@/config/public_config.json";
 import { BsImage } from "react-icons/bs";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "@/utils/trpc";
 import CustomSelect from "@/components/forms/CustomSelect";
 import { Switch } from "@headlessui/react";
 import { classNames } from "@/utils/helpers";
 import AdvancedInput from "@/components/forms/AdvancedInput";
+import { useRouter } from "next/router";
+
+interface FormValues {
+	name: string;
+	description: string;
+	organization: { id: string; name: string };
+	location: string;
+	headerImage: string;
+	eventStart: Date;
+	eventEnd: Date;
+	formOpen: Date | null;
+	formClose: Date | null;
+}
 
 const NewEventView: FunctionComponent = () => {
-	const organizations = public_config.organizations;
+	const router = useRouter();
+	const now = new Date();
+	now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+
 	let createEvent = trpc.useMutation(["admin.createEvent"]);
 	const {
 		register,
 		control,
 		handleSubmit,
-		setValue,
 		formState: { errors },
-	} = useForm();
-	const didSubmit = async (data: any) => {
-		console.log(data);
-		console.log(errors);
-		/* createEvent.mutate(
-		{},
-				{
-					onSuccess: (res) => {
-						alert("Event created successfully!");
-						window.open(`/events/${res.event.pageID}`, "_blank");
-					},
-				}
-			);*/
+	} = useForm<FormValues>({
+		defaultValues: {
+			eventStart: now,
+			eventEnd: now,
+			formOpen: null,
+			formClose: null,
+		},
+	});
+
+	const onSubmit: SubmitHandler<FormValues> = async (data) => {
+		if (data == null) return;
+
+		const t = { ...data, organization: data.organization.name };
+		console.log(data.organization);
+		createEvent.mutate(t, {
+			onSuccess: (res) => {
+				router.push(`/admin/events/${res.id}`);
+				window.open(`/events/${res.pageID}`, "_blank");
+			},
+		});
 	};
-
-	useEffect(() => {
-		const now = new Date();
-		now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-
-		setValue("eventStart", now.toISOString().slice(0, 16));
-		setValue("eventEnd", now.toISOString().slice(0, 16));
-	}, []);
 
 	const [formTimesEnabled, setFormTimesEnabled] = useState(false);
 
@@ -46,7 +60,7 @@ const NewEventView: FunctionComponent = () => {
 		<div className="w-full h-full p-[5px]">
 			<div className="max-w-[50rem] mx-auto">
 				<div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-					<form onSubmit={handleSubmit(didSubmit)}>
+					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="shadow rounded-md">
 							<div className="bg-white py-6 px-4 space-y-6 sm:p-6">
 								<div>
@@ -71,15 +85,15 @@ const NewEventView: FunctionComponent = () => {
 									</div>
 									<div className="col-span-12 sm:col-span-6 md:col-span-4">
 										<Controller
-											name={"organization" as string}
+											name={"organization"}
 											rules={{ required: true }}
 											control={control}
 											render={({ field, fieldState }) => (
-												<CustomSelect
+												<CustomSelect<FormValues>
 													field={field}
 													fieldState={fieldState}
 													label="Organization"
-													choices={organizations}
+													choices={public_config.organizations}
 													unselectedText="RowdyHacks"
 												/>
 											)}
@@ -102,7 +116,7 @@ const NewEventView: FunctionComponent = () => {
 											placeholder="https://i.imgur.com/kUK771p.jpeg"
 											InlineIcon={BsImage}
 											type="url"
-											register={register("imageURL", {
+											register={register("headerImage", {
 												required: { value: true, message: "Required." },
 											})}
 											errors={errors}
@@ -131,7 +145,7 @@ const NewEventView: FunctionComponent = () => {
 													required: { value: true, message: "Required." },
 													valueAsDate: true,
 													validate: {
-														invalid: (date) => !isNaN(date) || "Invalid Date.",
+														invalid: (date) => !isNaN(date.getTime()) || "Invalid Date.",
 													},
 												})}
 												errors={errors}
@@ -145,7 +159,7 @@ const NewEventView: FunctionComponent = () => {
 													required: { value: true, message: "Required." },
 													valueAsDate: true,
 													validate: {
-														invalid: (date) => !isNaN(date) || "Invalid Date.",
+														invalid: (date) => !isNaN(date.getTime()) || "Invalid Date.",
 													},
 												})}
 												errors={errors}
@@ -198,7 +212,8 @@ const NewEventView: FunctionComponent = () => {
 													valueAsDate: true,
 													disabled: !formTimesEnabled,
 													validate: {
-														invalid: (date) => !isNaN(date) || "Invalid Date.",
+														invalid: (date) =>
+															(date != null && !isNaN(date.getTime())) || "Invalid Date.",
 													},
 												})}
 												errors={errors}
@@ -213,7 +228,8 @@ const NewEventView: FunctionComponent = () => {
 													valueAsDate: true,
 													disabled: !formTimesEnabled,
 													validate: {
-														invalid: (date) => !isNaN(date) || "Invalid Date.",
+														invalid: (date) =>
+															(date != null && !isNaN(date.getTime())) || "Invalid Date.",
 													},
 												})}
 												errors={errors}

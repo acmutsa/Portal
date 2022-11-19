@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { nanoid } from "nanoid";
-import { createRouter, Context } from "@/server/router/context";
+import { Context, createRouter } from "@/server/router/context";
 import * as trpc from "@trpc/server";
 import { env } from "@/env/server.mjs";
 
@@ -42,37 +42,33 @@ export const adminRouter = createRouter()
 	})
 	.mutation("createEvent", {
 		input: z.object({
-			eventName: z.string(),
-			eventDescription: z.string(),
-			eventImage: z.string().optional(),
-			eventOrg: z.string(),
-			eventLocation: z.string(),
+			name: z.string(),
+			description: z.string(),
+			headerImage: z.string(),
+			organization: z.string(),
+			location: z.string(),
 			eventStart: z.date(),
 			eventEnd: z.date(),
-			formOpen: z.date(),
-			formClose: z.date(),
+			formOpen: z.date().nullish(),
+			formClose: z.date().nullish(),
 		}),
 		async resolve({ input, ctx }) {
 			await validateAdmin(ctx);
 
-			let newEvent = await ctx.prisma.event.create({
+			// If the form close/open is unspecified, it automatically takes on the values of the event start/end.
+			let { formClose, formOpen } = input;
+			if (formClose == null || formOpen == null) {
+				formOpen = input.eventStart;
+				formClose = input.eventEnd;
+			}
+
+			return await ctx.prisma.event.create({
 				data: {
-					name: input.eventName,
-					description: input.eventDescription,
-					headerImage: input.eventImage!,
-					organization: input.eventOrg,
-					location: input.eventLocation,
-					eventStart: input.eventStart,
-					eventEnd: input.eventEnd,
-					formOpen: input.formOpen,
-					formClose: input.formClose,
+					...input,
+					formOpen,
+					formClose,
 					pageID: nanoid(7).toLowerCase(),
 				},
 			});
-
-			return {
-				status: "success",
-				event: newEvent,
-			};
 		},
 	});

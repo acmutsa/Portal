@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { BsCheck, BsExclamationCircle } from "react-icons/bs";
 import { HiOutlineSelector } from "react-icons/hi";
-import { ControllerFieldState, FieldValues } from "react-hook-form";
+import { ControllerFieldState } from "react-hook-form";
 import { ControllerRenderProps } from "react-hook-form/dist/types/controller";
 import { classNames } from "@/utils/helpers";
 
@@ -11,8 +11,8 @@ interface Choice {
 	name: string;
 }
 
-interface CustomSelectProps {
-	field: ControllerRenderProps<FieldValues, string>;
+interface CustomSelectProps<TFormValues> {
+	field: ControllerRenderProps<TFormValues, any>;
 	fieldState: ControllerFieldState;
 	label: string;
 	labelFor?: string;
@@ -21,7 +21,7 @@ interface CustomSelectProps {
 	buttonClass?: string;
 }
 
-export default function CustomSelect(props: CustomSelectProps) {
+export default function CustomSelect<TFormValues>(props: CustomSelectProps<TFormValues>) {
 	const {
 		choices,
 		unselectedText,
