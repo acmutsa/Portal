@@ -9,7 +9,7 @@ import Disclosure from "@/components/util/Disclosure";
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({
 		description: "The premier Computer Science organization at UTSA",
-		title: "The Association of Computing Machinery",
+		title: "ACM UTSA",
 		suffix: false,
 		url: "/",
 	});
