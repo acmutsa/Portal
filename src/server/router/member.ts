@@ -4,9 +4,12 @@ import { z } from "zod";
 import * as trpc from "@trpc/server";
 import { validateAdmin } from "@/server/router/admin";
 import { getAllMembers } from "@/server/controllers/member";
+import { isCheckinOpen, getCheckin } from "@/server/controllers/checkin";
+import { Member } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 
 // Calling this method while passing your request context will ensure member credentials were provided.
-export const validateMember = async (ctx: Context) => {
+export const validateMember = async (ctx: Context): Promise<Member> => {
 	if (ctx.email == null || ctx.id == null)
 		throw new trpc.TRPCError({
 			code: "UNAUTHORIZED",
@@ -26,6 +29,8 @@ export const validateMember = async (ctx: Context) => {
 			message:
 				"Valid member-level credentials are required for this resource; what was provided was invalid.",
 		});
+
+	return member;
 };
 
 export const memberRouter = createRouter()
@@ -60,57 +65,55 @@ export const memberRouter = createRouter()
 		},
 	})
 	.mutation("checkin", {
-		input: z.object({
-			eventID: z.string(),
-		}),
-		async resolve({ ctx }) {
-			if (ctx?.id == null) return null;
-
-			let member = await ctx.prisma.member.findUnique({
-				where: {
-					id: ctx?.id?.toLowerCase(),
-				},
+		input: z
+			.object({
+				pageID: z.string(),
+			})
+			.or(
+				z.object({
+					id: z.string(),
+				})
+			),
+		async resolve({ ctx, input }) {
+			const self = await validateMember(ctx);
+			const event = await ctx.prisma.event.findUnique({
+				where: input,
 			});
 
-			// TODO: Fix this. Something is probably not working right here...
-			if (member && member.email == ctx?.email?.toLowerCase()) {
-				let eventShortID = ctx?.id?.toLowerCase() || "error";
-				let memberID = member?.id || "error";
-
-				let checkin = await ctx.prisma.checkin.findMany({
-					where: {
-						event: {
-							pageID: eventShortID,
-						},
-						member: {
-							id: memberID,
-						},
-					},
-					take: 1,
+			if (event == null)
+				throw new TRPCError({
+					message: "The event you are trying to check into does not exist.",
+					code: "NOT_FOUND",
 				});
 
-				if (checkin.length == 0) {
-					let record = await ctx.prisma.checkin.create({
-						data: {
-							event: {
-								connect: {
-									pageID: eventShortID,
-								},
-							},
-							member: {
-								connect: {
-									id: memberID,
-								},
-							},
-							isInPerson: true,
-						},
-					});
+			const existing_checkin = await getCheckin(self.id, event.id);
+			if (existing_checkin != null)
+				throw new TRPCError({
+					message: "You have already checked in for this event.",
+					code: "CONFLICT",
+				});
 
-					return {
-						success: true,
-					};
-				}
-			}
+			if (!isCheckinOpen(event))
+				throw new TRPCError({
+					message: "You cannot checkin to this event anymore, the form has closed.",
+					code: "PRECONDITION_FAILED",
+				});
+
+			await ctx.prisma.checkin.create({
+				data: {
+					event: {
+						connect: {
+							id: event.id,
+						},
+					},
+					member: {
+						connect: {
+							id: self.id,
+						},
+					},
+					isInPerson: true,
+				},
+			});
 		},
 	})
 	.query("me", {

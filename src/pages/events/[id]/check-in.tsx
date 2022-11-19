@@ -1,5 +1,8 @@
 import type { NextPage } from "next";
-import { prisma } from "@/server/db/client";
+import { Event, prisma } from "@/server/db/client";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+import { trpc } from "@/utils/trpc";
 
 interface eventPageParams {
 	params: { id: string };
@@ -8,17 +11,30 @@ interface eventPageParams {
 	defaultLocale: string;
 }
 
-interface Event {
-	name: string | null;
-	description: string | null;
-	organization: string | null;
-	location: string | null;
-	headerImage: string | null;
-	startDate: string | null;
-	endDate: string | null;
+interface FormValues {
+	feedback: string;
 }
 
-const EventView: NextPage<{ event: Event | null }> = ({ event }) => {
+const CheckinView: NextPage<{ event: Event | null }> = ({ event }) => {
+	const checkin = trpc.useMutation(["member.checkin"]);
+	const router = useRouter();
+	const { register, handleSubmit } = useForm({
+		defaultValues: { feedback: "" },
+	});
+
+	const onSubmit: SubmitHandler<FormValues> = async (data) => {
+		if (data == null) return;
+		checkin.mutate(
+			{ pageID: event!.pageID },
+			{
+				onSuccess: async () => {
+					// TODO: Add special interaction here, maybe? Set off a serotonin boosting animation?
+					await router.push(`/events/${event!.pageID}`);
+				},
+			}
+		);
+	};
+
 	if (event) {
 		return (
 			<div className="page-view bg-darken">
@@ -26,30 +42,40 @@ const EventView: NextPage<{ event: Event | null }> = ({ event }) => {
 					<h1 className="text-2xl p-1.5 font-inter font-bold text-primary-dark">
 						Thanks for attending <span className="text-primary-light">{event.name}</span>?
 					</h1>
-					<div className="px-4 mb-4 w-full max-w-[30rem] m-1">
-						<textarea
-							className="w-full font-roboto h-full min-h-[5rem] rounded ring-1 ring-zinc-300 resize-y placeholder:mx-2"
-							placeholder="  Leave your feedback here..."
-						/>
-					</div>
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<div className="px-4 mb-4 w-full max-w-[30rem] m-1">
+							<textarea
+								className="w-full font-roboto h-full min-h-[5rem] rounded ring-1 ring-zinc-300 resize-y placeholder:mx-2"
+								placeholder="  Leave your feedback here..."
+								{...register("feedback", { pattern: /^[\w.+\-!@#$%^&*(),;':\[\]~]*$/ })}
+							/>
+						</div>
 
-					<h1 className="text-5xl font-extrabold font-inter"></h1>
-					<button className="h-[40px] mb-3 w-full bg-primary-dark font-inter text-white rounded font-semibold max-w-[15rem]">
-						Submit
-					</button>
+						<h1 className="text-5xl font-extrabold font-inter"></h1>
+						<button className="h-[40px] mb-3 w-full bg-primary-dark font-inter text-white rounded font-semibold max-w-[15rem]">
+							Submit
+						</button>
+					</form>
 				</div>
 			</div>
 		);
-	} else {
-		return <p>Not found</p>;
 	}
+
+	return <p>Not found</p>;
 };
 
 export async function getStaticProps(urlParams: eventPageParams) {
 	const params = urlParams.params;
+
+	// Limit selection of properties for SSR
 	const event = await prisma.event.findUnique({
 		where: {
 			pageID: params.id.toLowerCase(),
+		},
+		select: {
+			id: true,
+			name: true,
+			pageID: true,
 		},
 	});
 
@@ -63,15 +89,7 @@ export async function getStaticProps(urlParams: eventPageParams) {
 
 	return {
 		props: {
-			event: {
-				name: event.name,
-				description: event.description,
-				organization: event.organization,
-				headerImage: event.headerImage,
-				location: event.location,
-				startDate: event.eventStart.toString(),
-				endDate: event.eventEnd.toString(),
-			},
+			event,
 		},
 		// Next.js will attempt to re-generate the page:
 		// - When a request comes in
@@ -84,4 +102,4 @@ export async function getStaticPaths() {
 	return { paths: [], fallback: "blocking" };
 }
 
-export default EventView;
+export default CheckinView;

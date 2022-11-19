@@ -1,4 +1,18 @@
-import { prisma, Checkin } from "@/server/db/client";
+import { prisma, Checkin, Event } from "@/server/db/client";
+import { isBefore, isAfter } from "date-fns";
+
+/**
+ * Returns true if checking in to a specific event is available given the form
+ * open and form close times for the event.
+ * @param event The event (must have formOpen/formClose or eventStart/eventEnd attributes selected)
+ * @param useEventTimes If true, the check will use the event times instead of the form open times.
+ */
+export function isCheckinOpen(event: Event, useEventTimes: boolean = false): boolean {
+	if (event.forcedIsOpen) return true;
+	const now = new Date();
+	if (useEventTimes) return isBefore(event.eventStart, now) && isAfter(event.eventEnd, now);
+	return isBefore(event.formOpen, now) && isAfter(event.formClose, now);
+}
 
 /**
  * Check if a checkin exists for a given member and event.
