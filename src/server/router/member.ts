@@ -64,20 +64,53 @@ export const memberRouter = createRouter()
 			return member != null && member.email == email.toLowerCase();
 		},
 	})
+	/**
+	 * Checks if the given form is available to check-in to.
+	 * Requires member login.
+	 * Provide either the event pageID or full ID.
+	 */
+	.query("checkinOpen", {
+		input: z
+			.object({
+				pageID: z.string().min(1),
+				id: z.string().min(1),
+			})
+			.partial()
+			.refine(
+				(data) => data.pageID != undefined || data.id != undefined,
+				"Either pageID or id should be specified"
+			),
+		async resolve({ ctx, input }) {
+			if (input.pageID === undefined && input.id === undefined) await validateMember(ctx);
+			const event = await ctx.prisma.event.findUnique({
+				where: input.pageID != undefined ? { pageID: input.pageID } : { id: input.id },
+			});
+
+			if (event == null)
+				throw new TRPCError({
+					message: "The event you are looking for does not exist.",
+					code: "NOT_FOUND",
+				});
+
+			return isCheckinOpen(event);
+		},
+	})
 	.mutation("checkin", {
 		input: z
 			.object({
 				pageID: z.string(),
+				id: z.string(),
+				feedback: z.string().nullish(),
 			})
-			.or(
-				z.object({
-					id: z.string(),
-				})
+			.partial()
+			.refine(
+				(data) => data.pageID !== undefined || data.id !== undefined,
+				"Either pageID or id should be specified"
 			),
 		async resolve({ ctx, input }) {
 			const self = await validateMember(ctx);
 			const event = await ctx.prisma.event.findUnique({
-				where: input,
+				where: input.pageID != undefined ? { pageID: input.pageID } : { id: input.id },
 			});
 
 			if (event == null)
@@ -112,6 +145,7 @@ export const memberRouter = createRouter()
 						},
 					},
 					isInPerson: true,
+					feedback: input.feedback,
 				},
 			});
 		},

@@ -24,8 +24,10 @@ const CheckinView: NextPage<{ event: Event | null }> = ({ event }) => {
 
 	const onSubmit: SubmitHandler<FormValues> = async (data) => {
 		if (data == null) return;
+		const feedback = (data.feedback ?? "").length > 0 ? data.feedback : null;
+
 		checkin.mutate(
-			{ pageID: event!.pageID },
+			{ pageID: event!.pageID, feedback },
 			{
 				onSuccess: async () => {
 					// TODO: Add special interaction here, maybe? Set off a serotonin boosting animation?
