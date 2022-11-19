@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { createRouter, Context } from "@/server/router/context";
 import * as trpc from "@trpc/server";
 import { env } from "@/env/server.mjs";
+import { titleCase } from "title-case";
 
 export const validateAdmin = async (
 	ctx: Context | { admin_username: string; admin_password: string }
@@ -57,7 +58,7 @@ export const adminRouter = createRouter()
 
 			let newEvent = await ctx.prisma.event.create({
 				data: {
-					name: input.eventName,
+					name: titleCase(input.eventName),
 					description: input.eventDescription,
 					headerImage: input.eventImage!,
 					organization: input.eventOrg,

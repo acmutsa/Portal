@@ -30,13 +30,14 @@ interface DoCheckInProps {
 
 const DoCheckIn: FunctionComponent<DoCheckInProps> = ({ eventID }) => {
 	return (
-		<div className="w-full p-2 text-white font-semibold">
+		<div className="w-full p-2 text-white font-semibold max-w-[400px]">
 			<button className="h-12 my-2 w-full justify-self-center bg-primary-dark hover:bg-primary-dark-hover rounded transition ease-in">
 				Check-in
 			</button>
+			<p className="text-black">or</p>
 			<Link href={"/events/" + eventID}>
 				<button className="h-12 my-2 w-full justify-self-center bg-primary-light hover:bg-primary-light-hover rounded transition ease-in">
-					Event Details
+					View Event Details
 				</button>
 			</Link>
 		</div>
@@ -77,10 +78,11 @@ const EventView: NextPage<{ event: Event | null }> = ({ event }) => {
 					<OpenGraph properties={ogp} />
 				</Head>
 				<div className="page-view bg-darken">
-					<div className="mt-10 max-w-[30rem] mx-auto bg-white rounded-lg text-center flex flex-col items-center justify-center">
-						<h1 className="text-2xl p-1.5 font-inter font-bold text-primary-dark">
+					<div className="mt-10 max-w-[35rem] mx-auto bg-white rounded-lg text-center flex flex-col items-center justify-center py-5">
+						<h1 className="text-2xl pt-1.5 font-inter font-extrabold text-primary-dark">
 							Thanks for attending
-							<br />
+						</h1>
+						<h1 className="text-5xl p-1.5 font-inter font-extrabold text-primary-dark pt-0 mb-5">
 							<span className="text-primary-light">{event.name}</span>!
 						</h1>
 						<DoCheckIn eventID={event.eventID || "error"} />
