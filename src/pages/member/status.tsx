@@ -130,17 +130,17 @@ const Status: NextPage<ServerSideProps> = ({ checkins: checkinsJSON }) => {
 			<div className="page-view bg-darken flex justify-center py-8 md:py-20">
 				<div className="w-[90%] max-w-[40rem]">
 					<div className="p-3 my-4 bg-white rounded-lg shadow">
-						<div className="flex justify-between mb-1">
-							<span className="text-[15px] font-inter text-slate-800 text-white">
+						<div className="flex justify-between mb-2">
+							<span className="font-inter text-slate-800 text-white">
 								{points < requiredPoints
 									? `${requiredPoints - points} points remaining`
 									: "You are a member!"}
 							</span>
-							<span className="text-sm font-inter text-slate-800 tracking-widest text-white">
+							<span className="font-inter text-slate-800 tracking-widest text-white">
 								{(progress * 100).toFixed(0)}%
 							</span>
 						</div>
-						<div className="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
+						<div className="w-full bg-gray-200 rounded-full h-[0.8rem] dark:bg-gray-700">
 							<div
 								className="bg-blue-600 h-full rounded-full min-w-[1rem] max-w-full"
 								style={{ width: `${(progress * 100).toFixed(0)}%` }}
