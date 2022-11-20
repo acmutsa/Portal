@@ -5,8 +5,11 @@ import majors from "@/utils/majors.json";
 import classifications from "@/utils/classifications.json";
 import identities from "@/utils/identities.json";
 import months from "@/utils/months.json";
+import ethnicities from "@/utils/ethnicities.json";
 import { range } from "@/utils/helpers";
 import { BsExclamationCircle } from "react-icons/bs";
+import { PrettyMemberDataSchema, toMemberData } from "@/utils/transform";
+import { addMinutes } from "date-fns";
 
 const currentYear = new Date().getFullYear();
 const years = range(currentYear - 4, currentYear + 4).map((year) => ({
@@ -14,22 +17,49 @@ const years = range(currentYear - 4, currentYear + 4).map((year) => ({
 	name: year.toString(),
 }));
 
+// TODO: Add shirt size, organizations, and address data
 // TODO: Refine all aria labels, make sure accessibility is fully supported.
-// Refactor each of the standard inputs into a separate component with types, ids, errors etc.
+// TODO: Use AdvancedInput for all relevant forms
 
 const NewMemberView: FunctionComponent = () => {
 	const {
 		register,
 		handleSubmit,
 		control,
-		getValues,
 		formState: { errors },
 	} = useForm();
 	const didSubmit = async (data: any) => {
-		console.log(data);
-	};
+		// Birthday may be invalid/NaN when form submits.
+		// date-fns will format as UTC, but it will be in CST, thus -6 hours behind for Texas/CST.
+		// The result is all dates by users will be rendered 1 day off by date-fns.
+		const birthday = isNaN(data.birthday.getTime())
+			? undefined
+			: addMinutes(data.birthday, data.birthday.getTimezoneOffset());
 
-	console.log(isNaN(getValues().birthday));
+		const identity = data.identity?.id;
+		console.log(identity);
+		const classification = data.classification?.id;
+		const ethnicity = data.ethnicity?.id;
+		const major = data.major?.id;
+		const graduationDate =
+			data?.graduationMonth != null && data?.graduationYear != null
+				? {
+						month: parseInt(data.graduationMonth.id),
+						year: parseInt(data.graduationYear.id),
+				  }
+				: null;
+
+		const parsed = PrettyMemberDataSchema.parse({
+			id: data.id,
+			classification,
+			major,
+			graduationDate,
+			identity,
+			ethnicity,
+			birthday,
+		});
+		console.log(toMemberData(parsed));
+	};
 
 	return (
 		<div className="w-full h-full p-[5px]">
@@ -140,7 +170,6 @@ const NewMemberView: FunctionComponent = () => {
 										<Controller
 											name={"major" as string}
 											control={control}
-											rules={{ required: true }}
 											render={({ field, fieldState }) => (
 												<CustomSelect
 													field={field}
@@ -156,7 +185,6 @@ const NewMemberView: FunctionComponent = () => {
 										<Controller
 											name={"classification" as string}
 											control={control}
-											rules={{ required: true }}
 											render={({ field, fieldState }) => (
 												<CustomSelect
 													field={field}
@@ -177,7 +205,6 @@ const NewMemberView: FunctionComponent = () => {
 												<Controller
 													name={"graduationMonth" as string}
 													control={control}
-													rules={{ required: true }}
 													render={({ field, fieldState }) => (
 														<CustomSelect
 															field={field}
@@ -194,7 +221,6 @@ const NewMemberView: FunctionComponent = () => {
 												<Controller
 													name={"graduationYear" as string}
 													control={control}
-													rules={{ required: true }}
 													render={({ field, fieldState }) => (
 														<CustomSelect
 															field={field}
@@ -209,10 +235,9 @@ const NewMemberView: FunctionComponent = () => {
 											</div>
 										</div>
 									</div>
-									<div className="col-span-6 sm:col-span-4">
+									<div className="col-span-6 sm:col-span-3">
 										<Controller
 											name={"identity" as string}
-											rules={{ required: true }}
 											control={control}
 											render={({ field, fieldState }) => (
 												<CustomSelect
@@ -220,7 +245,22 @@ const NewMemberView: FunctionComponent = () => {
 													fieldState={fieldState}
 													label="Gender Identity"
 													choices={identities}
-													unselectedText="Non-binary"
+													unselectedText="Transgender"
+												/>
+											)}
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-4">
+										<Controller
+											name={"ethnicity" as string}
+											control={control}
+											render={({ field, fieldState }) => (
+												<CustomSelect
+													field={field}
+													fieldState={fieldState}
+													label="Ethnicity"
+													choices={ethnicities}
+													unselectedText="White"
 												/>
 											)}
 										/>
@@ -241,11 +281,7 @@ const NewMemberView: FunctionComponent = () => {
 													: "border-gray-300"
 											} mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
 											{...register("birthday", {
-												required: { value: true, message: "Required." },
 												valueAsDate: true,
-												validate: {
-													invalid: (date) => !isNaN(date) || "Invalid Date.",
-												},
 											})}
 										/>
 										{errors.birthday ? (

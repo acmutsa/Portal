@@ -1,0 +1,26 @@
+[
+  {
+    "id": "WHITE",
+    "name": "White"
+  },
+  {
+    "id": "BLACK_OR_AFRICAN_AMERICAN",
+    "name": "Black or African American"
+  },
+  {
+    "id": "AMERICAN_INDIAN_OR_ALASKA_NATIVE",
+    "name": "American Indian or Alaskan Native"
+  },
+  {
+    "id": "ASIAN",
+    "name": "Asian"
+  },
+  {
+    "id": "NATIVE_HAWAIIAN_PACIFIC_ISLANDER",
+    "name": "Native Hawaiian or Pacific Islander"
+  },
+  {
+    "id": "HISPANIC_OR_LATINO",
+    "name": "Hispanic or Latino"
+  }
+]

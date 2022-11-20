@@ -1,34 +1,26 @@
 [
   {
-    "id": "male",
+    "id": "MALE",
     "name": "Male"
   },
   {
-    "id": "woman",
-    "name": "Woman"
+    "id": "FEMALE",
+    "name": "Female"
   },
   {
-    "id": "transgender-man",
-    "name": "Transgender Man"
+    "id": "TRANSGENDER",
+    "name": "Transgender"
   },
   {
-    "id": "transgender-woman",
-    "name": "Transgender Woman"
-  },
-  {
-    "id": "nonbinary",
-    "name": "Non-binary"
-  },
-  {
-    "id": "intersex",
+    "id": "INTERSEX",
     "name": "Intersex"
   },
   {
-    "id": "other",
-    "name": "Other"
+    "id": "DOES_NOT_IDENTIFY",
+    "name": "Do Not Identify"
   },
   {
-    "id": "silent",
-    "name": "Prefer Not To Say"
+    "id": "SomethingElsePlaceholder",
+    "name": "Something Else (WIP)"
   }
 ]

@@ -33,14 +33,7 @@ export default function CustomSelect<TFormValues>(props: CustomSelectProps<TForm
 	} = props;
 
 	return (
-		<Listbox
-			value={value}
-			onChange={(e) => {
-				onChange(e);
-				console.log(e);
-				console.log(`${label} changed!`);
-			}}
-		>
+		<Listbox value={value} onChange={onChange}>
 			{({ open }) => (
 				<>
 					<Listbox.Label htmlFor={labelFor} className="block text-sm font-medium text-gray-700">

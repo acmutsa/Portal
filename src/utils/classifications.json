@@ -1,22 +1,22 @@
 [
   {
-    "id": "freshman",
+    "id": "FRESHMAN",
     "name": "Freshman"
   },
   {
-    "id": "sophomore",
+    "id": "SOPHOMORE",
     "name": "Sophomore"
   },
   {
-    "id": "junior",
+    "id": "JUNIOR",
     "name": "Junior"
   },
   {
-    "id": "senior",
+    "id": "SENIOR",
     "name": "Senior"
   },
   {
-    "id": "graduate",
+    "id": "GRADUATE",
     "name": "Graduate"
   }
 ]
