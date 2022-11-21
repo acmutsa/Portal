@@ -152,16 +152,7 @@ export const memberRouter = createRouter()
 	})
 	.query("me", {
 		async resolve({ ctx }) {
-			if (ctx?.id == null) return null;
-
-			let member = await ctx.prisma.member.findUnique({
-				where: {
-					id: ctx?.id?.toLowerCase(),
-				},
-			});
-
-			if (member && member.email == ctx?.email?.toLowerCase()) return member;
-			return null;
+			return await validateMember(ctx);
 		},
 	})
 	.query("getAll", {
