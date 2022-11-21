@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { Context, createRouter } from "@/server/router/context";
 import * as trpc from "@trpc/server";
 import { env } from "@/env/server.mjs";
+import { titleCase } from "title-case";
 
 export const validateAdmin = async (
 	ctx: Context | { admin_username: string; admin_password: string }

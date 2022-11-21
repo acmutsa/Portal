@@ -81,7 +81,7 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 					<title>{ogp.title}</title>
 					<OpenGraph properties={ogp} />
 				</Head>
-				<div className="page-view bg-darken pt-5">
+				<div className="page-view bg-darken !pt-[100px]">
 					<BigEventHeader
 						title={props.name || "Error"}
 						imageURL={props.headerImage || "Error"}

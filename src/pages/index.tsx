@@ -9,7 +9,7 @@ import Disclosure from "@/components/util/Disclosure";
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({
 		description: "The premier Computer Science organization at UTSA",
-		title: "The Association of Computing Machinery",
+		title: "ACM UTSA",
 		suffix: false,
 		url: "/",
 	});
@@ -39,17 +39,17 @@ const Home: NextPage = () => {
 						</h1>
 						<div className="grid grid-rows-3 grid-cols-1 gap-2 px-3 py-4 w-full text-white font-semibold">
 							<Link href="/events/">
-								<button className="h-12 w-full px-2 justify-self-center bg-primary hover:bg-primary-600 rounded">
+								<button className="h-12 w-full px-2 justify-self-center bg-primary-dark hover:bg-primary-dark-hover rounded transition ease-in">
 									Events
 								</button>
 							</Link>
 							<Link href="/register">
-								<button className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 rounded">
+								<button className="h-12 w-full justify-self-center bg-primary-dark hover:bg-primary-dark-hover rounded transition ease-in">
 									Register
 								</button>
 							</Link>
-							<Link href="/me" className="mx-2">
-								<button className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 rounded">
+							<Link href="/member/status" className="mx-2">
+								<button className="h-12 w-full justify-self-center bg-primary-dark hover:bg-primary-dark-hover rounded transition ease-in">
 									Status
 								</button>
 							</Link>
