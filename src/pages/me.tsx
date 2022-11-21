@@ -95,7 +95,7 @@ const MeView: NextPage<ServerSideProps> = ({ member, checkins }: ServerSideProps
 												onClick={() => changeTab(tabId)}
 												className={classNames(
 													tabId == currentTabId
-														? "border-primary-light text-primary-light-hover"
+														? "border-secondary-400 hover:border-secondary-500 text-secondary-500 hover:text-secondary-600"
 														: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
 													"whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm"
 												)}

@@ -79,7 +79,7 @@ export default function CustomSelect<TFormValues>(props: CustomSelectProps<TForm
 										key={choice.id}
 										className={({ active }) =>
 											classNames(
-												active ? "text-white bg-primary-light" : "text-gray-900",
+												active ? "text-white bg-secondary" : "text-gray-900",
 												"cursor-default select-none relative py-2 pl-3 pr-9"
 											)
 										}

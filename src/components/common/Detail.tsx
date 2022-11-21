@@ -35,9 +35,9 @@ const Detail: FunctionComponent<DetailProps> = ({
 						<button
 							onClick={buttonAction}
 							type="button"
-							className="bg-white rounded-md font-semibold text-primary-light hover:text-primary-light-hover focus:outline-none focus:ring-[1.5px] focus:ring-offset-4 focus:ring-blue-500"
+							className="bg-white rounded-md font-semibold text-secondary-500 hover:text-secondary-600 focus:outline-none focus:ring-[1.5px] focus:ring-offset-4 focus:ring-blue-500"
 						>
-							{buttonLabel ?? "Update"}
+							{buttonLabel ?? "Modify"}
 						</button>
 					</span>
 				) : null}
