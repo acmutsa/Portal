@@ -4,18 +4,56 @@ module.exports = {
 	content: ["./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
 		extend: {
+			boxShadow: {
+				"inner-md": "inset 1px 4px 6px 0 rgb(0 0 0 / 0.1)",
+				"inner-md-2": "inset 2px 2px 6px 0 rgb(0 0 0 / 0.15)",
+				"inner-md-3": "inset 2px 4px 6px 0 rgb(0 0 0 / 0.21)",
+				"inner-md-4": "inset 2px 4px 10px 0 rgb(0 0 0 / 0.28)",
+				"inner-lg": "inset 4px 5px 7px 0 rgb(0 0 0 / 0.2)",
+				"inner-xl": "inset 4px 9px 9px 0 rgb(0 0 0 / 0.3)",
+				"inner-2xl": "inset 4px 11px 12px 0 rgb(0 0 0 / 0.3)",
+			},
 			screens: {
 				"xs": "450px",
 			},
 			colors: {
-				accent: "#f15a22",
-				primary: {
-					dark: "#0C2340",
-					"dark-hover": "#0f2c50",
-					light: "#179BD5",
-					"light-hover": "#179BD5",
+				accent: {
+					DEFAULT: "#f15a22",
+					100: "#fcded3",
+					200: "#f9bda7",
+					300: "#f79c7a",
+					400: "#f47b4e",
+					500: "#f15a22",
+					600: "#c1481b",
+					700: "#913614",
+					800: "#60240e",
+					900: "#301207",
 				},
-				paper: "#faebd7"
+				primary: {
+					DEFAULT: "#0C2340",
+					100: "#ced3d9",
+					200: "#9ea7b3",
+					300: "#6d7b8c",
+					400: "#3d4f66",
+					500: "#0c2340",
+					600: "#0a1c33",
+					700: "#071526",
+					800: "#050e1a",
+					900: "#02070d",
+				},
+				secondary: {
+					DEFAULT: "#179bd5",
+					100: "#d1ebf7",
+					200: "#a2d7ee",
+					300: "#74c3e6",
+					400: "#45afdd",
+					500: "#179bd5",
+					600: "#127caa",
+					700: "#0e5d80",
+					800: "#093e55",
+					900: "#051f2b",
+				},
+				paper: "#faebd7",
 			},
 			fontFamily: {
 				opensans: ["\"Open Sans\"", "sans-serif"],

@@ -29,7 +29,7 @@ const EventView: NextPage = () => {
 	useEffect(() => {
 		// TODO: Improve navigation guards to not show login page at all before redirecting when logged in.
 		if (globalState.member) {
-			router.replace("/member/status");
+			router.replace("/me");
 		}
 	}, [globalState]);
 
@@ -42,7 +42,7 @@ const EventView: NextPage = () => {
 			setCookie("member_email", data.email);
 			setCookie("member_id", data.id);
 			setGlobalState({ ...globalState, member: true });
-			await router.push("/member/status");
+			await router.push("/me");
 		} else {
 			setIsErrorOpen(true);
 		}

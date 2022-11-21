@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import EditEventView from "@/components/admin/EditEventView";
 import EditMemberView from "@/components/admin/EditMemberView";
+import Head from "next/head";
 
 enum AdminView {
 	dashboard,
@@ -85,29 +86,34 @@ const Admin: NextPage = () => {
 	let [ElementToShow, CurrentPage] = inferFromPath(path);
 
 	return (
-		<div className="page-view bg-white flex flex-col md:flex-row w-[100vw]">
-			<div className="w-full md:min-w-[13rem] lg:min-w-[13.5rem] md:max-w-[14rem] [&>*]:cursor-pointer py-2 md:py-6 border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
-				{sideNavElements.map((element) => (
-					<div
-						key={element.text}
-						className={`w-52 mx-auto lg:w-full py-1.5 md:py-4 px-2 grid grid-cols-3 v ${
-							element.page === CurrentPage ? "text-zinc-900" : "text-zinc-600"
-						} hover:text-zinc-900`}
-						onClick={() => swapPage(element.page)}
-					>
-						<div className="col-span-1 m-auto">
-							<element.icon />
+		<>
+			<Head>
+				<title>Administrative Panel</title>
+			</Head>
+			<div className="page-view bg-white flex flex-col md:flex-row w-[100vw]">
+				<div className="w-full md:min-w-[13rem] lg:min-w-[13.5rem] md:max-w-[14rem] [&>*]:cursor-pointer py-2 md:py-6 border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
+					{sideNavElements.map((element) => (
+						<div
+							key={element.text}
+							className={`w-52 mx-auto lg:w-full py-1.5 md:py-4 px-2 grid grid-cols-3 v ${
+								element.page === CurrentPage ? "text-zinc-900" : "text-zinc-600"
+							} hover:text-zinc-900`}
+							onClick={() => swapPage(element.page)}
+						>
+							<div className="col-span-1 m-auto">
+								<element.icon />
+							</div>
+							<div className="col-span-2 justify-self-start">
+								<span>{element.text}</span>
+							</div>
 						</div>
-						<div className="col-span-2 justify-self-start">
-							<span>{element.text}</span>
-						</div>
-					</div>
-				))}
+					))}
+				</div>
+				<div className="p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-scroll relative bg-zinc-100">
+					<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
+				</div>
 			</div>
-			<div className="p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-scroll relative bg-zinc-100">
-				<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
-			</div>
-		</div>
+		</>
 	);
 };
 

@@ -46,7 +46,7 @@ const Navbar: FunctionComponent = () => {
 	if (globalState.ready) {
 		if (globalState.member)
 			dynamicNavbarElements = [
-				<NavbarItem key={"status"} router={router} route={"/member/status"}>
+				<NavbarItem key={"status"} router={router} route={"/me"}>
 					Status
 				</NavbarItem>,
 				<Link key={"logout"} href={"/logout"}>
@@ -76,7 +76,7 @@ const Navbar: FunctionComponent = () => {
 		];
 
 	return (
-		<div className="h-[4.5rem] p-1 w-full bg-primary-dark font-inter drop-shadow-lg z-10 text-white text-xl fixed">
+		<div className="h-[4.5rem] p-1 w-full bg-primary font-inter drop-shadow-lg z-50 text-white text-xl fixed">
 			<div className="grid grid-cols-2 h-full w-full max-w-[1140px] mx-auto">
 				<div className="flex items-center">
 					<Link href="/">

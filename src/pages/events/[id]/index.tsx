@@ -117,12 +117,12 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 							<div className="border-l-2">
 								<h2 className="text-center font-bold">Actions</h2>
 								<Link href={`/events/${id}/check-in`}>
-									<button className="h-12 w-full bg-primary-dark text-white rounded-lg font-semibold m-2">
+									<button className="h-12 w-full bg-primary text-white rounded-lg font-semibold m-2">
 										Check-in
 									</button>
 								</Link>
 								<a href={calendarLink} target="_blank">
-									<button className="h-12 w-full bg-primary-light text-white rounded-lg font-semibold m-2 flex items-center justify-center">
+									<button className="h-12 w-full bg-secondary text-white rounded-lg font-semibold m-2 flex items-center justify-center">
 										<SiGooglecalendar className="mr-2 w-5 h-5" />
 										Add To Google Calendar
 									</button>
