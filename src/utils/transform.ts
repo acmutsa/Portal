@@ -87,6 +87,8 @@ export const PrettyMemberDataSchema = z.object({
 });
 type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
 
+// TODO: Create a toPrettyMemberData function to transform the database representation into a usable version.
+
 export function toMemberData(data: PrettyMemberData): MemberData {
 	const basicData = {
 		memberID: data.id,
