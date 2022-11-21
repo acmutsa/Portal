@@ -109,6 +109,11 @@ export const memberRouter = createRouter()
 					return {
 						success: true,
 					};
+				} else {
+					return {
+						success: false,
+						reason: "",
+					};
 				}
 			}
 		},
