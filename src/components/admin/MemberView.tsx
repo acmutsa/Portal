@@ -15,6 +15,7 @@ import { RowActions } from "@/components/table/RowActions";
 import { useRouter } from "next/router";
 import { BsPlus } from "react-icons/bs";
 import Link from "next/link";
+import MemberDataTable from "./MemberDataTable";
 
 const columnHelper = createColumnHelper<Member>();
 
@@ -163,7 +164,9 @@ const EventView: FunctionComponent = () => {
 					)}
 				</div>
 				<div className="overflow-scroll overflow-x-auto border-box">
-					<div className="inline-block pb-1 w-full">{membersTable}</div>
+					<div className="inline-block pb-1 w-full">
+						<MemberDataTable />
+					</div>
 				</div>
 			</div>
 		</div>

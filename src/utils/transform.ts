@@ -43,7 +43,9 @@ const currentYear = now.getFullYear();
  */
 function defaultValues<TRecord>(obj: TRecord, defaultValue: any): TRecord {
 	if (defaultValue == null) return obj;
-	return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v ?? defaultValue])) as TRecord;
+	return Object.fromEntries(
+		Object.entries(obj as ArrayLike<TRecord>).map(([k, v]) => [k, v ?? defaultValue])
+	) as TRecord;
 }
 
 const OrganizationEnum = z.enum(["ACM", "ACM_W", "ROWDY_CREATORS", "ICPC", "CODING_IN_COLOR"]);
