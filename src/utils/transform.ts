@@ -3,9 +3,8 @@
  */
 
 import type { MemberData, Member } from "@prisma/client";
-import { typeToFlattenedError, z } from "zod";
+import { z } from "zod";
 import { lightFormat, subYears } from "date-fns";
-import { type } from "os";
 
 interface OrganizationData {
 	isInACM: boolean | null;
@@ -49,7 +48,13 @@ function defaultValues<TRecord>(obj: TRecord, defaultValue: any): TRecord {
 	) as TRecord;
 }
 
-const OrganizationEnum = z.enum(["ACM", "ACM_W", "ROWDY_CREATORS", "ICPC", "CODING_IN_COLOR"]);
+export const OrganizationEnum = z.enum([
+	"ACM",
+	"ACM_W",
+	"ROWDY_CREATORS",
+	"ICPC",
+	"CODING_IN_COLOR",
+]);
 const ClassificationEnum = z.enum(["FRESHMAN", "SOPHOMORE", "JUNIOR", "SENIOR", "Unknown"]);
 const EthnicityEnum = z.enum([
 	"WHITE",
@@ -88,7 +93,7 @@ export const PrettyMemberDataSchema = z.object({
 	ethnicity: z.set(EthnicityEnum).optional(),
 	identity: z.set(z.string()).optional(),
 });
-type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
+export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
 type Classification = z.TypeOf<typeof ClassificationEnum>;
 type Organzation = z.TypeOf<typeof OrganizationEnum>;
 type Ethnicity = z.TypeOf<typeof EthnicityEnum>;
