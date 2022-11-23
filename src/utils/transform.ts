@@ -44,7 +44,7 @@ const currentYear = now.getFullYear();
 function defaultValues<TRecord>(obj: TRecord, defaultValue: any): TRecord {
 	if (defaultValue == null) return obj;
 	return Object.fromEntries(
-		Object.entries(obj as ArrayLike<TRecord>).map(([k, v]) => [k, v ?? defaultValue])
+		Object.entries(obj as any).map(([k, v]) => [k, v ?? defaultValue])
 	) as TRecord;
 }
 
