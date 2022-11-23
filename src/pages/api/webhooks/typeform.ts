@@ -175,7 +175,7 @@ const parseMemberItem = async (data: any) => {
 							isInACMW: parsedData.data.orgs.includes("ACM-W"),
 							isInRC: parsedData.data.orgs.includes("Rowdy Creators"),
 							isInICPC: parsedData.data.orgs.includes("ICPC"),
-							isInCIC: parsedData.data.orgs.includes("CIC"),
+							isInCIC: parsedData.data.orgs.includes("Coding in Color"),
 							isBlackorAA: parsedData.data.identity.includes("African American or Black"),
 							isAsian: parsedData.data.identity.includes("Asian"),
 							isNAorAN: parsedData.data.identity.includes("Native American/Alaskan Native"),
