@@ -158,6 +158,6 @@ export const memberRouter = createRouter()
 	.query("getAll", {
 		async resolve({ ctx }) {
 			await validateAdmin(ctx);
-			return getAllMembers();
+			return getAllMembers(true);
 		},
 	});

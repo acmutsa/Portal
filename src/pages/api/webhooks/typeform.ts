@@ -156,44 +156,49 @@ const parseMemberItem = async (data: any) => {
 	const parsedData = memberItemValidator.safeParse(memberToValidate);
 	//TODO: add custom identity handling
 	if (parsedData.success) {
-		const item = await prisma.member.create({
-			data: {
-				name: parsedData.data.name,
-				email: parsedData.data.email.toLowerCase(),
-				joinDate: new Date(),
-				id: parsedData.data.id.toLowerCase(),
-				extendedMemberData: "{}",
+		try {
+			const item = await prisma.member.create({
 				data: {
-					create: {
-						major: parsedData.data.major,
-						classification: parsedData.data.classificaiton,
-						graduationDate: parsedData.data.gradDate,
-						shirtIsUnisex: parsedData.data.shirtType === "Unisex",
-						shirtSize: parsedData.data.shirtSize,
-						isInACM: parsedData.data.orgs.includes("ACM"),
-						isInACMW: parsedData.data.orgs.includes("ACM-W"),
-						isInRC: parsedData.data.orgs.includes("RC"),
-						isInICPC: parsedData.data.orgs.includes("ICPC"),
-						isInCIC: parsedData.data.orgs.includes("CIC"),
-						isBlackorAA: parsedData.data.identity.includes("Black or African American"),
-						isAsian: parsedData.data.identity.includes("Asian"),
-						isNAorAN: parsedData.data.identity.includes("Native American or Alaskan Native"),
-						isNHorPI: parsedData.data.identity.includes("Native Hawaiian or Pacific Islander"),
-						isHispanicorLatinx: parsedData.data.identity.includes("Hispanic or Latinx"),
-						isWhite: parsedData.data.identity.includes("White"),
-						isMale: parsedData.data.identity.includes("Male"),
-						isFemale: parsedData.data.identity.includes("Female"),
-						isNonBinary: parsedData.data.identity.includes("Non-binary"),
-						isTransgender: parsedData.data.identity.includes("Transgender"),
-						isIntersex: parsedData.data.identity.includes("Intersex"),
-						doesNotIdentify: parsedData.data.identity.includes("I prefer not to say"),
-						address: `${parsedData.data.addressLineOne}, ${parsedData.data.city}, ${parsedData.data.state} ${parsedData.data.zipcode}`,
+					name: parsedData.data.name,
+					email: parsedData.data.email.toLowerCase(),
+					joinDate: new Date(),
+					id: parsedData.data.id.toLowerCase(),
+					extendedMemberData: "{}",
+					data: {
+						create: {
+							major: parsedData.data.major,
+							classification: parsedData.data.classificaiton,
+							graduationDate: parsedData.data.gradDate,
+							shirtIsUnisex: parsedData.data.shirtType === "Unisex",
+							shirtSize: parsedData.data.shirtSize,
+							isInACM: parsedData.data.orgs.includes("ACM"),
+							isInACMW: parsedData.data.orgs.includes("ACM-W"),
+							isInRC: parsedData.data.orgs.includes("Rowdy Creators"),
+							isInICPC: parsedData.data.orgs.includes("ICPC"),
+							isInCIC: parsedData.data.orgs.includes("Coding in Color"),
+							isBlackorAA: parsedData.data.identity.includes("African American or Black"),
+							isAsian: parsedData.data.identity.includes("Asian"),
+							isNAorAN: parsedData.data.identity.includes("Native American/Alaskan Native"),
+							isNHorPI: parsedData.data.identity.includes("Native Hawaiian or Pacific Islander"),
+							isHispanicorLatinx: parsedData.data.identity.includes("Hispanic / Latinx"),
+							isWhite: parsedData.data.identity.includes("White"),
+							isMale: parsedData.data.identity.includes("Male"),
+							isFemale: parsedData.data.identity.includes("Female"),
+							isNonBinary: parsedData.data.identity.includes("Non-Binary"),
+							isTransgender: parsedData.data.identity.includes("Transgender"),
+							isIntersex: parsedData.data.identity.includes("Intersex"),
+							doesNotIdentify: parsedData.data.identity.includes("I prefer not to say"),
+							address: `${parsedData.data.addressLineOne}, ${parsedData.data.city}, ${parsedData.data.state} ${parsedData.data.zipcode}`,
+						},
 					},
 				},
-			},
-		});
-		console.log("Success!");
-		return true;
+			});
+			console.log("Success!");
+			return true;
+		} catch (e) {
+			console.log(e);
+			return false;
+		}
 	} else {
 		console.log("Validation error: ", JSON.stringify(parsedData));
 		return false;

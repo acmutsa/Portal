@@ -1,0 +1,49 @@
+			<div className="p-4 bg-white rounded-lg border-zinc-200 border-[1px]">
+				<div className="w-full pb-2">
+					{isSuccess ? (
+						<div className="flex justify-start font-inter">
+							<span className="text-xl tracking-wide text-zinc-800 font-bold my-auto">Members</span>
+							<span className="ml-2 px-2 pt-0.5 text-zinc-600 text-sm my-auto">
+								viewing {members.length} member{pluralize(members.length)}
+							</span>
+							<div className="grow" />
+							<div className="justify-self-end">
+								<Link href="/admin/members/new">
+									<button className="inline-flex h-9 justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 shadow-inner hover:shadow-inner-md-2 rounded-lg text-white font-inter font-medium">
+										<BsPlus className="h-6 w-6" />
+										New Member
+									</button>
+								</Link>
+								{/* TODO: Use the labels & default value options & use the human format (not id) */}
+								<VisibilityDropdown
+									onColumnChange={(visibilityState) => {
+										table.setState((prev) => ({ ...prev, columnVisibility: visibilityState }));
+									}}
+									columns={table.getAllLeafColumns().map((column) => ({ id: column.id }))}
+								/>
+							</div>
+						</div>
+					) : (
+						<div className="animate-pulse p-2 h-5 bg-gray-300 rounded-full dark:bg-gray-700 w-48" />
+					)}
+				</div>
+				<div className="overflow-scroll overflow-x-auto border-box">
+					<div className="inline-block pb-1 w-full">{membersTable}</div>
+				</div>
+			</div>
+
+
+pp
+pp
+p0;]pppppp
+
+p0
+
+p0
+p0
+pppppp
+
+this is me typing on this keyboard
+
+
+this is some text
