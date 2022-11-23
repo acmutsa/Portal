@@ -21,15 +21,15 @@ type MemberWithData = Prisma.MemberGetPayload<{ include: { data: true } }>;
 const orgBodyTemplate = (rowData: any) => {
 	const orgTags: JSX.Element[] = [];
 	if (rowData.prettyMemberData.organizations?.has("ACM"))
-		orgTags.push(<span className="p-tag p-tag-rounded p-tag-info">ACM</span>);
+		orgTags.push(<span className="p-tag mx-[2px] p-tag-rounded !bg-secondary">ACM</span>);
 	if (rowData.prettyMemberData.organizations?.has("ACM_W"))
-		orgTags.push(<span className="p-tag p-tag-rounded p-tag-info">ACM W</span>);
+		orgTags.push(<span className="p-tag mx-[2px] p-tag-rounded !bg-[#B0FFFB]">ACM W</span>);
 	if (rowData.prettyMemberData.organizations?.has("ICPC"))
-		orgTags.push(<span className="p-tag p-tag-rounded p-tag-info">ICPC</span>);
+		orgTags.push(<span className="p-tag mx-[2px] p-tag-rounded !bg-[#FFD51E]">ICPC</span>);
 	if (rowData.prettyMemberData.organizations?.has("ROWDY_CREATORS"))
-		orgTags.push(<span className="p-tag p-tag-rounded p-tag-info">Rowdy Creators</span>);
+		orgTags.push(<span className="p-tag mx-[2px] p-tag-rounded p-tag-info">Rowdy Creators</span>);
 	if (rowData.prettyMemberData.organizations?.has("CODING_IN_COLOR"))
-		orgTags.push(<span className="p-tag p-tag-rounded p-tag-info">CIC</span>);
+		orgTags.push(<span className="p-tag mx-[2px] p-tag-rounded">CIC</span>);
 	return <div>{orgTags}</div>;
 };
 
