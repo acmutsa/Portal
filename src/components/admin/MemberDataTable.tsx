@@ -96,7 +96,9 @@ const ethnicityBodyTemplate = (rowData: any) => {
 			</span>
 		);
 	if (rowData.prettyMemberData.ethnicity?.has("ASIAN"))
-		ethTags.push(<span className="p-tag m-[2px] rounded !bg-pink-500">Asian</span>);
+		ethTags.push(
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-pink-500">Asian</span>
+		);
 	if (rowData.prettyMemberData.ethnicity?.has("NATIVE_HAWAIIAN_PACIFIC_ISLANDER"))
 		ethTags.push(
 			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-teal-500">
@@ -116,20 +118,38 @@ const ethnicityBodyTemplate = (rowData: any) => {
 	);
 };
 
-// const ethnicityItemTemplate = (option: string) => {
-// 	switch (option) {
-// 		case "ACM":
-// 			return <span className="p-tag m-[2px] rounded !bg-secondary">ACM</span>;
-// 		case "ACM W":
-// 			return <span className="p-tag m-[2px] rounded !bg-[#F2751B]">ACM W</span>;
-// 		case "ICPC":
-// 			return <span className="p-tag m-[2px] rounded !bg-[#FFD51E]">ICPC</span>;
-// 		case "Rowdy Creators":
-// 			return <span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Rowdy Creators</span>;
-// 		case "CIC":
-// 			return <span className="p-tag m-[2px] rounded !bg-[#000000]">CIC</span>;
-// 	}
-// };
+const ethnicityItemTemplate = (option: string) => {
+	switch (option) {
+		case "WHITE":
+			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-emerald-800">White</span>;
+		case "BLACK_OR_AFRICAN_AMERICAN":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-800">
+					Black or African American
+				</span>
+			);
+		case "NATIVE_AMERICAN_ALASKAN_NATIVE":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-600">
+					Native American / Alaskan Native
+				</span>
+			);
+		case "ASIAN":
+			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-pink-500">Asian</span>;
+		case "NATIVE_HAWAIIAN_PACIFIC_ISLANDER":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-teal-500">
+					Native Hawaiian / Pacific Islander
+				</span>
+			);
+		case "HISPANIC_OR_LATINO":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">
+					Hispanic or Latino
+				</span>
+			);
+	}
+};
 
 const ethnicityFilterTemplate = (options: any) => {
 	return (
