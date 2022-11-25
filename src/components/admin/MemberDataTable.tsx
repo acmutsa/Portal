@@ -2,7 +2,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { trpc } from "@/utils/trpc";
 import { toPrettyMemberData, PrettyMemberData } from "@/utils/transform";
 import type { Member, MemberData } from "@prisma/client";
@@ -58,6 +58,101 @@ const orgBodyTemplate = (rowData: any) => {
 	if (rowData.prettyMemberData.organizations?.has("CODING_IN_COLOR"))
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#000000]">CIC</span>);
 	return <div>{orgTags}</div>;
+};
+
+const ethnicityBodyTemplate = (rowData: any) => {
+	const ref = useRef<any>();
+
+	useEffect(() => {
+		const handleScroll = (e: any) => {
+			if (e.deltaY > 0) e.currentTarget.scrollLeft += 25;
+			else e.currentTarget.scrollLeft -= 25;
+		};
+
+		const ele = ref.current;
+		if (ele) {
+			ele.addEventListener("wheel", handleScroll);
+		} else {
+			console.log("ele is null");
+		}
+	}, []);
+
+	console.log("rowData: ", rowData);
+	const ethTags: JSX.Element[] = [];
+	if (rowData.prettyMemberData.ethnicity?.has("WHITE"))
+		ethTags.push(
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-secondary">White</span>
+		);
+	if (rowData.prettyMemberData.ethnicity?.has("BLACK_OR_AFRICAN_AMERICAN"))
+		ethTags.push(
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#F2751B]">
+				Black or African American
+			</span>
+		);
+	if (rowData.prettyMemberData.ethnicity?.has("NATIVE_AMERICAN_ALASKAN_NATIVE"))
+		ethTags.push(
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#FFD51E]">
+				Native American / Alaskan Native
+			</span>
+		);
+	if (rowData.prettyMemberData.ethnicity?.has("ASIAN"))
+		ethTags.push(<span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Asian</span>);
+	if (rowData.prettyMemberData.ethnicity?.has("NATIVE_HAWAIIAN_PACIFIC_ISLANDER"))
+		ethTags.push(
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#000000]">
+				Native Hawaiian / Pacific Islander
+			</span>
+		);
+	if (rowData.prettyMemberData.ethnicity?.has("HISPANIC_OR_LATINO"))
+		ethTags.push(
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#000000]">
+				Hispanic or Latino
+			</span>
+		);
+	return (
+		<div ref={ref} className="flex items-center !max-w-[150px] overflow-x-auto scrollbar-hide">
+			{ethTags}
+		</div>
+	);
+};
+
+// const ethnicityItemTemplate = (option: string) => {
+// 	switch (option) {
+// 		case "ACM":
+// 			return <span className="p-tag m-[2px] rounded !bg-secondary">ACM</span>;
+// 		case "ACM W":
+// 			return <span className="p-tag m-[2px] rounded !bg-[#F2751B]">ACM W</span>;
+// 		case "ICPC":
+// 			return <span className="p-tag m-[2px] rounded !bg-[#FFD51E]">ICPC</span>;
+// 		case "Rowdy Creators":
+// 			return <span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Rowdy Creators</span>;
+// 		case "CIC":
+// 			return <span className="p-tag m-[2px] rounded !bg-[#000000]">CIC</span>;
+// 	}
+// };
+
+const ethnicityFilterTemplate = (options: any) => {
+	return (
+		<Dropdown
+			value={options.value}
+			options={[
+				"White",
+				"Black or African American",
+				"Native Hawaiian or Pacific Islander",
+				"Asian",
+				"Native American or Alaskan Native",
+				"Hispnic or Latino",
+			]}
+			onChange={(e: any) => {
+				console.log("val: ", e.value);
+				options.filterCallback(e.value);
+			}}
+			itemTemplate={orgItemTemplate}
+			placeholder="Select a Status"
+			className="p-column-filter"
+			showClear
+		/>
+	);
 };
 
 const orgFilterTemplate = (options: any) => {
@@ -180,6 +275,11 @@ const DataTableDemo = () => {
 				filterElement={orgFilterTemplate}
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
 				filterMatchMode="custom"
+			></Column>
+			<Column
+				field="prettyMemberData.ethnicity"
+				header="Ethnicity"
+				body={ethnicityBodyTemplate}
 			></Column>
 		</DataTable>
 	);

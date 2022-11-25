@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -8,134 +8,145 @@
 
 body,
 html {
-    background-color: #0c2340;
-    height: 100vh;
+	background-color: #0c2340;
+	height: 100vh;
+}
+
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-hide::-webkit-scrollbar {
+	display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
 }
 
 .page-view {
-    height: 100vh;
-    width: 100%;
-    overflow-y: auto;
-    padding-top: 72px;
+	height: 100vh;
+	width: 100%;
+	overflow-y: auto;
+	padding-top: 72px;
 }
 
 .page-view.bg-darken {
-    background-color: rgba(0, 0, 0, 0.4);
-    padding-bottom: 60px;
+	background-color: rgba(0, 0, 0, 0.4);
+	padding-bottom: 60px;
 }
 
 .pv-darken {
-    background-color: rgba(0, 0, 0, 0.4);
-    padding-bottom: 60px;
+	background-color: rgba(0, 0, 0, 0.4);
+	padding-bottom: 60px;
 }
 
 .footer {
-    padding-top: 40px;
+	padding-top: 40px;
 }
 
 .no-footer ~ .footer {
-    display: none;
+	display: none;
 }
 
 .under-hover {
-    display: inline-block;
-    position: relative;
+	display: inline-block;
+	position: relative;
 }
 
 .under-hover:after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    transform: scaleX(0);
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    @apply bg-accent;
-    transform-origin: bottom right;
-    transition: transform 0.25s ease-out;
+	content: "";
+	position: absolute;
+	width: 100%;
+	transform: scaleX(0);
+	height: 2px;
+	bottom: 0;
+	left: 0;
+	@apply bg-accent;
+	transform-origin: bottom right;
+	transition: transform 0.25s ease-out;
 }
 
 .under-hover:hover:after,
 .under-hover.force:after {
-    transform: scaleX(1);
-    transform-origin: bottom left;
+	transform: scaleX(1);
+	transform-origin: bottom left;
 }
 
 .grayscale {
-    -webkit-transition: -webkit-filter 100ms linear;
+	-webkit-transition: -webkit-filter 100ms linear;
 }
 
 table {
-    @apply w-full;
-    font-family: "Inter", arial, sans-serif;
-    border-collapse: collapse;
+	@apply w-full;
+	font-family: "Inter", arial, sans-serif;
+	border-collapse: collapse;
 }
 
 td,
 th {
-    @apply text-left p-2 relative;
-    border: 1px solid #dddddd;
+	@apply text-left p-2 relative;
+	border: 1px solid #dddddd;
 }
 
 .resizer {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 5px;
-    background: rgba(0, 0, 0, 0.5);
-    cursor: col-resize;
-    user-select: none;
-    touch-action: none;
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+	width: 5px;
+	background: rgba(0, 0, 0, 0.5);
+	cursor: col-resize;
+	user-select: none;
+	touch-action: none;
 }
 
 .resizer.isResizing {
-    @apply bg-accent opacity-90;
+	@apply bg-accent opacity-90;
 }
 
 @media (hover: hover) {
-    .resizer {
-        opacity: 0;
-    }
+	.resizer {
+		opacity: 0;
+	}
 
-    *:hover > .resizer {
-        opacity: 1;
-    }
+	*:hover > .resizer {
+		opacity: 1;
+	}
 }
 
 .card-buttongroup > * {
-    @apply p-1 pb-2 hover:text-sky-700;
+	@apply p-1 pb-2 hover:text-sky-700;
 }
 
 .card-buttongroup > *:not(:last-child) {
-    @apply border-slate-200 border-r-2;
+	@apply border-slate-200 border-r-2;
 }
 
 .disclosure-symbol {
-    font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
+	font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
 }
 
 input.login {
-    @apply disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
+	@apply disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
     focus:border-sky-500 focus:ring-sky-500  focus:ring-1
     invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500
     focus:invalid:ring-pink-500 disabled:shadow-none;
 }
 
 .late-fade-in {
-    animation: fadeIn 1s forwards;
-    animation-delay: 2.5s;
-    opacity: 0;
+	animation: fadeIn 1s forwards;
+	animation-delay: 2.5s;
+	opacity: 0;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 input[type="date"]::-moz-placeholder {
-    @apply text-gray-500;
+	@apply text-gray-500;
 }
