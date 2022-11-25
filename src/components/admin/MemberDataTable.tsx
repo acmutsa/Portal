@@ -167,10 +167,10 @@ const DataTableDemo = () => {
 			dataKey="member.id"
 		>
 			<Column selectionMode="multiple" headerStyle={{ width: "3em" }}></Column>
-			<Column filter field="member.name" header="Name"></Column>
+			<Column sortable filter field="member.name" header="Name"></Column>
 			<Column filter field="member.email" header="Email"></Column>
 			<Column filter field="member.id" header="ABC123"></Column>
-			<Column filter field="member.data.major" header="Major"></Column>
+			<Column sortable filter field="member.data.major" header="Major"></Column>
 			<Column filter field="member.data.classification" header="Classification"></Column>
 			<Column
 				field="prettyMemberData.organizations"
