@@ -81,31 +81,31 @@ const ethnicityBodyTemplate = (rowData: any) => {
 	const ethTags: JSX.Element[] = [];
 	if (rowData.prettyMemberData.ethnicity?.has("WHITE"))
 		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-secondary">White</span>
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-emerald-800">White</span>
 		);
 	if (rowData.prettyMemberData.ethnicity?.has("BLACK_OR_AFRICAN_AMERICAN"))
 		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#F2751B]">
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-800">
 				Black or African American
 			</span>
 		);
 	if (rowData.prettyMemberData.ethnicity?.has("NATIVE_AMERICAN_ALASKAN_NATIVE"))
 		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#FFD51E]">
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-600">
 				Native American / Alaskan Native
 			</span>
 		);
 	if (rowData.prettyMemberData.ethnicity?.has("ASIAN"))
-		ethTags.push(<span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Asian</span>);
+		ethTags.push(<span className="p-tag m-[2px] rounded !bg-pink-500">Asian</span>);
 	if (rowData.prettyMemberData.ethnicity?.has("NATIVE_HAWAIIAN_PACIFIC_ISLANDER"))
 		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#000000]">
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-teal-500">
 				Native Hawaiian / Pacific Islander
 			</span>
 		);
 	if (rowData.prettyMemberData.ethnicity?.has("HISPANIC_OR_LATINO"))
 		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#000000]">
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">
 				Hispanic or Latino
 			</span>
 		);
