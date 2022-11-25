@@ -65,8 +65,8 @@ const ethnicityBodyTemplate = (rowData: any) => {
 
 	useEffect(() => {
 		const handleScroll = (e: any) => {
-			if (e.deltaY > 0) e.currentTarget.scrollLeft += 25;
-			else e.currentTarget.scrollLeft -= 25;
+			if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
+			else e.currentTarget.scrollLeft -= 10;
 		};
 
 		const ele = ref.current;
