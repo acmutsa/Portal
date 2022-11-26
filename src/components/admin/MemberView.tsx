@@ -1,128 +1,16 @@
-import React, { FunctionComponent } from "react";
-import type { Member } from "@prisma/client";
-
-import {
-	createColumnHelper,
-	flexRender,
-	getCoreRowModel,
-	useReactTable,
-} from "@tanstack/react-table";
-import { trpc } from "@/utils/trpc";
+import MemberDataTable from "@/components/admin/MemberDataTable";
 import Stat from "@/components/common/Stat";
-import { formatDateCell, pluralize } from "@/utils/helpers";
-import VisibilityDropdown from "@/components/table/VisibilityDropdown";
-import { RowActions } from "@/components/table/RowActions";
-import { useRouter } from "next/router";
-import { BsPlus } from "react-icons/bs";
+import { pluralize } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
 import Link from "next/link";
-import MemberDataTable from "./MemberDataTable";
-
-const columnHelper = createColumnHelper<Member>();
-
-const columns = [
-	columnHelper.accessor("id", {
-		header: "ID",
-	}),
-	columnHelper.accessor("name", {
-		header: "Name",
-		size: 200,
-	}),
-	columnHelper.accessor("email", {
-		header: "Email Address",
-		size: 300,
-	}),
-	columnHelper.accessor("joinDate", {
-		header: "Join Date",
-		size: 240,
-		cell: (info) => formatDateCell(info.getValue()),
-	}),
-];
+import { useRouter } from "next/router";
+import { FunctionComponent } from "react";
+import { BsPlus } from "react-icons/bs";
 
 const EventView: FunctionComponent = () => {
 	const { isSuccess, data: members } = trpc.useQuery(["member.getAll"], {
 		refetchOnWindowFocus: false,
 	});
-
-	const triggerDelete = (id: string) => {
-		console.log(`Deleting Member ${id}`);
-	};
-
-	const router = useRouter();
-	const table = useReactTable({
-		data: isSuccess ? members : [],
-		columns: [
-			...columns,
-			columnHelper.display({
-				id: "actions",
-				header: "Actions",
-				minSize: 200,
-				cell: (ctx) => (
-					<RowActions
-						onDelete={() => {
-							triggerDelete(ctx.row.original.id);
-						}}
-						onEdit={() => {
-							return router.push(`/admin/members/${ctx.row.original.id}`);
-						}}
-					/>
-				),
-			}),
-		],
-		getCoreRowModel: getCoreRowModel(),
-		columnResizeMode: "onChange",
-		enableColumnResizing: true,
-	});
-
-	const membersTable = (
-		<table className="text-sm max-h-[150rem]">
-			<thead>
-				{table.getHeaderGroups().map((headerGroup) => (
-					<tr key={headerGroup.id}>
-						{headerGroup.headers.map((header) => (
-							<th
-								{...{
-									key: header.id,
-									colSpan: header.colSpan,
-									style: {
-										width: header.getSize(),
-									},
-								}}
-							>
-								{header.isPlaceholder
-									? null
-									: flexRender(header.column.columnDef.header, header.getContext())}
-								<div
-									{...{
-										onMouseDown: header.getResizeHandler(),
-										onTouchStart: header.getResizeHandler(),
-										className: `resizer ${header.column.getIsResizing() ? "isResizing" : ""}`,
-									}}
-								/>
-							</th>
-						))}
-					</tr>
-				))}
-			</thead>
-			<tbody>
-				{table.getRowModel().rows.map((row) => (
-					<tr key={row.id}>
-						{row.getVisibleCells().map((cell) => (
-							<td
-								{...{
-									key: cell.id,
-									style: {
-										width: cell.column.getSize(),
-									},
-								}}
-							>
-								{flexRender(cell.column.columnDef.cell, cell.getContext())}
-							</td>
-						))}
-					</tr>
-				))}
-			</tbody>
-		</table>
-	);
 
 	return (
 		<div className="w-full h-full">
@@ -151,12 +39,6 @@ const EventView: FunctionComponent = () => {
 									</button>
 								</Link>
 								{/* TODO: Use the labels & default value options & use the human format (not id) */}
-								<VisibilityDropdown
-									onColumnChange={(visibilityState) => {
-										table.setState((prev) => ({ ...prev, columnVisibility: visibilityState }));
-									}}
-									columns={table.getAllLeafColumns().map((column) => ({ id: column.id }))}
-								/>
 							</div>
 						</div>
 					) : (
