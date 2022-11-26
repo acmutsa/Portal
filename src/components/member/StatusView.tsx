@@ -38,7 +38,7 @@ const StatusView: FunctionComponent<StatusProps> = ({ checkins }: StatusProps) =
 
 	return (
 		<>
-			<div className="px-4 sm:px-8 pt-7 pb-3 flex justify-end items-center">
+			<div className="px-4 bg-gray-50 sm:px-8 pt-7 pb-5 flex justify-end items-center">
 				<div className="w-full bg-gray-200 rounded-full h-[0.9rem] shadow-inner dark:bg-gray-700">
 					<div
 						className="bg-blue-600 h-full rounded-full min-w-[1rem] max-w-full"
