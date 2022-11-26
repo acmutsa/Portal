@@ -48,8 +48,8 @@ const Home: NextPage = () => {
 									Register
 								</button>
 							</Link>
-							<Link href="/member/status" className="mx-2">
-								<button className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 rounded transition ease-in">
+							<Link href="/me" className="mx-2">
+								<button className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 hover:bg-primary-dark-hover rounded transition ease-in">
 									Status
 								</button>
 							</Link>

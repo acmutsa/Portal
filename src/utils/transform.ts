@@ -2,7 +2,7 @@
  * Utilities for transforming data representation, especially with likeness to the MemberData table.
  */
 
-import { MemberData } from "@prisma/client";
+import type { MemberData, Member } from "@prisma/client";
 import { z } from "zod";
 import { lightFormat, subYears } from "date-fns";
 
@@ -43,15 +43,23 @@ const currentYear = now.getFullYear();
  */
 function defaultValues<TRecord>(obj: TRecord, defaultValue: any): TRecord {
 	if (defaultValue == null) return obj;
-	return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v ?? defaultValue])) as TRecord;
+	return Object.fromEntries(
+		Object.entries(obj as any).map(([k, v]) => [k, v ?? defaultValue])
+	) as TRecord;
 }
 
-const OrganizationEnum = z.enum(["ACM", "ACM_W", "ROWDY_CREATORS", "ICPC", "CODING_IN_COLOR"]);
-const ClassificationEnum = z.enum(["FRESHMAN", "SOPHOMORE", "JUNIOR", "SENIOR"]);
+export const OrganizationEnum = z.enum([
+	"ACM",
+	"ACM_W",
+	"ROWDY_CREATORS",
+	"ICPC",
+	"CODING_IN_COLOR",
+]);
+const ClassificationEnum = z.enum(["FRESHMAN", "SOPHOMORE", "JUNIOR", "SENIOR", "Unknown"]);
 const EthnicityEnum = z.enum([
 	"WHITE",
 	"BLACK_OR_AFRICAN_AMERICAN",
-	"AMERICAN_INDIAN_OR_ALASKA_NATIVE",
+	"NATIVE_AMERICAN_ALASKAN_NATIVE",
 	"ASIAN",
 	"NATIVE_HAWAIIAN_PACIFIC_ISLANDER",
 	"HISPANIC_OR_LATINO",
@@ -82,12 +90,62 @@ export const PrettyMemberDataSchema = z.object({
 		.optional(),
 	organizations: z.set(OrganizationEnum).optional(),
 	birthday: z.date().min(subYears(now, 50)).max(subYears(now, 14)).optional(),
-	ethnicity: EthnicityEnum.optional(),
-	identity: IdentityEnum.or(z.string()).optional(),
+	ethnicity: z.set(EthnicityEnum).optional(),
+	identity: z.set(z.string()).optional(),
 });
-type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
+export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
+type Classification = z.TypeOf<typeof ClassificationEnum>;
+type Organzation = z.TypeOf<typeof OrganizationEnum>;
+type Ethnicity = z.TypeOf<typeof EthnicityEnum>;
 
 // TODO: Create a toPrettyMemberData function to transform the database representation into a usable version.
+
+export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberData => {
+	const organizations = new Set<Organzation>();
+	const ethnicities = new Set<Ethnicity>();
+	const identities = new Set<string>();
+
+	//TODO: make this less gross
+
+	if (memberData.isInACM) organizations.add("ACM");
+	if (memberData.isInACMW) organizations.add("ACM_W");
+	if (memberData.isInRC) organizations.add("ROWDY_CREATORS");
+	if (memberData.isInICPC) organizations.add("ICPC");
+	if (memberData.isInCIC) organizations.add("CODING_IN_COLOR");
+
+	if (memberData.isBlackorAA) ethnicities.add("BLACK_OR_AFRICAN_AMERICAN");
+	if (memberData.isAsian) ethnicities.add("ASIAN");
+	if (memberData.isNAorAN) ethnicities.add("NATIVE_AMERICAN_ALASKAN_NATIVE");
+	if (memberData.isNHorPI) ethnicities.add("NATIVE_HAWAIIAN_PACIFIC_ISLANDER");
+	if (memberData.isHispanicorLatinx) ethnicities.add("HISPANIC_OR_LATINO");
+	if (memberData.isWhite) ethnicities.add("WHITE");
+
+	if (memberData.isMale) identities.add(IdentityEnum.enum.MALE);
+	if (memberData.isFemale) identities.add(IdentityEnum.enum.FEMALE);
+	if (memberData.isNonBinary) identities.add(IdentityEnum.enum.NON_BINARY);
+	if (memberData.isTransgender) identities.add(IdentityEnum.enum.TRANSGENDER);
+	if (memberData.isIntersex) identities.add(IdentityEnum.enum.INTERSEX);
+	if (memberData.doesNotIdentify) identities.add(IdentityEnum.enum.DOES_NOT_IDENTIFY);
+	if (memberData.otherIdentity) identities.add(memberData.otherIdentity);
+
+	return {
+		id: member.id,
+		major: memberData.major || "Unkown",
+		classification: (ClassificationEnum.safeParse(memberData.classification).success
+			? memberData.classification
+			: "Unknown") as Classification,
+		graduationDate: memberData.graduationDate
+			? {
+					month: parseInt(memberData.graduationDate.split("/")[1] || "1") || 1,
+					year: parseInt(memberData.graduationDate.split("/")[2] || "2000") || 2000,
+			  }
+			: undefined,
+		organizations: organizations,
+		birthday: memberData.Birthday ? new Date(memberData.Birthday) : undefined,
+		ethnicity: ethnicities,
+		identity: identities,
+	};
+};
 
 export function toMemberData(data: PrettyMemberData): MemberData {
 	const basicData = {
@@ -133,17 +191,23 @@ export function toMemberData(data: PrettyMemberData): MemberData {
 	};
 
 	if (data.ethnicity != null) {
-		// Else-if required, only one value allowed to be true. Otherwise, ALL NULL.
-		if (data.ethnicity == EthnicityEnum.enum.WHITE) ethnicityData.isWhite = true;
-		else if (data.ethnicity == EthnicityEnum.enum.ASIAN) ethnicityData.isAsian = true;
-		else if (data.ethnicity == EthnicityEnum.enum.AMERICAN_INDIAN_OR_ALASKA_NATIVE)
-			ethnicityData.isNAorAN = true;
-		else if (data.ethnicity == EthnicityEnum.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER)
-			ethnicityData.isNHorPI = true;
-		else if (data.ethnicity == EthnicityEnum.enum.BLACK_OR_AFRICAN_AMERICAN)
+		if (data.ethnicity.has(EthnicityEnum.enum.WHITE)) ethnicityData.isWhite = true;
+		if (data.ethnicity.has(EthnicityEnum.enum.ASIAN)) ethnicityData.isAsian = true;
+		if (data.ethnicity.has(EthnicityEnum.enum.BLACK_OR_AFRICAN_AMERICAN))
 			ethnicityData.isBlackorAA = true;
-		else if (data.ethnicity == EthnicityEnum.enum.HISPANIC_OR_LATINO)
+		if (data.ethnicity.has(EthnicityEnum.enum.HISPANIC_OR_LATINO))
 			ethnicityData.isHispanicorLatinx = true;
+		if (data.ethnicity.has(EthnicityEnum.enum.NATIVE_AMERICAN_ALASKAN_NATIVE))
+			ethnicityData.isNAorAN = true;
+		if (data.ethnicity.has(EthnicityEnum.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER))
+			ethnicityData.isNHorPI = true;
+
+		// if (data.ethnicity == EthnicityEnum.enum.WHITE) ethnicityData.isWhite = true;
+		// if (data.ethnicity == EthnicityEnum.enum.ASIAN) ethnicityData.isAsian = true;
+		// if (data.ethnicity == EthnicityEnum.enum.AMERICAN_INDIAN_OR_ALASKA_NATIVE) ethnicityData.isNAorAN = true;
+		// if (data.ethnicity == EthnicityEnum.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER) ethnicityData.isNHorPI = true;
+		// if (data.ethnicity == EthnicityEnum.enum.BLACK_OR_AFRICAN_AMERICAN) ethnicityData.isBlackorAA = true;
+		// if (data.ethnicity == EthnicityEnum.enum.HISPANIC_OR_LATINO) ethnicityData.isHispanicorLatinx = true;
 		ethnicityData = defaultValues<EthnicityData>(ethnicityData, false);
 	}
 
@@ -159,16 +223,26 @@ export function toMemberData(data: PrettyMemberData): MemberData {
 
 	if (data.identity != null) {
 		if (IdentityEnum.safeParse(data.identity).success) {
-			if (data.identity == IdentityEnum.enum.MALE) identityData.isMale = true;
-			else if (data.identity == IdentityEnum.enum.FEMALE) identityData.isFemale = true;
-			else if (data.identity == IdentityEnum.enum.INTERSEX) identityData.isIntersex = true;
-			else if (data.identity == IdentityEnum.enum.NON_BINARY) identityData.isNonBinary = true;
-			else if (data.identity == IdentityEnum.enum.TRANSGENDER) identityData.isTransgender = true;
-			else if (data.identity == IdentityEnum.enum.DOES_NOT_IDENTIFY)
-				identityData.doesNotIdentify = true;
-		} else identityData.otherIdentity = data.identity;
-		identityData = defaultValues<IdentityData>(identityData, false);
-	}
+			for (let val of data.identity) {
+				if (data.identity.has(IdentityEnum.enum.MALE)) identityData.isMale = true;
+				else if (data.identity.has(IdentityEnum.enum.FEMALE)) identityData.isFemale = true;
+				else if (data.identity.has(IdentityEnum.enum.NON_BINARY)) identityData.isNonBinary = true;
+				else if (data.identity.has(IdentityEnum.enum.TRANSGENDER))
+					identityData.isTransgender = true;
+				else if (data.identity.has(IdentityEnum.enum.INTERSEX)) identityData.isIntersex = true;
+				else if (data.identity.has(IdentityEnum.enum.DOES_NOT_IDENTIFY))
+					identityData.doesNotIdentify = true;
+				else identityData.otherIdentity = val;
+			}
 
-	return { ...basicData, ...identityData, ...ethnicityData, ...organizationData, ...identityData };
+			identityData = defaultValues<IdentityData>(identityData, false);
+		}
+	}
+	return {
+		...basicData,
+		...identityData,
+		...ethnicityData,
+		...organizationData,
+		...identityData,
+	};
 }
