@@ -3,7 +3,7 @@ import LoginForm from "@/components/admin/LoginForm";
 import { setCookie } from "cookies-next";
 
 const Login: NextPage = () => {
-	const pressedSubmit = (username: string, password: string) => {
+	const onSubmit = (username: string, password: string) => {
 		setCookie("admin_uname", username);
 		setCookie("admin_pass", password);
 
@@ -12,7 +12,7 @@ const Login: NextPage = () => {
 
 	return (
 		<div className="flex items-center justify-center page-view">
-			<LoginForm callback={(username, password) => pressedSubmit(username, password)} />
+			<LoginForm callback={(username, password) => onSubmit(username, password)} />
 		</div>
 	);
 };
