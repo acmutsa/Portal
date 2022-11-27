@@ -30,24 +30,6 @@ FilterService.register("MATCH_TAG", (a, b) => {
 		case "CIC":
 			enumName = "CODING_IN_COLOR";
 			break;
-		case "White":
-			enumName = "WHITE";
-			break;
-		case "Black or African American":
-			enumName = "BLACK_OR_AFRICAN_AMERICAN";
-			break;
-		case "Native American / Alaskan Native":
-			enumName = "NATIVE_AMERICAN_ALASKAN_NATIVE";
-			break;
-		case "Asian":
-			enumName = "ASIAN";
-			break;
-		case "Native Hawaiian / Pacific Islander":
-			enumName = "NATIVE_HAWAIIAN_PACIFIC_ISLANDER";
-			break;
-		case "Hispanic or Latino":
-			enumName = "HISPANIC_OR_LATINO";
-			break;
 	}
 
 	return a.has(enumName);
@@ -137,31 +119,30 @@ const ethnicityBodyTemplate = (rowData: any) => {
 };
 
 const ethnicityItemTemplate = (option: string) => {
-	console.log("option:", option);
 	switch (option) {
-		case "White":
+		case "WHITE":
 			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-emerald-800">White</span>;
-		case "Black or African American":
+		case "BLACK_OR_AFRICAN_AMERICAN":
 			return (
 				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-800">
 					Black or African American
 				</span>
 			);
-		case "Native American / Alaskan Native":
+		case "NATIVE_AMERICAN_ALASKAN_NATIVE":
 			return (
 				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-600">
 					Native American / Alaskan Native
 				</span>
 			);
-		case "Asian":
+		case "ASIAN":
 			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-pink-500">Asian</span>;
-		case "Native Hawaiian / Pacific Islander":
+		case "NATIVE_HAWAIIAN_PACIFIC_ISLANDER":
 			return (
 				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-teal-500">
 					Native Hawaiian / Pacific Islander
 				</span>
 			);
-		case "Hispanic or Latino":
+		case "HISPANIC_OR_LATINO":
 			return (
 				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">
 					Hispanic or Latino
@@ -177,17 +158,17 @@ const ethnicityFilterTemplate = (options: any) => {
 			options={[
 				"White",
 				"Black or African American",
-				"Native Hawaiian / Pacific Islander",
+				"Native Hawaiian or Pacific Islander",
 				"Asian",
-				"Native American / Alaskan Native",
-				"Hispanic or Latino",
+				"Native American or Alaskan Native",
+				"Hispnic or Latino",
 			]}
 			onChange={(e: any) => {
 				console.log("val: ", e.value);
 				options.filterCallback(e.value);
 			}}
-			itemTemplate={ethnicityItemTemplate}
-			placeholder="Select a Ethnicity"
+			itemTemplate={orgItemTemplate}
+			placeholder="Select a Status"
 			className="p-column-filter"
 			showClear
 		/>
@@ -204,7 +185,7 @@ const orgFilterTemplate = (options: any) => {
 				options.filterCallback(e.value);
 			}}
 			itemTemplate={orgItemTemplate}
-			placeholder="Select a Organization"
+			placeholder="Select a Status"
 			className="p-column-filter"
 			showClear
 		/>
@@ -252,10 +233,6 @@ const DataTableDemo = () => {
 			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
 		},
 		"prettyMemberData.organizations": {
-			operator: FilterOperator.OR,
-			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
-		},
-		"prettyMemberData.ethnicity": {
 			operator: FilterOperator.OR,
 			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
 		},
@@ -323,10 +300,6 @@ const DataTableDemo = () => {
 				field="prettyMemberData.ethnicity"
 				header="Ethnicity"
 				body={ethnicityBodyTemplate}
-				filter
-				filterElement={ethnicityFilterTemplate}
-				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
-				filterMatchMode="custom"
 			></Column>
 		</DataTable>
 	);
