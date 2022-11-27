@@ -130,7 +130,7 @@ const ethnicityBodyTemplate = (rowData: any) => {
 			</span>
 		);
 	return (
-		<div ref={ref} className="flex items-center !max-w-[150px] overflow-x-auto scrollbar-hide">
+		<div ref={ref} className="flex items-center !max-w-[150px] overflow-x-hidden scrollbar-hide">
 			{ethTags}
 		</div>
 	);
