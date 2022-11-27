@@ -63,7 +63,6 @@ type MemberWithData = Prisma.MemberGetPayload<{ include: { data: true } }>;
 // TODO: Try to make this all typed? AFAIK there is a way to type the PrimeReact rowData. In the meantime going to YOLO it.
 
 const orgBodyTemplate = (rowData: any) => {
-	console.log("rowData: ", rowData);
 	const orgTags: JSX.Element[] = [];
 	if (rowData.prettyMemberData.organizations?.has("ACM"))
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-secondary">ACM</span>);
@@ -71,10 +70,10 @@ const orgBodyTemplate = (rowData: any) => {
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#F2751B]">ACM W</span>);
 	if (rowData.prettyMemberData.organizations?.has("ICPC"))
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#FFD51E]">ICPC</span>);
-	if (rowData.prettyMemberData.organizations?.has("ROWDY_CREATORS"))
-		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Rowdy Creators</span>);
 	if (rowData.prettyMemberData.organizations?.has("CODING_IN_COLOR"))
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#000000]">CIC</span>);
+	if (rowData.prettyMemberData.organizations?.has("ROWDY_CREATORS"))
+		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Rowdy Creators</span>);
 	return <div>{orgTags}</div>;
 };
 
@@ -95,7 +94,6 @@ const ethnicityBodyTemplate = (rowData: any) => {
 		}
 	}, []);
 
-	console.log("rowData: ", rowData);
 	const ethTags: JSX.Element[] = [];
 	if (rowData.prettyMemberData.ethnicity?.has("WHITE"))
 		ethTags.push(
@@ -137,7 +135,6 @@ const ethnicityBodyTemplate = (rowData: any) => {
 };
 
 const ethnicityItemTemplate = (option: string) => {
-	console.log("option:", option);
 	switch (option) {
 		case "White":
 			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-emerald-800">White</span>;
@@ -183,7 +180,6 @@ const ethnicityFilterTemplate = (options: any) => {
 				"Hispanic or Latino",
 			]}
 			onChange={(e: any) => {
-				console.log("val: ", e.value);
 				options.filterCallback(e.value);
 			}}
 			itemTemplate={ethnicityItemTemplate}
@@ -200,7 +196,6 @@ const orgFilterTemplate = (options: any) => {
 			value={options.value}
 			options={["ACM", "ACM W", "ICPC", "Rowdy Creators", "CIC"]}
 			onChange={(e: any) => {
-				console.log("val: ", e.value);
 				options.filterCallback(e.value);
 			}}
 			itemTemplate={orgItemTemplate}
