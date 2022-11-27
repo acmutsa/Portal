@@ -162,19 +162,19 @@ const identityBodyTemplate = (rowData: any) => {
 		);
 		if (rowData.prettyMemberData.identity?.has("NON_BINARY"))
 			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-600">Non-binary</span>
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-500">Non-binary</span>
 			);
 		if (rowData.prettyMemberData.identity?.has("TRANSGENDER"))
 			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-pink-500">Transgender</span>
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-violet-500">Transgender</span>
 			);
 		if (rowData.prettyMemberData.identity?.has("INTERSEX"))
 			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-teal-500">Intersex</span>
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-fuchsia-700">Intersex</span>
 			);
 		if (rowData.prettyMemberData.identity?.has("DOES_NOT_IDENTIFY"))
 			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-500">
 					Does not identify
 				</span>
 			);
@@ -413,7 +413,7 @@ const DataTableDemo = () => {
 				header="Identity"
 				body={identityBodyTemplate}
 				filter
-				filterElement={ethnicityFilterTemplate}
+				filterElement={identityFilterTemplate}
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
 				filterMatchMode="custom"
 			></Column>
