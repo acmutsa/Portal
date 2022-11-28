@@ -18,7 +18,7 @@ const Detail: FunctionComponent<DetailProps> = ({
 	buttonLabel,
 	buttonAction,
 }: DetailProps) => {
-	useButton = useButton ?? true;
+	useButton = useButton ?? false;
 	striped = striped ?? true;
 	return (
 		<div
