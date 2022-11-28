@@ -16,7 +16,9 @@ interface ModifiableDetailProps {
 	choices?: Choice[];
 	autoComplete?: string;
 	placeholder?: string;
-	rules?: Validate<string | null | undefined> | Record<string, Validate<string | null | undefined>>;
+	rules?:
+		| Validate<string | Choice | null | undefined>
+		| Record<string, Validate<string | Choice | null | undefined>>;
 }
 
 const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
@@ -67,7 +69,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 		>
 			<dt className="text-sm font-medium text-gray-500">{label}</dt>
 			<dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2 items-center">
-				<span className="flex-grow pr-8">
+				<span className="flex-grow md:pr-8">
 					{choices != null ? (
 						<Controller
 							name={id as "id"}
@@ -111,7 +113,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 						</p>
 					) : null}
 				</span>
-				<span className="ml-4 space-x-4 flex-shrink-0 font-semibold text-secondary-500">
+				<span className="ml-3 sm:ml-4 space-x-3 sm:space-x-4 flex-shrink-0 font-semibold text-secondary-500">
 					<button
 						onClick={handleSubmit(onSubmit)}
 						type="button"
