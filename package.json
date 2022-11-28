@@ -44,7 +44,7 @@
     "react-qr-code": "^2.0.8",
     "react-query": "3.39.2",
     "remark-gfm": "^3.0.1",
-    "sharp": "^0.31.0",
+    "sharp": "^0.31.2",
     "superjson": "^1.10.0",
     "title-case": "^3.0.3",
     "usehooks-ts": "^2.9.1",
