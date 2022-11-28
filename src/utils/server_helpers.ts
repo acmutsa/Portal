@@ -4,6 +4,7 @@ import { deleteCookie } from "cookies-next";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
 import { getMember } from "@/server/controllers/member";
 import { MemberData } from "@prisma/client";
+import { cookies } from "@/utils/constants";
 
 export type NextServerRequest = IncomingMessage & { cookies: NextApiRequestCookies };
 
@@ -29,8 +30,8 @@ export async function validateMember(
 
 	// If nothing was found, ask for the cookies to be deleted.
 	if (member == null) {
-		deleteCookie("member_email", { req: request, res: response });
-		deleteCookie("member_id", { req: request, res: response });
+		deleteCookie(cookies.member_email, { req: request, res: response });
+		deleteCookie(cookies.member_id, { req: request, res: response });
 		return [false, null];
 	}
 

@@ -16,6 +16,7 @@ import Head from "next/head";
 import Sidebar from "@/components/admin/Sidebar";
 import { deleteCookie } from "cookies-next";
 import { useGlobalContext } from "@/components/common/GlobalContext";
+import { cookies } from "@/utils/constants";
 
 enum AdminView {
 	dashboard,
@@ -92,8 +93,8 @@ const Admin: NextPage = () => {
 				router.push("/admin/members/new/", undefined, { shallow: true });
 				break;
 			case AdminView.logout:
-				deleteCookie("admin_uname");
-				deleteCookie("admin_pass");
+				deleteCookie(cookies.admin_username);
+				deleteCookie(cookies.admin_password);
 				router.replace("/admin/login");
 				setGlobalState({ ...globalState, admin: false });
 		}
