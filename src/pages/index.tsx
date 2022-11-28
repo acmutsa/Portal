@@ -29,6 +29,7 @@ const Home: NextPage = () => {
 							src={"/img/logo.png"}
 							layout="fill"
 							objectFit="cover"
+							priority={true}
 						/>
 					</div>
 					<div className="flex flex-col z-10 relative overflow-hidden items-center justify-start max-w-[25rem] w-full sm:w-[25rem] bg-white rounded border-2 border-secondary">
