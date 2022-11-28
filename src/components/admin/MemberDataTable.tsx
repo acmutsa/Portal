@@ -48,6 +48,27 @@ FilterService.register("MATCH_TAG", (a, b) => {
 		case "Hispanic or Latino":
 			enumName = "HISPANIC_OR_LATINO";
 			break;
+		case "Male":
+			enumName = "MALE";
+			break;
+		case "Female":
+			enumName = "FEMALE";
+			break;
+		case "Non-binary":
+			enumName = "NON_BINARY";
+			break;
+		case "Transgender":
+			enumName = "TRANSGENDER";
+			break;
+		case "Intersex":
+			enumName = "INTERSEX";
+			break;
+		case "Does Not Identify":
+			enumName = "DOES_NOT_IDENTIFY";
+			break;
+		case "Other":
+			enumName = "OTHER";
+			break;
 	}
 
 	return a.has(enumName);
@@ -175,7 +196,7 @@ const identityBodyTemplate = (rowData: any) => {
 		if (rowData.prettyMemberData.identity?.has("DOES_NOT_IDENTIFY"))
 			idenTags.push(
 				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-500">
-					Does not identify
+					Does Not Identify
 				</span>
 			);
 		if (rowData.prettyMemberData.identity?.has("OTHER"))
@@ -189,6 +210,35 @@ const identityBodyTemplate = (rowData: any) => {
 			{idenTags}
 		</div>
 	);
+};
+
+const identityItemTemplate = (option: string) => {
+	switch (option) {
+		case "Male":
+			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-orange-700">Male</span>;
+		case "Female":
+			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-900">Female</span>;
+		case "Non-binary":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-500">Non-binary</span>
+			);
+		case "Transgender":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-violet-500">Transgender</span>
+			);
+		case "Intersex":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-fuchsia-700">Intersex</span>
+			);
+		case "Does Not Identify":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-500">
+					Does Not Identify
+				</span>
+			);
+		case "Other":
+			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">Other</span>;
+	}
 };
 
 const ethnicityItemTemplate = (option: string) => {
@@ -234,14 +284,14 @@ const identityFilterTemplate = (options: any) => {
 				"Non-binary",
 				"Transgender",
 				"Intersex",
-				"Does Not Identiy",
+				"Does Not Identify",
 				"Other",
 			]}
 			onChange={(e: any) => {
 				options.filterCallback(e.value);
 			}}
-			itemTemplate={ethnicityItemTemplate}
-			placeholder="Select a Ethnicity"
+			itemTemplate={identityItemTemplate}
+			placeholder="Select a Identity"
 			className="p-column-filter"
 			showClear
 		/>
