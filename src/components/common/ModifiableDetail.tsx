@@ -33,13 +33,16 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 	striped = striped ?? true;
 	const [isModifying, toggleModifying, setModifying] = useToggle();
 
-	// TODO: Add defaultValue handler for Choice based input box
 	const {
 		register,
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({ defaultValues: { [id]: initialValue } });
+	} = useForm({
+		defaultValues: {
+			[id]: choices != null ? choices.find((choice) => choice.name == initialValue) : initialValue,
+		},
+	});
 
 	const onCancel = () => {
 		setModifying(false);
@@ -58,7 +61,8 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 		<div
 			className={classNames(
 				striped ? "even:bg-gray-50" : null,
-				"bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:px-6 sm:gap-4 items-center"
+				isModifying ? "px-4 pt-4 pb-8" : "px-4 py-3",
+				"bg-white sm:grid sm:grid-cols-3 sm:px-6 sm:gap-4 items-center"
 			)}
 		>
 			<dt className="text-sm font-medium text-gray-500">{label}</dt>
