@@ -48,6 +48,27 @@ FilterService.register("MATCH_TAG", (a, b) => {
 		case "Hispanic or Latino":
 			enumName = "HISPANIC_OR_LATINO";
 			break;
+		case "Male":
+			enumName = "MALE";
+			break;
+		case "Female":
+			enumName = "FEMALE";
+			break;
+		case "Non-binary":
+			enumName = "NON_BINARY";
+			break;
+		case "Transgender":
+			enumName = "TRANSGENDER";
+			break;
+		case "Intersex":
+			enumName = "INTERSEX";
+			break;
+		case "Does Not Identify":
+			enumName = "DOES_NOT_IDENTIFY";
+			break;
+		case "Other":
+			enumName = "OTHER";
+			break;
 	}
 
 	return a.has(enumName);
@@ -63,7 +84,6 @@ type MemberWithData = Prisma.MemberGetPayload<{ include: { data: true } }>;
 // TODO: Try to make this all typed? AFAIK there is a way to type the PrimeReact rowData. In the meantime going to YOLO it.
 
 const orgBodyTemplate = (rowData: any) => {
-	console.log("rowData: ", rowData);
 	const orgTags: JSX.Element[] = [];
 	if (rowData.prettyMemberData.organizations?.has("ACM"))
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-secondary">ACM</span>);
@@ -71,10 +91,10 @@ const orgBodyTemplate = (rowData: any) => {
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#F2751B]">ACM W</span>);
 	if (rowData.prettyMemberData.organizations?.has("ICPC"))
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#FFD51E]">ICPC</span>);
-	if (rowData.prettyMemberData.organizations?.has("ROWDY_CREATORS"))
-		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Rowdy Creators</span>);
 	if (rowData.prettyMemberData.organizations?.has("CODING_IN_COLOR"))
 		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#000000]">CIC</span>);
+	if (rowData.prettyMemberData.organizations?.has("ROWDY_CREATORS"))
+		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Rowdy Creators</span>);
 	return <div>{orgTags}</div>;
 };
 
@@ -95,7 +115,6 @@ const ethnicityBodyTemplate = (rowData: any) => {
 		}
 	}, []);
 
-	console.log("rowData: ", rowData);
 	const ethTags: JSX.Element[] = [];
 	if (rowData.prettyMemberData.ethnicity?.has("WHITE"))
 		ethTags.push(
@@ -130,14 +149,99 @@ const ethnicityBodyTemplate = (rowData: any) => {
 			</span>
 		);
 	return (
-		<div ref={ref} className="flex items-center !max-w-[150px] overflow-x-auto scrollbar-hide">
+		<div ref={ref} className="flex items-center !max-w-[150px] overflow-x-hidden scrollbar-hide">
 			{ethTags}
 		</div>
 	);
 };
 
+const identityBodyTemplate = (rowData: any) => {
+	const ref = useRef<any>();
+
+	useEffect(() => {
+		const handleScroll = (e: any) => {
+			if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
+			else e.currentTarget.scrollLeft -= 10;
+		};
+
+		const ele = ref.current;
+		if (ele) {
+			ele.addEventListener("wheel", handleScroll);
+		} else {
+			console.log("ele is null");
+		}
+	}, []);
+
+	const idenTags: JSX.Element[] = [];
+	if (rowData.prettyMemberData.identity?.has("MALE"))
+		idenTags.push(
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-orange-700">Male</span>
+		);
+	if (rowData.prettyMemberData.identity?.has("FEMALE")) {
+		idenTags.push(
+			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-900">Female</span>
+		);
+		if (rowData.prettyMemberData.identity?.has("NON_BINARY"))
+			idenTags.push(
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-500">Non-binary</span>
+			);
+		if (rowData.prettyMemberData.identity?.has("TRANSGENDER"))
+			idenTags.push(
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-violet-500">Transgender</span>
+			);
+		if (rowData.prettyMemberData.identity?.has("INTERSEX"))
+			idenTags.push(
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-fuchsia-700">Intersex</span>
+			);
+		if (rowData.prettyMemberData.identity?.has("DOES_NOT_IDENTIFY"))
+			idenTags.push(
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-500">
+					Does Not Identify
+				</span>
+			);
+		if (rowData.prettyMemberData.identity?.has("OTHER"))
+			idenTags.push(
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">Other</span>
+			);
+	}
+
+	return (
+		<div ref={ref} className="flex items-center !max-w-[150px] overflow-x-hidden scrollbar-hide">
+			{idenTags}
+		</div>
+	);
+};
+
+const identityItemTemplate = (option: string) => {
+	switch (option) {
+		case "Male":
+			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-orange-700">Male</span>;
+		case "Female":
+			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-900">Female</span>;
+		case "Non-binary":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-500">Non-binary</span>
+			);
+		case "Transgender":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-violet-500">Transgender</span>
+			);
+		case "Intersex":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-fuchsia-700">Intersex</span>
+			);
+		case "Does Not Identify":
+			return (
+				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-500">
+					Does Not Identify
+				</span>
+			);
+		case "Other":
+			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">Other</span>;
+	}
+};
+
 const ethnicityItemTemplate = (option: string) => {
-	console.log("option:", option);
 	switch (option) {
 		case "White":
 			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-emerald-800">White</span>;
@@ -170,6 +274,30 @@ const ethnicityItemTemplate = (option: string) => {
 	}
 };
 
+const identityFilterTemplate = (options: any) => {
+	return (
+		<Dropdown
+			value={options.value}
+			options={[
+				"Male",
+				"Female",
+				"Non-binary",
+				"Transgender",
+				"Intersex",
+				"Does Not Identify",
+				"Other",
+			]}
+			onChange={(e: any) => {
+				options.filterCallback(e.value);
+			}}
+			itemTemplate={identityItemTemplate}
+			placeholder="Select a Identity"
+			className="p-column-filter"
+			showClear
+		/>
+	);
+};
+
 const ethnicityFilterTemplate = (options: any) => {
 	return (
 		<Dropdown
@@ -183,7 +311,6 @@ const ethnicityFilterTemplate = (options: any) => {
 				"Hispanic or Latino",
 			]}
 			onChange={(e: any) => {
-				console.log("val: ", e.value);
 				options.filterCallback(e.value);
 			}}
 			itemTemplate={ethnicityItemTemplate}
@@ -200,7 +327,6 @@ const orgFilterTemplate = (options: any) => {
 			value={options.value}
 			options={["ACM", "ACM W", "ICPC", "Rowdy Creators", "CIC"]}
 			onChange={(e: any) => {
-				console.log("val: ", e.value);
 				options.filterCallback(e.value);
 			}}
 			itemTemplate={orgItemTemplate}
@@ -259,6 +385,10 @@ const DataTableDemo = () => {
 			operator: FilterOperator.OR,
 			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
 		},
+		"prettyMemberData.identity": {
+			operator: FilterOperator.OR,
+			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
+		},
 	});
 
 	const memberTableItemsStaging: MemberTableItem[] = [];
@@ -309,7 +439,7 @@ const DataTableDemo = () => {
 			<Column filter field="member.email" header="Email"></Column>
 			<Column filter field="member.id" header="ABC123"></Column>
 			<Column sortable filter field="member.data.major" header="Major"></Column>
-			<Column filter field="member.data.classification" header="Classification"></Column>
+			<Column sortable filter field="member.data.classification" header="Classification"></Column>
 			<Column
 				field="prettyMemberData.organizations"
 				header="Organizations"
@@ -325,6 +455,15 @@ const DataTableDemo = () => {
 				body={ethnicityBodyTemplate}
 				filter
 				filterElement={ethnicityFilterTemplate}
+				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
+				filterMatchMode="custom"
+			></Column>
+			<Column
+				field="prettyMemberData.identity"
+				header="Identity"
+				body={identityBodyTemplate}
+				filter
+				filterElement={identityFilterTemplate}
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
 				filterMatchMode="custom"
 			></Column>
