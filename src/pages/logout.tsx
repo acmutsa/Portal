@@ -3,13 +3,14 @@ import { useEffect } from "react";
 import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import { useGlobalContext } from "@/components/common/GlobalContext";
+import { cookies } from "@/utils/constants";
 
 const Logout: NextPage = () => {
 	const router = useRouter();
 	const [globalState, setGlobalState] = useGlobalContext();
 	useEffect(() => {
-		deleteCookie("member_email");
-		deleteCookie("member_id");
+		deleteCookie(cookies.member_email);
+		deleteCookie(cookies.member_id);
 		setGlobalState({ ...globalState, member: false });
 		router.replace("/login");
 	}, []);

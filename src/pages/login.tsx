@@ -10,6 +10,7 @@ import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Disclosure from "@/components/util/Disclosure";
 import Head from "next/head";
+import { cookies } from "@/utils/constants";
 
 const EventView: NextPage = () => {
 	const { register, handleSubmit } = useForm();
@@ -39,8 +40,8 @@ const EventView: NextPage = () => {
 		let isLoggedIn = await memberLoggedIn.mutateAsync({ email: data.email, id: data.id });
 		if (isLoggedIn) {
 			// Setup cookies, open success modal
-			setCookie("member_email", data.email);
-			setCookie("member_id", data.id);
+			setCookie(cookies.member_email, data.email);
+			setCookie(cookies.member_id, data.id);
 			setGlobalState({ ...globalState, member: true });
 			await router.push("/me");
 		} else {

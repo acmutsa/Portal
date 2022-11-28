@@ -40,12 +40,12 @@ const Home: NextPage = () => {
 						</h1>
 						<div className="grid grid-rows-3 grid-cols-1 gap-2 px-3 py-4 w-full text-white font-semibold">
 							<Link href="/events/">
-								<button className="h-12 w-full px-2 justify-self-center bg-primary hover:bg-primary-600 hover:bg-primary-dark-hover rounded transition ease-in">
+								<button className="h-12 w-full px-2 justify-self-center bg-primary hover:bg-primary-600 rounded transition ease-in">
 									Events
 								</button>
 							</Link>
 							<Link href="/register">
-								<button className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 hover:bg-primary-dark-hover rounded transition ease-in">
+								<button className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 rounded transition ease-in">
 									Register
 								</button>
 							</Link>

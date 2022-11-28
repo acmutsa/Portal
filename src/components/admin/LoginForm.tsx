@@ -1,45 +1,82 @@
-import { FunctionComponent } from "react";
-import Image from "next/image";
-import { BsFillArrowRightCircleFill } from "react-icons/bs";
-import { FieldValues, useForm } from "react-hook-form";
-// import TextField from "@material-ui/core/TextField";
+import { useRouter } from "next/router";
+import { FunctionComponent, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useGlobalContext } from "@/components/common/GlobalContext";
+import Disclosure from "@/components/util/Disclosure";
 
 interface LoginFormProps {
 	callback: (username: string, password: string) => void;
 }
 
-const LoginForm: FunctionComponent<LoginFormProps> = (props) => {
+const LoginForm: FunctionComponent<LoginFormProps> = ({ callback }: LoginFormProps) => {
 	const { register, handleSubmit } = useForm();
-	const didSubmit = (p: any) => props.callback(p.admin_uname, p.admin_pass);
+	const [globalState, setGlobalState] = useGlobalContext();
+	const router = useRouter();
+	const onSubmit = (data: any) => {
+		callback(data.username, data.password);
+	};
+
+	// Redirect immediately to base admin page. This is only for whenever someone navigates directly to /admin/login while logged in.
+	useEffect(() => {
+		console.log(router.route)
+		if (router.route == '/admin/login' && globalState.admin) {
+			router.replace("/admin");
+		}
+	}, [globalState]);
 
 	return (
-		<div className="w-full max-w-[500px] h-full max-h-[600px] shadow-2xl rounded-xl bg-white flex flex-col justify-center items-center">
-			<Image src="/img/logo.png" width={128} height={128} />
-			<h1 className="font-bold text-xl mb-[20%] mt-[10px]">Officer Login</h1>
-			<form
-				onSubmit={handleSubmit(didSubmit)}
-				className="flex flex-col justify-center items-center w-full"
-			>
-				<input
-					type="text"
-					id="admin_uname"
-					placeholder="Username"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("admin_uname", { required: true })}
-				/>
-				<input
-					type="password"
-					id="admin_pass"
-					placeholder="Password"
-					className="bg-slate-200 border-none h-[50px] w-[75%] focus:outline-none p-[5px] rounded-md my-[10px]"
-					{...register("admin_pass", { required: true })}
-				/>
-				<div className="flex justify-start w-[75%] mt-[10px]">
-					<button className="bg-secondary text-white h-[50px] w-[100px] rounded-xl font-bold flex items-center justify-center">
-						Sign in <BsFillArrowRightCircleFill className="ml-[5px]" />
-					</button>
+		<div className="page-view bg-darken flex justify-center">
+			<div className="my-auto px-3">
+				<div className="bg-white max-w-[25rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
+					<p className="text-lg md:text-[22px] tracking-wide md:tracking-normal font-semibold text-slate-700 font-raleway mb-2">
+						Administrative Portal
+					</p>
+					<form
+						onSubmit={handleSubmit(onSubmit)}
+						className="min-w-[20rem] sm:w-full flex flex-col font-inter justify-start p-1 pb-2 text-left"
+					>
+						<label className="">
+							<p className="block tracking-wide text-sm md:text-base font-medium text-slate-700">
+								Username
+							</p>
+							<input
+								type="text"
+								id="username"
+								{...register("username", { required: true })}
+								className="login peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300
+									 block w-full rounded-md md:text-base placeholder-slate-400"
+							/>
+							<p className="mb-1 text-base invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
+								Username required.
+							</p>
+						</label>
+						<label>
+							<span className="block text-sm md:text-base font-medium text-slate-700">
+								Password
+							</span>
+							<input
+								type="password"
+								id="password"
+								{...register("password", {
+									required: true,
+								})}
+								className="login peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300
+									 block w-full rounded-md md:text-base placeholder-slate-400"
+							/>
+							<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
+								Password required.
+							</p>
+						</label>
+						<button
+							className="bg-sky-500 focus:bg-sky-600 hover:bg-sky-600 px-5 outline-none py-2 mt-1.5 md:mt-0 sm:py-2.5 text-sm
+							 leading-5 rounded-md font-semibold text-white"
+						>
+							Login
+						</button>
+					</form>
 				</div>
-			</form>
+			</div>
+			<Disclosure />
 		</div>
 	);
 };

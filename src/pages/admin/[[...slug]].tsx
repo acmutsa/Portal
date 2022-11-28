@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { BsCalendarRange } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
+import { BiLogOut } from "react-icons/bi";
 import EventView from "@/components/admin/EventView";
 import MemberView from "@/components/admin/MemberView";
 import DashView from "@/components/admin/DashView";
@@ -12,6 +13,10 @@ import { FunctionComponent } from "react";
 import EditEventView from "@/components/admin/EditEventView";
 import EditMemberView from "@/components/admin/EditMemberView";
 import Head from "next/head";
+import Sidebar from "@/components/admin/Sidebar";
+import { deleteCookie } from "cookies-next";
+import { useGlobalContext } from "@/components/common/GlobalContext";
+import { cookies } from "@/utils/constants";
 
 enum AdminView {
 	dashboard,
@@ -21,23 +26,29 @@ enum AdminView {
 	newMember,
 	editEvent,
 	editMember,
+	logout,
 }
 
-const sideNavElements = [
+const navigationOptions = [
 	{
 		icon: AiOutlineDashboard,
-		page: AdminView.dashboard,
-		text: "Dashboard",
+		id: AdminView.dashboard,
+		label: "Dashboard",
 	},
 	{
 		icon: CgProfile,
-		page: AdminView.members,
-		text: "Members",
+		id: AdminView.members,
+		label: "Members",
 	},
 	{
 		icon: BsCalendarRange,
-		page: AdminView.events,
-		text: "Events",
+		id: AdminView.events,
+		label: "Events",
+	},
+	{
+		icon: BiLogOut,
+		id: AdminView.logout,
+		label: "Logout",
 	},
 ];
 
@@ -59,6 +70,7 @@ const inferFromPath = (path: string): [FunctionComponent | null, AdminView | nul
 
 const Admin: NextPage = () => {
 	const router = useRouter();
+	const [globalState, setGlobalState] = useGlobalContext();
 	let path =
 		router.asPath.charAt(router.asPath.length - 1) != "/" ? router.asPath + "/" : router.asPath;
 
@@ -80,6 +92,11 @@ const Admin: NextPage = () => {
 			case AdminView.newMember:
 				router.push("/admin/members/new/", undefined, { shallow: true });
 				break;
+			case AdminView.logout:
+				deleteCookie(cookies.admin_username);
+				deleteCookie(cookies.admin_password);
+				router.replace("/admin/login");
+				setGlobalState({ ...globalState, admin: false });
 		}
 	};
 
@@ -90,26 +107,9 @@ const Admin: NextPage = () => {
 			<Head>
 				<title>Administrative Panel</title>
 			</Head>
-			<div className="page-view bg-white flex flex-col md:flex-row w-[100vw]">
-				<div className="w-full md:min-w-[13rem] lg:min-w-[13.5rem] md:max-w-[14rem] [&>*]:cursor-pointer py-2 md:py-6 border-r-zinc-200 border-2 font-inter text-left text-lg font-semibold">
-					{sideNavElements.map((element) => (
-						<div
-							key={element.text}
-							className={`w-52 mx-auto lg:w-full py-1.5 md:py-4 px-2 grid grid-cols-3 v ${
-								element.page === CurrentPage ? "text-zinc-900" : "text-zinc-600"
-							} hover:text-zinc-900`}
-							onClick={() => swapPage(element.page)}
-						>
-							<div className="col-span-1 m-auto">
-								<element.icon />
-							</div>
-							<div className="col-span-2 justify-self-start">
-								<span>{element.text}</span>
-							</div>
-						</div>
-					))}
-				</div>
-				<div className="p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-scroll relative bg-zinc-100">
+			<div className="page-view bg-white flex w-[100vw]">
+				<Sidebar options={navigationOptions} onChange={(id) => swapPage(id as AdminView)} />
+				<div className="flex-grow p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-scroll relative bg-zinc-100">
 					<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
 				</div>
 			</div>
