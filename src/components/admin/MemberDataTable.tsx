@@ -433,6 +433,8 @@ const DataTableDemo = () => {
 			filterDisplay="menu"
 			filters={filters}
 			dataKey="member.id"
+			currentPageReportTemplate="Showing {first} through {last} of {totalRecords} total members"
+			paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
 		>
 			<Column selectionMode="multiple" headerStyle={{ width: "3em" }}></Column>
 			<Column sortable filter field="member.name" header="Name"></Column>
@@ -467,6 +469,7 @@ const DataTableDemo = () => {
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
 				filterMatchMode="custom"
 			></Column>
+			<Column filter field="prettyMemberData.identity.address" header="ABC123"></Column>
 		</DataTable>
 	);
 };
