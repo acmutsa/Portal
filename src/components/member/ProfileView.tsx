@@ -29,9 +29,6 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileVie
 					{member.email}
 				</Detail>
 				<Detail label="myUTSA ID">{member.id}</Detail>
-				<Detail label="Name" useButton={true}>
-					{member.name}
-				</Detail>
 				<Detail label="Major" useButton={true}>
 					{member.data?.major ?? "Unknown"}
 				</Detail>
