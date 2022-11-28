@@ -37,6 +37,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileVie
 					initialValue={member.email}
 					rules={{
 						email: (email) => {
+							if (email == null || email.length == 0) return "Required.";
 							return emailParser.safeParse(email).success || "Invalid email address";
 						},
 					}}

@@ -39,7 +39,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 		control,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({ defaultValues: { id: initialValue } });
+	} = useForm({ defaultValues: { [id]: initialValue } });
 
 	const onCancel = () => {
 		setModifying(false);
@@ -90,7 +90,10 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 
 								"block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none sm:text-sm"
 							)}
-							{...register(id as "id", { required: true, validate: rules })}
+							{...register(id as "id", {
+								required: { value: true, message: "Required." },
+								validate: rules,
+							})}
 						/>
 					)}
 					{errors[id as "id"] ? (
