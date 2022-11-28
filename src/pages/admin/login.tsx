@@ -10,7 +10,7 @@ const Login: NextPage = () => {
 		window.location.reload();
 	};
 
-	return (
+	return (	
 		<div className="flex items-center justify-center page-view">
 			<LoginForm callback={(username, password) => onSubmit(username, password)} />
 		</div>

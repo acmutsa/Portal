@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { BsCalendarRange } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
+import { BiLogOut } from "react-icons/bi";
 import EventView from "@/components/admin/EventView";
 import MemberView from "@/components/admin/MemberView";
 import DashView from "@/components/admin/DashView";
@@ -13,6 +14,8 @@ import EditEventView from "@/components/admin/EditEventView";
 import EditMemberView from "@/components/admin/EditMemberView";
 import Head from "next/head";
 import Sidebar from "@/components/admin/Sidebar";
+import { deleteCookie } from "cookies-next";
+import { useGlobalContext } from "@/components/common/GlobalContext";
 
 enum AdminView {
 	dashboard,
@@ -22,6 +25,7 @@ enum AdminView {
 	newMember,
 	editEvent,
 	editMember,
+	logout,
 }
 
 const navigationOptions = [
@@ -39,6 +43,11 @@ const navigationOptions = [
 		icon: BsCalendarRange,
 		id: AdminView.events,
 		label: "Events",
+	},
+	{
+		icon: BiLogOut,
+		id: AdminView.logout,
+		label: "Logout",
 	},
 ];
 
@@ -60,6 +69,7 @@ const inferFromPath = (path: string): [FunctionComponent | null, AdminView | nul
 
 const Admin: NextPage = () => {
 	const router = useRouter();
+	const [globalState, setGlobalState] = useGlobalContext();
 	let path =
 		router.asPath.charAt(router.asPath.length - 1) != "/" ? router.asPath + "/" : router.asPath;
 
@@ -81,6 +91,11 @@ const Admin: NextPage = () => {
 			case AdminView.newMember:
 				router.push("/admin/members/new/", undefined, { shallow: true });
 				break;
+			case AdminView.logout:
+				deleteCookie("admin_uname");
+				deleteCookie("admin_pass");
+				router.replace("/admin/login");
+				setGlobalState({ ...globalState, admin: false });
 		}
 	};
 
