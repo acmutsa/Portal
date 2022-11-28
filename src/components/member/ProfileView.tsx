@@ -1,8 +1,11 @@
+import majors from "@/utils/majors.json";
 import { FunctionComponent } from "react";
 import { Member, MemberData } from "@prisma/client";
 import Badge from "@/components/common/Badge";
 import Detail from "@/components/common/Detail";
 import { lightFormat } from "date-fns";
+import ModifiableDetail from "@/components/common/ModifiableDetail";
+import { z } from "zod";
 
 interface ProfileViewProps {
 	member: Member & { data: MemberData };
@@ -14,6 +17,8 @@ const BadgeStatusColors = {
 	failure: "bg-red-100 text-red-800",
 };
 
+const emailParser = z.string().email();
+
 const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileViewProps) => {
 	const statusColor = BadgeStatusColors.in_progress;
 	const statusText = "In Progress";
@@ -22,16 +27,31 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileVie
 	return (
 		<>
 			<dl className="overflow-scroll overflow-x-auto relative">
-				<Detail label="Name" useButton={true}>
+				<ModifiableDetail id="name" placeholder="John Doe" label="Name" initialValue={member.name}>
 					{member.name}
-				</Detail>
-				<Detail label="Email address" useButton={true}>
+				</ModifiableDetail>
+				<ModifiableDetail
+					id="email"
+					placeholder="you@example.org"
+					label="Email address"
+					initialValue={member.email}
+					rules={{
+						email: (email) => {
+							return emailParser.safeParse(email).success || "Invalid email address";
+						},
+					}}
+				>
 					{member.email}
-				</Detail>
+				</ModifiableDetail>
 				<Detail label="myUTSA ID">{member.id}</Detail>
-				<Detail label="Major" useButton={true}>
+				<ModifiableDetail
+					id="major"
+					label="Major"
+					choices={majors}
+					initialValue={member.data?.major}
+				>
 					{member.data?.major ?? "Unknown"}
-				</Detail>
+				</ModifiableDetail>
 				<Detail label="Join Date">{formattedJoinDate}</Detail>
 				<Detail label="Classification">{member.data?.classification ?? "Unknown"}</Detail>
 				<div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

@@ -6,7 +6,7 @@ import { ControllerFieldState } from "react-hook-form";
 import { ControllerRenderProps } from "react-hook-form/dist/types/controller";
 import { classNames } from "@/utils/helpers";
 
-interface Choice {
+export interface Choice {
 	id: string;
 	name: string;
 }
@@ -14,7 +14,7 @@ interface Choice {
 interface CustomSelectProps<TFormValues> {
 	field: ControllerRenderProps<TFormValues, any>;
 	fieldState: ControllerFieldState;
-	label: string;
+	label?: string | null | undefined;
 	labelFor?: string;
 	choices: Choice[];
 	unselectedText?: string;
@@ -36,9 +36,11 @@ export default function CustomSelect<TFormValues>(props: CustomSelectProps<TForm
 		<Listbox value={value} onChange={onChange}>
 			{({ open }) => (
 				<>
-					<Listbox.Label htmlFor={labelFor} className="block text-sm font-medium text-gray-700">
-						{label}
-					</Listbox.Label>
+					{label != null ? (
+						<Listbox.Label htmlFor={labelFor} className="block text-sm font-medium text-gray-700">
+							{label}
+						</Listbox.Label>
+					) : null}
 					<div className="mt-1 relative">
 						<Listbox.Button
 							className={`${buttonClass} bg-white relative w-full border ${
