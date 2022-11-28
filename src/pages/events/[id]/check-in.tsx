@@ -16,7 +16,7 @@ interface FormValues {
 	feedback: string;
 }
 
-const CheckinView: NextPage<{ event: Event | null }> = ({ event }) => {
+const CheckinView: NextPage<{ event: Event }> = ({ event }) => {
 	const checkin = trpc.useMutation(["member.checkin"]);
 	const router = useRouter();
 	const [globalState] = useGlobalContext();
@@ -87,9 +87,7 @@ export async function getStaticProps(urlParams: eventPageParams) {
 
 	if (event == null)
 		return {
-			props: {
-				event: null,
-			},
+			notFound: true,
 			revalidate: 5,
 		};
 
