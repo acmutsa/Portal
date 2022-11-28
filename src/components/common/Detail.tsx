@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import { classNames } from "@/utils/helpers";
 
-interface DetailProps {
+export interface DetailProps {
 	label: string;
 	children: string | number | JSX.Element;
 	useButton?: boolean;
