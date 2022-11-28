@@ -469,7 +469,7 @@ const DataTableDemo = () => {
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
 				filterMatchMode="custom"
 			></Column>
-			<Column filter field="prettyMemberData.identity.address" header="ABC123"></Column>
+			<Column filter field="member.data.address" header="Address"></Column>
 		</DataTable>
 	);
 };
