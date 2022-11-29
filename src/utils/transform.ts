@@ -94,14 +94,16 @@ export const PrettyMemberDataSchema = z.object({
 	identity: z.set(z.string()).optional(),
 });
 export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
+export const PrettyMemberDataWithoutIdSchema = PrettyMemberDataSchema.omit({ id: true });
+export type PrettyMemberDataWithoutId = z.infer<typeof PrettyMemberDataWithoutIdSchema>;
 type Classification = z.TypeOf<typeof ClassificationEnum>;
-type Organzation = z.TypeOf<typeof OrganizationEnum>;
+type Organization = z.TypeOf<typeof OrganizationEnum>;
 type Ethnicity = z.TypeOf<typeof EthnicityEnum>;
 
 // TODO: Create a toPrettyMemberData function to transform the database representation into a usable version.
 
 export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberData => {
-	const organizations = new Set<Organzation>();
+	const organizations = new Set<Organization>();
 	const ethnicities = new Set<Ethnicity>();
 	const identities = new Set<string>();
 
@@ -130,7 +132,7 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 
 	return {
 		id: member.id,
-		major: memberData.major || "Unkown",
+		major: memberData.major || "Unknown",
 		classification: (ClassificationEnum.safeParse(memberData.classification).success
 			? memberData.classification
 			: "Unknown") as Classification,
@@ -232,7 +234,10 @@ export function toMemberData(data: PrettyMemberData): MemberData {
 				else if (data.identity.has(IdentityEnum.enum.INTERSEX)) identityData.isIntersex = true;
 				else if (data.identity.has(IdentityEnum.enum.DOES_NOT_IDENTIFY))
 					identityData.doesNotIdentify = true;
-				else identityData.otherIdentity = val;
+				else {
+					// Only first value in sequence is taken.
+					if (identityData.otherIdentity == null) identityData.otherIdentity = val;
+				}
 			}
 
 			identityData = defaultValues<IdentityData>(identityData, false);
