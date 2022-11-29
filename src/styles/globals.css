@@ -143,6 +143,12 @@ input.login {
 		opacity: 1;
 	}
 }
+
 input[type="date"]::-moz-placeholder {
 	@apply text-gray-500;
+}
+
+/* TODO: Find a solution of navbar covering toasts that doesn't involve static spacing. Use a z-index solution preferably. */
+.p-toast {
+    @apply mt-20;
 }
