@@ -141,12 +141,13 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 		}
 	}
 
+	// Note: Do not return null or similar values. Empty values should always be made undefined.
 	return {
 		id: member.id,
-		major: memberData.major || "Unknown",
-		classification: (ClassificationEnum.safeParse(memberData.classification).success
-			? memberData.classification
-			: "Unknown") as Classification,
+		major: memberData.major ?? undefined,
+		classification: ClassificationEnum.safeParse(memberData.classification).success
+			? (memberData.classification as Classification)
+			: undefined,
 		graduationDate,
 		organizations: organizations,
 		birthday: memberData.Birthday ? new Date(memberData.Birthday) : undefined,
