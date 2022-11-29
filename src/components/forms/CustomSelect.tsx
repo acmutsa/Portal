@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { BsCheck, BsExclamationCircle } from "react-icons/bs";
 import { HiOutlineSelector } from "react-icons/hi";
@@ -19,21 +19,35 @@ interface CustomSelectProps<TFormValues> {
 	choices: Choice[];
 	unselectedText?: string;
 	buttonClass?: string;
+	flattenedValues?: boolean;
 }
 
-export default function CustomSelect<TFormValues>(props: CustomSelectProps<TFormValues>) {
-	const {
-		choices,
-		unselectedText,
-		buttonClass,
-		label,
-		labelFor,
-		field: { onChange, value, name },
-		fieldState: { error },
-	} = props;
+export default function CustomSelect<TFormValues>({
+	choices,
+	unselectedText,
+	buttonClass,
+	label,
+	labelFor,
+	flattenedValues,
+	field: { onChange, value, name },
+	fieldState: { error },
+}: CustomSelectProps<TFormValues>) {
+	flattenedValues = flattenedValues ?? false;
+	const [internalValue, setInternalValue] = useState<Choice | null>(null);
+	useEffect(() => {
+		if (flattenedValues) setInternalValue(choices.find((choice) => choice.name == value) ?? null);
+		else setInternalValue(value as Choice);
+	}, [value]);
 
 	return (
-		<Listbox value={value} onChange={onChange}>
+		<Listbox
+			value={internalValue}
+			onChange={(value) => {
+				// TODO: Extend this to support both id and name instead of hardcoding for name only.
+				if (flattenedValues) onChange(value?.name);
+				else onChange(value);
+			}}
+		>
 			{({ open }) => (
 				<>
 					{label != null ? (
@@ -50,8 +64,8 @@ export default function CustomSelect<TFormValues>(props: CustomSelectProps<TForm
 							} rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 sm:text-sm`}
 						>
 							<span className="block truncate">
-								{value ? (
-									(value as Choice).name
+								{internalValue != null ? (
+									internalValue.name
 								) : (
 									<span className="text-gray-300">{unselectedText ?? "Nothing selected"}</span>
 								)}
