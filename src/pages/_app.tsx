@@ -7,7 +7,7 @@ import superjson from "superjson";
 import type { AppRouter } from "@/server/router";
 import Navbar from "@/components/Navbar";
 import { GlobalContext, initialState } from "@/components/common/GlobalContext";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
 import NProgress from "nprogress";
@@ -22,7 +22,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	// Setup progress bar router-based listeners
 	const router = useRouter();
 	useEffect(() => {
-		const handleStart = (url: string) => {
+		const handleStart = () => {
 			NProgress.start();
 		};
 
@@ -41,22 +41,34 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 		};
 	}, [router]);
 
+	const checkAdminAuthentication = useMemo(() => {
+		return () => {
+			adminLoggedIn.mutate(null, {
+				onSuccess: (response) => {
+					setGlobalState((previousGlobalState) => {
+						return { ...previousGlobalState, admin: response ?? false };
+					});
+				},
+			});
+		};
+	}, [adminLoggedIn]);
+
+	const checkMemberAuthentication = useMemo(() => {
+		return () => {
+			memberLoggedIn.mutate(null, {
+				onSuccess: (response) => {
+					setGlobalState((previousGlobalState) => {
+						return { ...previousGlobalState, member: response ?? false, ready: true };
+					});
+				},
+			});
+		};
+	}, [memberLoggedIn]);
+
 	// Check whether the user is logged in or not.
 	useEffect(() => {
-		adminLoggedIn.mutate(null, {
-			onSuccess: (response) => {
-				setGlobalState((previousGlobalState) => {
-					return { ...previousGlobalState, admin: response ?? false };
-				});
-			},
-		});
-		memberLoggedIn.mutate(null, {
-			onSuccess: (response) => {
-				setGlobalState((previousGlobalState) => {
-					return { ...previousGlobalState, member: response ?? false, ready: true };
-				});
-			},
-		});
+		checkAdminAuthentication();
+		checkMemberAuthentication();
 	}, []);
 
 	return (
