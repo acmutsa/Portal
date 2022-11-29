@@ -1,11 +1,15 @@
-import { FunctionComponent } from "react";
-import { useForm, Controller, Validate } from "react-hook-form";
+import { Controller, useForm, Validate } from "react-hook-form";
 import Detail from "@/components/common/Detail";
 import { useToggle } from "usehooks-ts";
 import { classNames } from "@/utils/helpers";
 import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
 import majors from "@/utils/majors.json";
 import { BsExclamationCircle } from "react-icons/bs";
+import { FunctionComponent } from "react";
+
+interface FormValues {
+	value: string | null;
+}
 
 interface ModifiableDetailProps {
 	id: string;
@@ -15,10 +19,9 @@ interface ModifiableDetailProps {
 	striped?: boolean;
 	choices?: Choice[];
 	autoComplete?: string;
+	inputType?: string;
 	placeholder?: string;
-	rules?:
-		| Validate<string | Choice | null | undefined>
-		| Record<string, Validate<string | Choice | null | undefined>>;
+	rules?: Validate<string | null | undefined> | Record<string, Validate<string | null | undefined>>;
 }
 
 const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
@@ -32,23 +35,30 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 	placeholder,
 	rules,
 	inputType,
-}: ModifiableDetailProps) {
+}: ModifiableDetailProps) => {
 	striped = striped ?? true;
 	const [isModifying, toggleModifying, setModifying] = useToggle();
+
+	// Delete the initial value if it cannot be found within the given choices.
+	if (choices != null && choices.find((choice) => choice.name == initialValue) == null)
+		initialValue = null;
 
 	const {
 		register,
 		control,
 		handleSubmit,
+		setValue,
 		formState: { errors },
-	} = useForm({
+	} = useForm<FormValues>({
 		defaultValues: {
-			[id]: choices != null ? choices.find((choice) => choice.name == initialValue) : initialValue,
+			value: initialValue,
 		},
 	});
 
 	const onCancel = () => {
 		setModifying(false);
+		// Erase any changes when cancel is clicked.
+		setValue("value", initialValue ?? null);
 	};
 
 	const onSubmit = (data: any) => {
@@ -73,7 +83,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 				<span className="flex-grow md:pr-8">
 					{choices != null ? (
 						<Controller
-							name={id as "id"}
+							name="value"
 							control={control}
 							render={({ field, fieldState }) => (
 								<CustomSelect
@@ -81,6 +91,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 									fieldState={fieldState}
 									choices={majors}
 									unselectedText="Computer Science"
+									flattenedValues={true}
 								/>
 							)}
 						/>
@@ -91,26 +102,26 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 							autoComplete={autoComplete}
 							placeholder={placeholder}
 							className={classNames(
-								errors[id as "id"]
+								errors.value
 									? "border-red-300 focus:border-red-300 focus:ring-red-300"
 									: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
 
 								"block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none sm:text-sm"
 							)}
-							{...register(id as "id", {
+							{...register("value", {
 								required: { value: true, message: "Required." },
 								validate: rules,
 							})}
 						/>
 					)}
-					{errors[id as "id"] ? (
+					{errors.value ? (
 						<p
 							className="absolute inline-flex mt-1 text-sm text-red-600"
 							id="name-error"
 							role="alert"
 						>
 							<BsExclamationCircle className="mx-1 mt-1" />
-							{errors[id as "id"]!.message as string}
+							{errors.value!.message as string}
 						</p>
 					) : null}
 				</span>
