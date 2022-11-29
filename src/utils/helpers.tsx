@@ -70,11 +70,9 @@ export const getDates = (
 
 export const sum = (a: number, b: number) => a + b;
 
-const removeEmpty = (
-	object: Record<string, string | null | undefined>
-): { [k: string]: string } => {
-	const filteredEntries: [string, string][] = Object.entries(object).filter(
-		(kv): kv is [string, string] => kv[1] != null
+export const removeEmpty = (object: Record<string, {} | null | undefined>): { [k: string]: {} } => {
+	const filteredEntries: [string, {}][] = Object.entries(object).filter(
+		(kv): kv is [string, {}] => kv[1] != null
 	);
 	return Object.fromEntries(filteredEntries);
 };
@@ -96,7 +94,7 @@ export const generateGoogleCalendarLink = (
 			details: description,
 			dates: `${startString}/${endString}`,
 			location: location,
-		})
+		}) as Record<string, string>
 	);
 	return `https://calendar.google.com/calendar/render?${params.toString()}`;
 };
@@ -142,4 +140,12 @@ export function isCheckinOpen(
 	now = now ?? new Date();
 	if (useEventTimes) return isBefore(event.eventStart, now) && isAfter(event.eventEnd, now);
 	return isBefore(event.formOpen, now) && isAfter(event.formClose, now);
+}
+
+/**
+ * Returns true if all values on the object are null or undefined.
+ * @param object The object to check the values of.
+ */
+export function isValuesNull(object: Object) {
+	return Object.values(object).every((v) => v == null);
 }
