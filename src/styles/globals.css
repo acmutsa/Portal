@@ -118,10 +118,6 @@ th {
 	@apply p-1 pb-2 hover:text-sky-700;
 }
 
-.card-buttongroup > *:not(:last-child) {
-	@apply border-slate-200 border-r-2;
-}
-
 .disclosure-symbol {
 	font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
 }

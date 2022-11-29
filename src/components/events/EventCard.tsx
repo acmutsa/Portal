@@ -113,7 +113,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 					>
 						{timeText}
 					</time>
-					<div className="card-buttongroup grid grid-cols-3 text-center mt-2 text-slate-900 font-medium font-inter">
+					<div className="card-buttongroup divide-x-2 divide-slate-200 grid grid-cols-3 text-center mt-2 text-slate-900 font-medium font-inter">
 						<div>
 							{/* TODO: Figure out what to do with this button. */}
 							<a href="#">RSVP</a>
