@@ -2,14 +2,15 @@ import { Context, createRouter } from "@/server/router/context";
 
 import { z } from "zod";
 import * as trpc from "@trpc/server";
-import { validateAdmin } from "@/server/router/admin";
-import { getAllMembers } from "@/server/controllers/member";
-import { isCheckinOpen, getCheckin } from "@/server/controllers/checkin";
-import { Member } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { validateAdmin } from "@/server/router/admin";
+import { getAllMembers, getMember } from "@/server/controllers/member";
+import { getCheckin, isCheckinOpen } from "@/server/controllers/checkin";
+import { isValuesNull } from "@/utils/helpers";
+import { PrettyMemberDataSchema, toMemberData } from "@/utils/transform";
 
 // Calling this method while passing your request context will ensure member credentials were provided.
-export const validateMember = async (ctx: Context): Promise<Member> => {
+export const validateMember = async (ctx: Context, extendedData: boolean = false) => {
 	if (ctx.email == null || ctx.id == null)
 		throw new trpc.TRPCError({
 			code: "UNAUTHORIZED",
@@ -17,11 +18,7 @@ export const validateMember = async (ctx: Context): Promise<Member> => {
 				"Member-level credentials are required for this resource, whereas nothing was provided.",
 		});
 
-	let member = await ctx.prisma.member.findUnique({
-		where: {
-			id: ctx.id.toLowerCase(),
-		},
-	});
+	const member = await getMember(ctx.id.toLowerCase(), extendedData);
 
 	if (member == null || member.email != ctx.email.toLowerCase())
 		throw new trpc.TRPCError({
@@ -55,11 +52,7 @@ export const memberRouter = createRouter()
 				if (!email || !id) return false;
 			}
 
-			let member = await ctx.prisma.member.findUnique({
-				where: {
-					id: id.toLowerCase(),
-				},
-			});
+			let member = await getMember(id.toLowerCase());
 
 			return member != null && member.email == email.toLowerCase();
 		},
