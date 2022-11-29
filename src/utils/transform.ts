@@ -4,7 +4,7 @@
 
 import type { MemberData, Member } from "@prisma/client";
 import { z } from "zod";
-import { lightFormat, subYears } from "date-fns";
+import { lightFormat, parse, subYears } from "date-fns";
 
 interface OrganizationData {
 	isInACM: boolean | null;
@@ -107,20 +107,18 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 	const ethnicities = new Set<Ethnicity>();
 	const identities = new Set<string>();
 
-	//TODO: make this less gross
+	if (memberData.isInACM) organizations.add(OrganizationEnum.enum.ACM);
+	if (memberData.isInACMW) organizations.add(OrganizationEnum.enum.ACM_W);
+	if (memberData.isInRC) organizations.add(OrganizationEnum.enum.ROWDY_CREATORS);
+	if (memberData.isInICPC) organizations.add(OrganizationEnum.enum.ICPC);
+	if (memberData.isInCIC) organizations.add(OrganizationEnum.enum.CODING_IN_COLOR);
 
-	if (memberData.isInACM) organizations.add("ACM");
-	if (memberData.isInACMW) organizations.add("ACM_W");
-	if (memberData.isInRC) organizations.add("ROWDY_CREATORS");
-	if (memberData.isInICPC) organizations.add("ICPC");
-	if (memberData.isInCIC) organizations.add("CODING_IN_COLOR");
-
-	if (memberData.isBlackorAA) ethnicities.add("BLACK_OR_AFRICAN_AMERICAN");
-	if (memberData.isAsian) ethnicities.add("ASIAN");
-	if (memberData.isNAorAN) ethnicities.add("NATIVE_AMERICAN_ALASKAN_NATIVE");
-	if (memberData.isNHorPI) ethnicities.add("NATIVE_HAWAIIAN_PACIFIC_ISLANDER");
-	if (memberData.isHispanicorLatinx) ethnicities.add("HISPANIC_OR_LATINO");
-	if (memberData.isWhite) ethnicities.add("WHITE");
+	if (memberData.isBlackorAA) ethnicities.add(EthnicityEnum.enum.BLACK_OR_AFRICAN_AMERICAN);
+	if (memberData.isAsian) ethnicities.add(EthnicityEnum.enum.ASIAN);
+	if (memberData.isNAorAN) ethnicities.add(EthnicityEnum.enum.NATIVE_AMERICAN_ALASKAN_NATIVE);
+	if (memberData.isNHorPI) ethnicities.add(EthnicityEnum.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER);
+	if (memberData.isHispanicorLatinx) ethnicities.add(EthnicityEnum.enum.HISPANIC_OR_LATINO);
+	if (memberData.isWhite) ethnicities.add(EthnicityEnum.enum.WHITE);
 
 	if (memberData.isMale) identities.add(IdentityEnum.enum.MALE);
 	if (memberData.isFemale) identities.add(IdentityEnum.enum.FEMALE);
@@ -130,18 +128,26 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 	if (memberData.doesNotIdentify) identities.add(IdentityEnum.enum.DOES_NOT_IDENTIFY);
 	if (memberData.otherIdentity) identities.add(memberData.otherIdentity);
 
+	let graduationDate: { year: number; month: number } | undefined = undefined;
+	if (memberData.graduationDate != null) {
+		try {
+			const realGraduationDate = parse(memberData.graduationDate, "y-LL", new Date());
+			graduationDate = {
+				month: realGraduationDate.getUTCMonth(),
+				year: realGraduationDate.getUTCFullYear(),
+			};
+		} catch (e) {
+			console.log(e);
+		}
+	}
+
 	return {
 		id: member.id,
 		major: memberData.major || "Unknown",
 		classification: (ClassificationEnum.safeParse(memberData.classification).success
 			? memberData.classification
 			: "Unknown") as Classification,
-		graduationDate: memberData.graduationDate
-			? {
-					month: parseInt(memberData.graduationDate.split("/")[1] || "1") || 1,
-					year: parseInt(memberData.graduationDate.split("/")[2] || "2000") || 2000,
-			  }
-			: undefined,
+		graduationDate,
 		organizations: organizations,
 		birthday: memberData.Birthday ? new Date(memberData.Birthday) : undefined,
 		ethnicity: ethnicities,
