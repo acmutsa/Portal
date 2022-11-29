@@ -11,6 +11,7 @@ import {
 } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
+import Badge from "@/components/common/Badge";
 
 interface EventHeaderProps {
 	title: string;
@@ -94,6 +95,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 								{isOngoing ? ping : null}
 							</a>
 						</Link>
+						{isEventPast ? <Badge colorClass="bg-red-100 text-red-800 mx-2">Past</Badge> : null}
 						{/*<div
 							className="text-[22px] text-red-600 ml-auto my-auto cursor-pointer p-1"
 							onClick={toggleLiked}
