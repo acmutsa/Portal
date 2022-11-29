@@ -1,4 +1,5 @@
-import { differenceInDays, format } from "date-fns";
+import { differenceInDays, format, isAfter, isBefore } from "date-fns";
+import { Event } from "@/server/db/client";
 
 export function pluralize(count: number) {
 	return count != 1 ? "s" : "";
@@ -124,3 +125,21 @@ export function classNames(...classes: (string | null)[]) {
 
 export const range = (start: number, stop: number, step: number = 1) =>
 	Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
+
+/**
+ * Returns true if checking in to a specific event is available given the form
+ * open and form close times for the event.
+ * @param event The event (must have formOpen/formClose or eventStart/eventEnd attributes selected)
+ * @param useEventTimes If true, the check will use the event times instead of the form open times.
+ * @param now The time to be compared to in all checks. Defaults to now.
+ */
+export function isCheckinOpen(
+	event: Event,
+	useEventTimes: boolean = false,
+	now: Date | null = null
+): boolean {
+	if (event.forcedIsOpen) return true;
+	now = now ?? new Date();
+	if (useEventTimes) return isBefore(event.eventStart, now) && isAfter(event.eventEnd, now);
+	return isBefore(event.formOpen, now) && isAfter(event.formClose, now);
+}
