@@ -34,18 +34,7 @@ const Events: NextPage<{ results: Event[] }> = ({ results }) => {
 			<div className="page-view bg-darken">
 				<div className="grid p-1 pt-[2rem] grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 w-full md:w-[90%] mx-auto">
 					{results.map((event) => {
-						return (
-							<EventCard
-								key={event.id}
-								pageID={event.pageID}
-								title={event.name}
-								startDate={event.eventStart}
-								endDate={event.eventEnd}
-								eventHost={event.organization}
-								imageURL={event.headerImage}
-								location={event.location}
-							/>
-						);
+						return <EventCard key={event.id} event={event} />;
 					})}
 				</div>
 			</div>
