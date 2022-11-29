@@ -31,7 +31,8 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 	autoComplete,
 	placeholder,
 	rules,
-}) => {
+	inputType,
+}: ModifiableDetailProps) {
 	striped = striped ?? true;
 	const [isModifying, toggleModifying, setModifying] = useToggle();
 
@@ -85,7 +86,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 						/>
 					) : (
 						<input
-							type="text"
+							type={inputType ?? "text"}
 							id={id}
 							autoComplete={autoComplete}
 							placeholder={placeholder}
