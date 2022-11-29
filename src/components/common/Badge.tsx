@@ -1,16 +1,24 @@
 import { FunctionComponent } from "react";
+import { classNames } from "@/utils/helpers";
 
 interface BadgeProps {
 	colorClass?: string;
+	spacingClass?: string;
 	children: string | JSX.Element;
 }
 
-const Badge: FunctionComponent<BadgeProps> = ({ children, colorClass }: BadgeProps) => {
+const Badge: FunctionComponent<BadgeProps> = ({
+	children,
+	colorClass,
+	spacingClass,
+}: BadgeProps) => {
 	return (
 		<span
-			className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium ${
-				colorClass ?? "bg-gray-100 text-gray-800"
-			}`}
+			className={classNames(
+				colorClass ?? "bg-gray-100 text-gray-800",
+				spacingClass ?? "px-2.5 py-0.5",
+				"inline-flex items-center rounded-md text-sm font-medium"
+			)}
 		>
 			{children}
 		</span>
