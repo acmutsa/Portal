@@ -13,6 +13,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Badge from "@/components/common/Badge";
 import { Event } from "@prisma/client";
+import { isCheckinOpen } from "@/utils/helpers";
 
 interface EventHeaderProps {
 	event: Event;
@@ -54,6 +55,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 		};
 	}, []);
 
+	const isOpen = isCheckinOpen(event);
 	const isOngoing = event.eventStart < now && now < event.eventEnd;
 	const timeText = getTimeText(now, event.eventStart, event.eventEnd);
 	const isEventPast = isPast(event.eventEnd);
@@ -106,7 +108,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 						<Link href={eventURL}>
 							<a>Details</a>
 						</Link>
-						{!isEventPast ? (
+						{isOpen ? (
 							<Link href={checkinURL}>
 								<a>Check-in</a>
 							</Link>
