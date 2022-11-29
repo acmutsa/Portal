@@ -1,11 +1,15 @@
 import majors from "@/utils/majors.json";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useMemo, useRef } from "react";
 import { Member, MemberData } from "@prisma/client";
 import Badge from "@/components/common/Badge";
 import Detail from "@/components/common/Detail";
 import { lightFormat } from "date-fns";
 import ModifiableDetail from "@/components/common/ModifiableDetail";
 import { z } from "zod";
+import { trpc } from "@/utils/trpc";
+import { Toast } from "primereact/toast";
+import { ModifiableDetailFormValues } from "@/components/common/ModifiableDetail";
+import { setProperty } from "dot-prop";
 
 interface ProfileViewProps {
 	member: Member & { data: MemberData };
@@ -23,11 +27,48 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileVie
 	const statusColor = BadgeStatusColors.in_progress;
 	const statusText = "In Progress";
 	const formattedJoinDate = lightFormat(member.joinDate, "MM/dd/yyyy");
+	const updateProfile = trpc.useMutation(["member.updateProfile"]);
+	const toast = useRef<Toast>(null);
+
+	const showError = useMemo(() => {
+		return (message: string) => {
+			toast?.current?.show({
+				severity: "error",
+				summary: "Failed to Update Profile",
+				detail: message ?? "No message provided.",
+				life: 4000,
+			});
+		};
+	}, [toast]);
+
+	const updateHandler = useMemo(() => {
+		return (propertyName: string) => {
+			return async ({ value }: ModifiableDetailFormValues) => {
+				// setProperty is required for any MemberData table properties (major, ethnicity, classification)
+				const args = setProperty({}, propertyName, value!);
+				await updateProfile.mutate(args);
+
+				if (updateProfile.isError) {
+					showError(updateProfile.error.message);
+					updateProfile.reset();
+					return false;
+				}
+				return true;
+			};
+		};
+	}, [updateProfile, showError]);
 
 	return (
 		<>
+			<Toast ref={toast} />
 			<dl className="overflow-scroll overflow-x-auto relative">
-				<ModifiableDetail id="name" placeholder="John Doe" label="Name" initialValue={member.name}>
+				<ModifiableDetail
+					id="name"
+					placeholder="John Doe"
+					label="Name"
+					initialValue={member.name}
+					onSubmit={updateHandler("name")}
+				>
 					{member.name}
 				</ModifiableDetail>
 				<ModifiableDetail
@@ -42,6 +83,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileVie
 							return emailParser.safeParse(email).success || "Invalid email address.";
 						},
 					}}
+					onSubmit={updateHandler("email")}
 				>
 					{member.email}
 				</ModifiableDetail>
@@ -51,6 +93,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileVie
 					label="Major"
 					choices={majors}
 					initialValue={member.data?.major}
+					onSubmit={updateHandler("data.major")}
 				>
 					{member.data?.major ?? "Unknown"}
 				</ModifiableDetail>
