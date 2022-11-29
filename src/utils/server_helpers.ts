@@ -20,7 +20,7 @@ export async function validateMember(
 	response: ServerResponse,
 	extended: boolean = false
 ): Promise<[boolean, Member | (Member & { data: MemberData }) | null]> {
-	// Acquire the basic data to look for the me
+	// Acquire the basic data to look for the member
 	const id = request.cookies.member_id;
 	const email = request.cookies.member_email;
 	if (id == null || email == null) return [false, null];
@@ -35,6 +35,6 @@ export async function validateMember(
 		return [false, null];
 	}
 
-	// Otherwise, it's valid, return the me.
+	// Otherwise, it's valid, return the member.
 	return [true, member];
 }
