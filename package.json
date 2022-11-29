@@ -28,6 +28,7 @@
     "cookies-next": "^2.1.1",
     "cssesc": "^3.0.0",
     "date-fns": "^2.29.3",
+    "dot-prop": "^7.2.0",
     "flowbite-datepicker": "^1.2.2",
     "nanoid": "^4.0.0",
     "next": "12.3.1",
