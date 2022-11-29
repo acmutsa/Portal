@@ -9,7 +9,7 @@ import { absUrl, generateGoogleCalendarLink } from "@/utils/helpers";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
-import { SiGooglecalendar } from "react-icons/si";
+import { SiGooglecalendar, SiTwitch } from "react-icons/si";
 import { format, lightFormat } from "date-fns";
 import BigEventHeader from "@/components/events/BigEventHeader";
 import QRCode from "react-qr-code";
@@ -117,16 +117,23 @@ const EventView: NextPage<eventPageServerProps> = (props) => {
 							<div className="border-l-2">
 								<h2 className="text-center font-bold">Actions</h2>
 								<Link href={`/events/${id}/check-in`}>
-									<button className="h-12 w-full bg-primary text-white rounded-lg font-semibold m-2">
+									<button className="h-12 w-full bg-primary text-white rounded-lg font-semibold mx-2 flex items-center justify-center mb-2">
 										Check-in
 									</button>
 								</Link>
-								<a href={calendarLink} target="_blank">
-									<button className="h-12 w-full bg-secondary text-white rounded-lg font-semibold m-2 flex items-center justify-center">
+								<Link href={calendarLink} target="_blank">
+									<button className="h-12 w-full bg-secondary text-white rounded-lg font-semibold mx-2 flex items-center justify-center mb-2">
 										<SiGooglecalendar className="mr-2 w-5 h-5" />
 										Add To Google Calendar
 									</button>
-								</a>
+								</Link>
+								<Link href={"https://twitch.tv/acmutsa"} target="_blank">
+									<button className="h-12 w-full bg-[#9146FF] text-white rounded-lg font-semibold mx-2 flex items-center justify-center">
+										<SiTwitch className="mr-2 w-5 h-5" />
+										Watch on Twitch
+									</button>
+								</Link>
+								<br />
 								<NoSSR>
 									<QRCode className="mx-auto scale-75" value={props.qrcodeData} />
 								</NoSSR>
