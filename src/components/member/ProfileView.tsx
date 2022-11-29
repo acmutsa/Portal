@@ -34,11 +34,12 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileVie
 					id="email"
 					placeholder="you@example.org"
 					label="Email address"
+					inputType="email"
 					initialValue={member.email}
 					rules={{
 						email: (email) => {
 							if (email == null || email.length == 0) return "Required.";
-							return emailParser.safeParse(email).success || "Invalid email address";
+							return emailParser.safeParse(email).success || "Invalid email address.";
 						},
 					}}
 				>
