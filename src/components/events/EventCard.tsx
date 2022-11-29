@@ -12,15 +12,10 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Badge from "@/components/common/Badge";
+import { Event } from "@prisma/client";
 
 interface EventHeaderProps {
-	title: string;
-	imageURL: string;
-	eventHost: string;
-	startDate: Date;
-	endDate: Date;
-	location: string;
-	pageID: string;
+	event: Event;
 }
 
 const ping = (
@@ -47,15 +42,7 @@ const getTimeText = (now: Date, start: Date, end: Date): string => {
 	return `${front}${format(start, "E h:mma")} to ${format(end, "EEE h:mma")}`;
 };
 
-const EventCard: FunctionComponent<EventHeaderProps> = ({
-	title,
-	imageURL,
-	eventHost,
-	startDate,
-	endDate,
-	location,
-	pageID,
-}) => {
+const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderProps) => {
 	const [now, setDate] = useState(new Date()); // Save the current date to be able to trigger an update
 
 	useEffect(() => {
@@ -67,12 +54,12 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 		};
 	}, []);
 
-	const isOngoing = startDate < now && now < endDate;
-	const timeText = getTimeText(now, startDate, endDate);
-	const isEventPast = isPast(endDate);
+	const isOngoing = event.eventStart < now && now < event.eventEnd;
+	const timeText = getTimeText(now, event.eventStart, event.eventEnd);
+	const isEventPast = isPast(event.eventEnd);
 	// TODO: Implement like/notification/etc. system
 	// const { value: isLiked, toggle: toggleLiked } = useBoolean(false);
-	const eventURL = `/events/${pageID}`;
+	const eventURL = `/events/${event.pageID}`;
 	const checkinURL = `${eventURL}/check-in`;
 
 	return (
@@ -83,7 +70,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 						isEventPast ? "hover:grayscale-0 grayscale" : ""
 					}`}
 				>
-					<Image src={imageURL} layout="fill" objectFit="cover" />
+					<Image src={event.headerImage} layout="fill" objectFit="cover" />
 				</div>
 			</Link>
 			<div className="bg-white rounded-b-xl">
@@ -91,7 +78,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 					<span className="inline-flex text-xl text-slate-800 font-extrabold font-raleway">
 						<Link href={eventURL}>
 							<a className="inline-flex cursor-pointer">
-								{title}
+								{event.name}
 								{isOngoing ? ping : null}
 							</a>
 						</Link>
@@ -110,7 +97,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({
 						</div>*/}
 					</span>
 					<time
-						dateTime={startDate.toISOString()}
+						dateTime={event.eventStart.toISOString()}
 						className="text-sm ml-0.5 -mt-1 justify-self-end font-inter text-slate-700"
 					>
 						{timeText}
