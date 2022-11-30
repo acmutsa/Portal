@@ -4,10 +4,18 @@ import { z } from "zod";
 import * as trpc from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { validateAdmin } from "@/server/router/admin";
-import { getAllMembers, getMember } from "@/server/controllers/member";
+import {
+	getAllMembers,
+	getMember,
+	MemberWithData,
+	PrettyMemberSchema,
+	updateMember,
+	updateMemberData,
+} from "@/server/controllers/member";
 import { getCheckin, isCheckinOpen } from "@/server/controllers/checkin";
 import { isValuesNull } from "@/utils/helpers";
-import { PrettyMemberDataSchema, toMemberData } from "@/utils/transform";
+import { PrettyMemberDataWithoutIdSchema } from "@/utils/transform";
+import { Member } from "@prisma/client";
 
 // Calling this method while passing your request context will ensure member credentials were provided.
 export const validateMember = async (ctx: Context, extendedData: boolean = false) => {
@@ -58,7 +66,7 @@ export const memberRouter = createRouter()
 		},
 	})
 	/**
-	 * Checks if the given form is available to check-in to.
+	 * Checks if the given form is available to check in to.
 	 * Requires member login.
 	 * Provide either the event pageID or full ID.
 	 */
@@ -86,6 +94,41 @@ export const memberRouter = createRouter()
 				});
 
 			return isCheckinOpen(event);
+		},
+	})
+	.mutation("updateProfile", {
+		input: z
+			.object({
+				name: z.string(),
+				email: z.string().email(),
+				data: PrettyMemberDataWithoutIdSchema,
+			})
+			.partial(), // Everything is optional, it is valid to send an empty object.
+		async resolve({ ctx, input }) {
+			// Check authentication first. Yes, this is intentionally before the empty input short-circuit to avoid potential confusion.
+			const self = await validateMember(ctx, input.data != null);
+
+			// Quit early if the input has nothing to update.
+			if (isValuesNull(input)) return;
+
+			// Latest version of the member & memberData tables will be stored here.
+			let latestMember: Member | MemberWithData | null = null;
+
+			// Extract Member table information from the input. Is strictly referencing the keys a good idea here?
+			const baseMemberData = PrettyMemberSchema.parse({ name: input.name, email: input.email });
+			// Member table updates
+			if (!isValuesNull(baseMemberData)) {
+				const receivedMember = await updateMember(self.id, baseMemberData);
+				if (receivedMember != null) latestMember = receivedMember;
+			}
+
+			// MemberData table updates
+			if (input.data != null && !isValuesNull(input.data)) {
+				const receivedMemberData = await updateMemberData(self.id, input.data, true);
+				latestMember = { ...latestMember, data: receivedMemberData } as MemberWithData;
+			}
+
+			return latestMember;
 		},
 	})
 	.mutation("checkin", {
