@@ -110,6 +110,12 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 									Add To Google Calendar
 								</button>
 							</a>
+							<a href={"https://twitch.tv/acmutsa"} target="_blank">
+								<button className="h-12 w-full bg-[#9146FF] text-white rounded-lg font-semibold mx-2 flex items-center justify-center">
+									<SiTwitch className="mr-2 w-5 h-5" />
+									Watch on Twitch
+								</button>
+							</a>
 							<NoSSR>
 								<QRCode className="mx-auto scale-75" value={qrcodeData} />
 							</NoSSR>
