@@ -54,7 +54,6 @@ export async function getServerSideProps<ServerSideProps>({ req, res }: GetServe
 
 const MeView: NextPage<ServerSideProps> = ({ member, checkins }: ServerSideProps) => {
 	const [currentTabId, setCurrentTabId] = useState("profile");
-	console.log(member);
 
 	const tabs: { [k: string]: { label: string; content: any; props: any } } = {
 		profile: { label: "Profile", content: ProfileView, props: { member } },

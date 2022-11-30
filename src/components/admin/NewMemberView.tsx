@@ -37,7 +37,6 @@ const NewMemberView: FunctionComponent = () => {
 			: addMinutes(data.birthday, data.birthday.getTimezoneOffset());
 
 		const identity = data.identity?.id;
-		console.log(identity);
 		const classification = data.classification?.id;
 		const ethnicity = data.ethnicity?.id;
 		const major = data.major?.id;
@@ -58,7 +57,6 @@ const NewMemberView: FunctionComponent = () => {
 			ethnicity,
 			birthday,
 		});
-		console.log(toMemberData(parsed));
 	};
 
 	return (
