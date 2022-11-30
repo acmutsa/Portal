@@ -67,12 +67,14 @@ const MeView: NextPage<ServerSideProps> = ({ member, checkins }: ServerSideProps
 		}
 	};
 
-	const currentTab = tabs[currentTabId];
 	const ogp = useOpenGraph({
 		title: "Membership Profile",
 		description: "Login to view your membership status, attendance and view/update your profile!",
 		url: "/me",
 	});
+
+	const currentTab = tabs[currentTabId];
+	const [CurrentElement, CurrentProps] = [currentTab?.content, currentTab?.props];
 
 	return (
 		<>
@@ -107,7 +109,9 @@ const MeView: NextPage<ServerSideProps> = ({ member, checkins }: ServerSideProps
 								</div>
 							</div>
 						</div>
-						<div className="border-t border-gray-200">{currentTab?.content(currentTab.props)}</div>
+						<div className="border-t border-gray-200">
+							<CurrentElement {...CurrentProps} />
+						</div>
 					</div>
 				</div>
 			</div>
