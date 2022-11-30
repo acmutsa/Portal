@@ -9,7 +9,7 @@ import { FunctionComponent, useState } from "react";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css";
-import { CgSpinnerTwoAlt } from "react-icons/all"; //icons
+import { CgSpinnerTwoAlt } from "react-icons/cg"; //icons
 
 export interface ModifiableDetailFormValues {
 	value: string | null;
