@@ -17,6 +17,7 @@ module.exports = {
 				"xs": "450px",
 			},
 			colors: {
+				twitch: "#9146FF",
 				accent: {
 					DEFAULT: "#f15a22",
 					100: "#fcded3",

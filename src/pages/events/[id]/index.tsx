@@ -97,25 +97,25 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 								</p>
 							</div>
 						</div>
-						<div className="border-l-2">
+						<div className="border-l-2 space-y-2">
 							<h2 className="text-center font-bold">Actions</h2>
 							<Link href={`/events/${id}/check-in`}>
-								<button className="h-12 w-full bg-primary text-white rounded-lg font-semibold m-2">
+								<button className="h-12 w-full bg-primary text-white rounded-lg font-semibold mx-2 !mt-0.5">
 									Check-in
 								</button>
 							</Link>
-							<a href={calendarLink} target="_blank">
-								<button className="h-12 w-full bg-secondary text-white rounded-lg font-semibold m-2 flex items-center justify-center">
+							<Link href={calendarLink} target="_blank">
+								<button className="h-12 w-full bg-secondary text-white rounded-lg font-semibold mx-2 flex items-center justify-center">
 									<SiGooglecalendar className="mr-2 w-5 h-5" />
 									Add To Google Calendar
 								</button>
-							</a>
-							<a href={"https://twitch.tv/acmutsa"} target="_blank">
-								<button className="h-12 w-full bg-[#9146FF] text-white rounded-lg font-semibold mx-2 flex items-center justify-center">
+							</Link>
+							<Link href={"https://twitch.tv/acmutsa"} target="_blank">
+								<button className="h-12 w-full bg-twitch text-white rounded-lg font-semibold mx-2 flex items-center justify-center">
 									<SiTwitch className="mr-2 w-5 h-5" />
 									Watch on Twitch
 								</button>
-							</a>
+							</Link>
 							<NoSSR>
 								<QRCode className="mx-auto scale-75" value={qrcodeData} />
 							</NoSSR>
