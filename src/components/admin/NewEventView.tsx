@@ -45,7 +45,7 @@ const NewEventView: FunctionComponent = () => {
 		if (data == null) return;
 
 		const t = { ...data, organization: data.organization.name };
-		console.log(data.organization);
+
 		createEvent.mutate(t, {
 			onSuccess: (res) => {
 				router.push(`/admin/events/${res.id}`);

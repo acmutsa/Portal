@@ -60,7 +60,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 			// 		name: parsedData.data.answers[0].text,
 			// 	},
 			// });
-			console.log("Ayyyy!");
 			return res.status(200).json({});
 		} else {
 			return res.status(400).json({});

@@ -31,7 +31,6 @@ interface StatusProps {
 
 const requiredPoints = 15;
 const StatusView: FunctionComponent<StatusProps> = ({ checkins }: StatusProps) => {
-	console.log(checkins);
 	const points: number = checkins.map((event) => event.points).reduce((a, b) => a + b, 0);
 	const progress: number = Math.min(1, points / requiredPoints);
 	const remainingPoints = Math.max(0, requiredPoints - points);

@@ -111,7 +111,7 @@ const ethnicityBodyTemplate = (rowData: any) => {
 		if (ele) {
 			ele.addEventListener("wheel", handleScroll);
 		} else {
-			console.log("ele is null");
+			// console.log("ele is null");
 		}
 	}, []);
 
@@ -168,7 +168,7 @@ const identityBodyTemplate = (rowData: any) => {
 		if (ele) {
 			ele.addEventListener("wheel", handleScroll);
 		} else {
-			console.log("ele is null");
+			// console.log("ele is null");
 		}
 	}, []);
 

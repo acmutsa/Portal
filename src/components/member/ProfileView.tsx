@@ -32,8 +32,8 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 	const statusText = "In Progress";
 	const formattedJoinDate = lightFormat(member.joinDate, "MM/dd/yyyy");
 	const updateProfile = trpc.useMutation(["member.updateProfile"], {
-		onSuccess: (data, variables, context) => {
-			console.log({ data, variables, context });
+		onSuccess: (data) => {
+			// Populate ProfileView with the latest data.
 			setMember((prevState) => ({ ...prevState, ...data }));
 
 			// Change the member email cookie if the email property has changed.
@@ -67,7 +67,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 				const args = setProperty({}, propertyName, value!);
 
 				// TODO: See if mutateAsync works well here.
-				return new Promise((resolve) => {
+				return new Promise<boolean>((resolve) => {
 					updateProfile.mutate(args, {
 						onSuccess: () => resolve(true),
 						onError: () => resolve(false),
