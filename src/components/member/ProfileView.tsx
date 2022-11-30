@@ -1,18 +1,19 @@
 import majors from "@/utils/majors.json";
-import { FunctionComponent, useMemo, useRef } from "react";
-import { Member, MemberData } from "@prisma/client";
+import { FunctionComponent, useMemo, useRef, useState } from "react";
 import Badge from "@/components/common/Badge";
 import Detail from "@/components/common/Detail";
 import { lightFormat } from "date-fns";
-import ModifiableDetail from "@/components/common/ModifiableDetail";
+import ModifiableDetail, { ModifiableDetailFormValues } from "@/components/common/ModifiableDetail";
 import { z } from "zod";
 import { trpc } from "@/utils/trpc";
 import { Toast } from "primereact/toast";
-import { ModifiableDetailFormValues } from "@/components/common/ModifiableDetail";
 import { setProperty } from "dot-prop";
+import { MemberWithData } from "@/server/controllers/member";
+import { getCookie, setCookie } from "cookies-next";
+import { cookies } from "@/utils/constants";
 
 interface ProfileViewProps {
-	member: Member & { data: MemberData };
+	member: MemberWithData;
 }
 
 const BadgeStatusColors = {
@@ -23,11 +24,29 @@ const BadgeStatusColors = {
 
 const emailParser = z.string().email();
 
-const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileViewProps) => {
+const ProfileView: FunctionComponent<ProfileViewProps> = ({
+	member: initialMember,
+}: ProfileViewProps) => {
+	const [member, setMember] = useState(initialMember);
 	const statusColor = BadgeStatusColors.in_progress;
 	const statusText = "In Progress";
 	const formattedJoinDate = lightFormat(member.joinDate, "MM/dd/yyyy");
-	const updateProfile = trpc.useMutation(["member.updateProfile"]);
+	const updateProfile = trpc.useMutation(["member.updateProfile"], {
+		onSuccess: (data, variables, context) => {
+			console.log({ data, variables, context });
+			setMember((prevState) => ({ ...prevState, ...data }));
+
+			// Change the member email cookie if the email property has changed.
+			// This shouldn't help anyone survive lockouts by an officer changing their email, so
+			// while I believe this to not be as optimized of a check, it works.
+			const newMemberEmail = data?.email;
+			if (newMemberEmail != null && newMemberEmail != getCookie(cookies.member_email))
+				setCookie(cookies.member_email, newMemberEmail);
+		},
+		onError: (error) => {
+			showError(error.message);
+		},
+	});
 	const toast = useRef<Toast>(null);
 
 	const showError = useMemo(() => {
@@ -46,14 +65,14 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({ member }: ProfileVie
 			return async ({ value }: ModifiableDetailFormValues) => {
 				// setProperty is required for any MemberData table properties (major, ethnicity, classification)
 				const args = setProperty({}, propertyName, value!);
-				await updateProfile.mutate(args);
 
-				if (updateProfile.isError) {
-					showError(updateProfile.error.message);
-					updateProfile.reset();
-					return false;
-				}
-				return true;
+				// TODO: See if mutateAsync works well here.
+				return new Promise((resolve) => {
+					updateProfile.mutate(args, {
+						onSuccess: () => resolve(true),
+						onError: () => resolve(false),
+					});
+				});
 			};
 		};
 	}, [updateProfile, showError]);
