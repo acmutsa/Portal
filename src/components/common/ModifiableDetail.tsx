@@ -5,10 +5,11 @@ import { classNames } from "@/utils/helpers";
 import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
 import majors from "@/utils/majors.json";
 import { BsExclamationCircle } from "react-icons/bs";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
-import "primeicons/primeicons.css"; //icons
+import "primeicons/primeicons.css";
+import { CgSpinnerTwoAlt } from "react-icons/all"; //icons
 
 export interface ModifiableDetailFormValues {
 	value: string | null;
@@ -70,6 +71,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 }: ModifiableDetailProps) => {
 	striped = striped ?? true;
 	const [isModifying, toggleModifying, setModifying] = useToggle();
+	const [loading, setLoading] = useState(false);
 
 	// Delete the initial value if it cannot be found within the given choices.
 	if (choices != null && choices.find((choice) => choice.name == initialValue) == null)
@@ -96,7 +98,9 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 	const onSubmitHandler = async (values: any) => {
 		let response: boolean = false;
 		if (onSubmit != null) {
+			setLoading(true);
 			response = await onSubmit(values);
+			setLoading(false);
 		}
 
 		if (response) {
@@ -122,7 +126,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 			>
 				<dt className="text-sm font-medium text-gray-500">{label}</dt>
 				<dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2 items-center">
-					<span className="flex-grow md:pr-8">
+					<span className="flex-grow">
 						{choices != null ? (
 							<Controller
 								name="value"
@@ -166,6 +170,11 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 								{errors.value!.message as string}
 							</p>
 						) : null}
+					</span>
+					<span className="text-secondary-800 m-1 mx-2">
+						<CgSpinnerTwoAlt
+							className={classNames("w-5 h-5 animate-spin", loading ? "" : "invisible")}
+						/>
 					</span>
 					<span className="ml-3 sm:ml-4 space-x-3 sm:space-x-4 flex-shrink-0 font-semibold text-secondary-500">
 						<button
