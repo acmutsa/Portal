@@ -78,6 +78,9 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 				// setProperty is required for any MemberData table properties (major, ethnicity, classification)
 				const args = setProperty({}, propertyName, value!);
 
+				// Prevent multiple mutations at the same time.
+				if (updateProfile.isLoading) return Promise.resolve(false);
+
 				// TODO: See if mutateAsync works well here.
 				return new Promise<boolean>((resolve) => {
 					updateProfile.mutate(args, {
