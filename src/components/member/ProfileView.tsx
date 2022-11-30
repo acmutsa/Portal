@@ -35,6 +35,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 		onSuccess: (data) => {
 			// Populate ProfileView with the latest data.
 			setMember((prevState) => ({ ...prevState, ...data }));
+			showSuccess();
 
 			// Change the member email cookie if the email property has changed.
 			// This shouldn't help anyone survive lockouts by an officer changing their email, so
@@ -49,8 +50,19 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 	});
 	const toast = useRef<Toast>(null);
 
+	const showSuccess = useMemo(() => {
+		return (message?: string) => {
+			toast?.current?.show({
+				severity: "success",
+				summary: "Profile Updated",
+				detail: message ?? "The profile was updated successfully.",
+				life: 3000,
+			});
+		};
+	}, [toast]);
+
 	const showError = useMemo(() => {
-		return (message: string) => {
+		return (message?: string) => {
 			toast?.current?.show({
 				severity: "error",
 				summary: "Failed to Update Profile",
