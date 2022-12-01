@@ -46,7 +46,7 @@ const Sort = ({ label, options, onChange }: SortProps) => {
 										onClick={onChangeHandler(id as SortOption)}
 										className={classNames(
 											active ? "bg-gray-100" : null,
-											"block px-4 py-2 text-sm font-medium text-gray-900"
+											"block w-full text-left px-4 py-2 text-sm font-medium text-gray-900"
 										)}
 									>
 										{label}
