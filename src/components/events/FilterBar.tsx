@@ -58,7 +58,7 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({}: FilterBarProps) => {
 						checked={showPastEvents}
 						onChange={setShowPastEvents}
 					>
-						<span className="font-medium text-sm text-gray-700">Show Past Events</span>
+						<span className="text-gray-700">Show Past Events</span>
 					</ShortToggle>
 				</div>
 				<Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">

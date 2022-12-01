@@ -43,7 +43,7 @@ const ShortToggle: FunctionComponent<ShortToggleProps> = ({
 						)}
 					/>
 				</Switch>
-				<Switch.Label className="ml-2 cursor-pointer">{children}</Switch.Label>
+				<Switch.Label className="ml-2 cursor-pointer font-medium text-sm">{children}</Switch.Label>
 			</Switch.Group>
 		</div>
 	);
