@@ -4,6 +4,7 @@ import { prisma, Event } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
+import FilterBar from "@/components/events/FilterBar";
 
 export async function getStaticProps() {
 	let results = await prisma.event.findMany({
@@ -31,11 +32,17 @@ const Events: NextPage<{ results: Event[] }> = ({ results }) => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-darken">
-				<div className="grid p-1 pt-[2rem] grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 w-full md:w-[90%] mx-auto">
-					{results.map((event) => {
-						return <EventCard key={event.id} event={event} />;
-					})}
+
+			<div className="page-view bg-darken Xbg-zinc-200">
+				<div className="w-full w-[90%] mx-auto p-1">
+					<div className="mt-6">
+						<FilterBar />
+					</div>
+					<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
+						{results.map((event) => {
+							return <EventCard key={event.id} event={event} />;
+						})}
+					</div>
 				</div>
 			</div>
 		</>

@@ -68,7 +68,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 	const checkinURL = `${eventURL}/check-in`;
 
 	return (
-		<div className="rounded-xl col-span-3 m-3">
+		<div className="[&>*]:shadow-lg rounded-xl col-span-3">
 			<Link href={eventURL}>
 				<div
 					className={`relative cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 ${
@@ -89,7 +89,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 						</Link>
 						{isEventPast ? (
 							<Badge colorClass="bg-red-100 text-red-800 mx-2 my-0.5 font-inter">Past</Badge>
-						) : isEventToday || true ? (
+						) : isEventToday ? (
 							<Badge colorClass="bg-sky-100 text-sky-800 mx-2 my-0.5 font-inter">Today</Badge>
 						) : null}
 						{/*<div
