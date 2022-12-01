@@ -8,6 +8,7 @@ import {
 	isBefore,
 	isPast,
 	isSameDay,
+	isToday,
 } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
@@ -59,6 +60,8 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 	const isOngoing = event.eventStart < now && now < event.eventEnd;
 	const timeText = getTimeText(now, event.eventStart, event.eventEnd);
 	const isEventPast = isPast(event.eventEnd);
+	const isEventToday = isToday(event.eventStart) || isToday(event.eventEnd);
+
 	// TODO: Implement like/notification/etc. system
 	// const { value: isLiked, toggle: toggleLiked } = useBoolean(false);
 	const eventURL = `/events/${event.pageID}`;
@@ -77,14 +80,18 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 			</Link>
 			<div className="bg-white rounded-b-xl">
 				<div className="flex flex-col align-middle p-2 pb-0 justify-between">
-					<span className="inline-flex text-xl text-slate-800 font-extrabold font-raleway">
+					<span className="inline-flex text-xl text-slate-800 font-extrabold font-raleway mb-0.5">
 						<Link href={eventURL}>
 							<a className="inline-flex cursor-pointer">
 								{event.name}
 								{isOngoing ? ping : null}
 							</a>
 						</Link>
-						{isEventPast ? <Badge colorClass="bg-red-100 text-red-800 mx-2">Past</Badge> : null}
+						{isEventPast ? (
+							<Badge colorClass="bg-red-100 text-red-800 mx-2 my-0.5 font-inter">Past</Badge>
+						) : isEventToday || true ? (
+							<Badge colorClass="bg-sky-100 text-sky-800 mx-2 my-0.5 font-inter">Today</Badge>
+						) : null}
 						{/*<div
 							className="text-[22px] text-red-600 ml-auto my-auto cursor-pointer p-1"
 							onClick={toggleLiked}
