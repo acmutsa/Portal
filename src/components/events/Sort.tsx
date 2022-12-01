@@ -2,16 +2,17 @@ import { Menu, Transition } from "@headlessui/react";
 import { BiChevronDown } from "react-icons/bi";
 import { Dispatch, Fragment, useMemo } from "react";
 import { classNames } from "@/utils/helpers";
+import { SortOption } from "@/components/events/FilterBar";
 
 interface SortProps {
 	label?: string;
-	options: Record<string, string>;
-	onChange?: Dispatch<string>;
+	options: Record<SortOption, string>;
+	onChange?: Dispatch<SortOption>;
 }
 
 const Sort = ({ label, options, onChange }: SortProps) => {
 	const onChangeHandler = useMemo(() => {
-		return (value: string) => {
+		return (value: SortOption) => {
 			return () => {
 				if (onChange != null) onChange(value);
 			};
@@ -42,7 +43,7 @@ const Sort = ({ label, options, onChange }: SortProps) => {
 							<Menu.Item key={id}>
 								{({ active }) => (
 									<button
-										onClick={onChangeHandler(id)}
+										onClick={onChangeHandler(id as SortOption)}
 										className={classNames(
 											active ? "bg-gray-100" : "",
 											"block px-4 py-2 text-sm font-medium text-gray-900"

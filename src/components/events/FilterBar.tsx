@@ -1,13 +1,11 @@
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { Dispatch, FunctionComponent, useMemo, useState } from "react";
 import ShortToggle from "@/components/common/ShortToggle";
 import Filter from "@/components/events/Filter";
 import { Menu, Popover } from "@headlessui/react";
 import Sort from "@/components/events/Sort";
-import { useDebounce } from "usehooks-ts";
 
-interface FilterBarProps {}
-
-const sortOptions: Record<string, string> = {
+export type SortOption = "recent" | "rating" | "newest";
+const sortOptions: Record<SortOption, string> = {
 	recent: "Most Recent",
 	rating: "Best Rating",
 	newest: "Newest",
@@ -25,24 +23,33 @@ const semesterOptions = [
 	{ value: "spring-2023", label: "Spring 2023" },
 ];
 
-const FilterBar: FunctionComponent<FilterBarProps> = ({}: FilterBarProps) => {
-	const [showPastEvents, setShowPastEvents] = useState(false);
-	const [organizationFilter, setOrganizationFilter] = useState<Record<string, boolean>>({});
-	const [semesterFilter, setSemesterFilter] = useState<Record<string, boolean>>({});
-	const [sort, setSort] = useState<string>("recent");
-	const mergedFilters = useMemo(() => {
-		return {
-			sort,
-			past: showPastEvents,
-			organizations: organizationFilter,
-			semesters: semesterFilter,
-		};
-	}, [showPastEvents, organizationFilter, semesterFilter]);
-	const debouncedMergedFilters = useDebounce(mergedFilters, 800);
+interface Filters {
+	sort: SortOption | null;
+	past: boolean;
+	organizations: Record<string, boolean> | null;
+	semesters: Record<string, boolean> | null;
+}
 
-	useEffect(() => {
-		console.log(debouncedMergedFilters);
-	}, [debouncedMergedFilters]);
+interface FilterBarProps {
+	onChange?: Dispatch<Filters>;
+}
+
+const FilterBar: FunctionComponent<FilterBarProps> = ({ onChange }: FilterBarProps) => {
+	const [showPastEvents, setShowPastEvents] = useState(false);
+	const [organizationFilter, setOrganizationFilter] = useState<Record<string, boolean> | null>(
+		null
+	);
+	const [semesterFilter, setSemesterFilter] = useState<Record<string, boolean> | null>(null);
+	const [sort, setSort] = useState<SortOption>("recent");
+	useMemo(() => {
+		if (onChange != null)
+			onChange({
+				sort,
+				past: showPastEvents,
+				organizations: organizationFilter,
+				semesters: semesterFilter,
+			});
+	}, [onChange, sort, showPastEvents, organizationFilter, semesterFilter]);
 
 	return (
 		<div className="h-12 px-5 font-inter bg-zinc-50 shadow rounded-lg flex divide-x-1 flex items-center justify-between">
