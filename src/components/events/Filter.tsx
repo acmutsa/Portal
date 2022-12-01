@@ -1,5 +1,5 @@
 import { Popover, Transition } from "@headlessui/react";
-import { Fragment, FunctionComponent, useMemo } from "react";
+import { Dispatch, Fragment, FunctionComponent, useMemo } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 
@@ -13,7 +13,7 @@ interface FilterProps {
 	name: string;
 	options: FilterOption[];
 	count?: number | string;
-	onChange?: (form: Record<string, boolean>) => void;
+	onChange?: Dispatch<Record<string, boolean>>;
 }
 
 const Filter: FunctionComponent<FilterProps> = ({
