@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { BsChevronDown } from "react-icons/bs";
 import { Disclosure, Transition } from "@headlessui/react";
+import { classNames } from "@/utils/helpers";
 
 interface DisclosureProps {
 	title: ReactNode | string;
@@ -21,9 +22,10 @@ function CustomDisclosure({ title, description }: DisclosureProps): JSX.Element 
 							>
 								<span>{title}</span>
 								<BsChevronDown
-									className={`ease-in-out transform transition-transform ${
-										open ? "rotate-180" : ""
-									} h-5 w-5 text-blue-500`}
+									className={classNames(
+										open ? "rotate-180" : null,
+										"ease-in-out transform transition-transform h-5 w-5 text-blue-500"
+									)}
 								/>
 							</Disclosure.Button>
 							<Transition

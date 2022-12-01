@@ -57,11 +57,13 @@ export default function CustomSelect<TFormValues>({
 					) : null}
 					<div className="mt-1 relative">
 						<Listbox.Button
-							className={`${buttonClass} bg-white relative w-full border ${
+							className={classNames(
+								buttonClass,
 								error
 									? "border-red-300 text-red-900 placeholder-red-300 focus:ring-red-400 focus:border-red-400"
-									: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
-							} rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 sm:text-sm`}
+									: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
+								"bg-white relative w-full border rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 sm:text-sm"
+							)}
 						>
 							<span className="block truncate">
 								{internalValue != null ? (

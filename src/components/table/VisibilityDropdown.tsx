@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Listbox } from "@headlessui/react";
 import { HiOutlineSelector } from "react-icons/hi";
 import { ImCheckmark } from "react-icons/im";
+import { classNames } from "@/utils/helpers";
 
 interface VisibilityProps {
 	columns: { id: string; label?: string; default?: boolean }[];
@@ -53,9 +54,10 @@ const VisibilityDropdown = ({ columns, onColumnChange }: VisibilityProps) => {
 						{({ selected }) => (
 							<div className="flex justify-between">
 								<ImCheckmark
-									className={`mx-1 mr-2 my-auto p-[0.5px] transition-all duration-300 ${
-										selected ? "text-blue-500" : "scale-0 text-zinc-500"
-									}`}
+									className={classNames(
+										selected ? "text-blue-500" : "scale-0 text-zinc-500",
+										"mx-1 mr-2 my-auto p-[0.5px] transition-all duration-300"
+									)}
 								/>
 								{label ?? id}
 							</div>

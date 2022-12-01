@@ -6,7 +6,7 @@ import classifications from "@/utils/classifications.json";
 import identities from "@/utils/identities.json";
 import months from "@/utils/months.json";
 import ethnicities from "@/utils/ethnicities.json";
-import { range } from "@/utils/helpers";
+import { classNames, range } from "@/utils/helpers";
 import { BsExclamationCircle } from "react-icons/bs";
 import { PrettyMemberDataSchema, toMemberData } from "@/utils/transform";
 import { addMinutes } from "date-fns";
@@ -85,11 +85,12 @@ const NewMemberView: FunctionComponent = () => {
 											autoComplete="name"
 											aria-invalid={errors.name ? "true" : "false"}
 											aria-describedby="name-error"
-											className={`${
+											className={classNames(
 												errors.name
 													? "border-red-300 focus:border-red-300 focus:ring-red-300"
-													: "border-gray-300"
-											} mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+													: "border-gray-300",
+												"mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+											)}
 											{...register("name", {
 												required: { value: true, message: "Required." },
 												minLength: { value: 2, message: "At least 2 characters required." },
@@ -115,11 +116,12 @@ const NewMemberView: FunctionComponent = () => {
 											type="text"
 											id="id"
 											placeholder="abc123"
-											className={`${
+											className={classNames(
 												errors.id
 													? "border-red-300 focus:border-red-300 focus:ring-red-300"
-													: "border-gray-300"
-											} mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+													: "border-gray-300",
+												"mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+											)}
 											{...register("id", {
 												required: { value: true, message: "Required." },
 												pattern: { value: /[a-z]{3}\d{3}/, message: "Invalid abc123." },
@@ -146,11 +148,12 @@ const NewMemberView: FunctionComponent = () => {
 											id="email"
 											autoComplete="email"
 											aria-describedby="email-error"
-											className={`${
+											className={classNames(
 												errors.email
 													? "border-red-300 focus:border-red-300 focus:ring-red-300"
-													: "border-gray-300"
-											} mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+													: "border-gray-300",
+												"mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+											)}
 											{...register("email", { required: { value: true, message: "Required." } })}
 										/>
 										{errors.email ? (
@@ -273,11 +276,12 @@ const NewMemberView: FunctionComponent = () => {
 											autoComplete="birthday"
 											aria-invalid={errors.birthday ? "true" : "false"}
 											aria-describedby="birthday-error"
-											className={`${
+											className={classNames(
 												errors.birthday
 													? "border-red-300 focus:border-red-300 focus:ring-red-300"
-													: "border-gray-300"
-											} mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+													: "border-gray-300",
+												"mt-1 block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+											)}
 											{...register("birthday", {
 												valueAsDate: true,
 											})}

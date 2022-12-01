@@ -14,7 +14,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Badge from "@/components/common/Badge";
 import { Event } from "@prisma/client";
-import { isCheckinOpen } from "@/utils/helpers";
+import { classNames, isCheckinOpen } from "@/utils/helpers";
 
 interface EventHeaderProps {
 	event: Event;
@@ -71,9 +71,10 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 		<div className="[&>*]:shadow-lg rounded-xl col-span-3">
 			<Link href={eventURL}>
 				<div
-					className={`relative cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400 ${
-						isEventPast ? "hover:grayscale-0 grayscale" : ""
-					}`}
+					className={classNames(
+						isEventPast ? "hover:grayscale-0 grayscale" : null,
+						"relative cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400"
+					)}
 				>
 					<Image src={event.headerImage} layout="fill" objectFit="cover" />
 				</div>

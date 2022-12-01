@@ -13,6 +13,7 @@ import Head from "next/head";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { useRouter } from "next/router";
+import { classNames } from "@/utils/helpers";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
@@ -79,9 +80,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 			<GlobalContext.Provider value={[globalState, setGlobalState]}>
 				<Navbar />
 				<div
-					className={`${
-						globalState.background ? "bg-[url('/img/bg.png')]" : "bg-white"
-					} bg-fixed bg-center bg-cover h-[calc(100vh)] overflow-y-auto`}
+					className={classNames(
+						globalState.background ? "bg-[url('/img/bg.png')]" : "bg-white",
+						"bg-fixed bg-center bg-cover h-[calc(100vh)] overflow-y-auto"
+					)}
 				>
 					<Component {...pageProps} />
 				</div>

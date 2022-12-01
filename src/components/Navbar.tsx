@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { useRouter } from "next/router";
+import { classNames } from "@/utils/helpers";
 
 interface HighlightProps {
 	router: any;
@@ -32,7 +33,7 @@ const NavbarItem: FunctionComponent<HighlightProps> = ({
 
 	return (
 		<Link href={href ?? route}>
-			<a className={`under-hover ${highlight ? "force" : ""}`}>{children}</a>
+			<a className={classNames(highlight ? "force" : null, "under-hover")}>{children}</a>
 		</Link>
 	);
 };
