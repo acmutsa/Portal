@@ -173,7 +173,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 					</span>
 					<span className="text-secondary-800 m-1 mx-2">
 						<CgSpinnerTwoAlt
-							className={classNames("w-5 h-5 animate-spin", loading ? "" : "invisible")}
+							className={classNames("w-5 h-5 animate-spin", loading ? null : "invisible")}
 						/>
 					</span>
 					<span className="ml-3 sm:ml-4 space-x-3 sm:space-x-4 flex-shrink-0 font-semibold text-secondary-500">

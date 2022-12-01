@@ -45,7 +45,7 @@ const Sort = ({ label, options, onChange }: SortProps) => {
 									<button
 										onClick={onChangeHandler(id as SortOption)}
 										className={classNames(
-											active ? "bg-gray-100" : "",
+											active ? "bg-gray-100" : null,
 											"block px-4 py-2 text-sm font-medium text-gray-900"
 										)}
 									>

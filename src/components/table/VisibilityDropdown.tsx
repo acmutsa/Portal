@@ -46,9 +46,10 @@ const VisibilityDropdown = ({ columns, onColumnChange }: VisibilityProps) => {
 						key={id}
 						value={id}
 						className={({ active }) =>
-							`relative p-1.5 cursor-pointer select-none ${
-								active ? "bg-blue-50 text-zinc-900" : "text-zinc-800"
-							}`
+							classNames(
+								active ? "bg-blue-50 text-zinc-900" : "text-zinc-800",
+								"relative p-1.5 cursor-pointer select-none"
+							)
 						}
 					>
 						{({ selected }) => (
