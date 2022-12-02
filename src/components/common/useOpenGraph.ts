@@ -18,17 +18,17 @@ type PageOgData = Omit<OGProperties, "image" | "card" | "site_name" | "type"> & 
 };
 
 export const useOpenGraph = (data: PageOgData) => {
-	// If the image is not defined, assume a default image using the NPB background.
-	if (data.image === undefined)
-		data.image = {
-			url: "/img/default-thumbnail.png",
-			type: "image/png",
-			alt: "The ACM-UTSA Logo",
-			width: 1920,
-			height: 1080,
-		};
-
 	return useMemo<OGProperties>(() => {
+		// If the image is not defined, assume a default image using the NPB background.
+		if (data.image === undefined)
+			data.image = {
+				url: "/img/default-thumbnail.png",
+				type: "image/png",
+				alt: "The ACM-UTSA Logo",
+				width: 1920,
+				height: 1080,
+			};
+
 		return {
 			url: data.url,
 			// Provide a suffix to the title, but only if it's not disabled explicitly.
