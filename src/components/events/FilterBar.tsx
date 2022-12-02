@@ -3,8 +3,8 @@ import ShortToggle from "@/components/common/ShortToggle";
 import Filter from "@/components/events/Filter";
 import { Menu, Popover } from "@headlessui/react";
 import Sort from "@/components/events/Sort";
+import { SortOption } from "@/server/controllers/events";
 
-export type SortOption = "recent" | "rating" | "newest";
 const sortOptions: Record<SortOption, string> = {
 	recent: "Most Recent",
 	rating: "Best Rating",
