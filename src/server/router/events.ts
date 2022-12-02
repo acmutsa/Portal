@@ -2,21 +2,13 @@ import { z } from "zod";
 import { createRouter } from "@/server/router/context";
 import { sum } from "@/utils/helpers";
 import { validateAdmin } from "@/server/router/admin";
+import { EventFilterSchema, getEvents } from "@/server/controllers/events";
 
 export const eventsRouter = createRouter()
-	.query("getCurrent", {
-		input: z.object({}).nullish(),
-		async resolve({ ctx }) {
-			return await ctx.prisma.event.findMany({
-				where: {
-					eventStart: {
-						gte: new Date(),
-					},
-				},
-				orderBy: {
-					eventStart: "asc",
-				},
-			});
+	.query("get", {
+		input: EventFilterSchema,
+		async resolve({ ctx, input }) {
+			return await getEvents(input);
 		},
 	})
 	.query("getAll", {
