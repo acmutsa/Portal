@@ -2,7 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import { BiChevronDown } from "react-icons/bi";
 import { Dispatch, Fragment, useMemo } from "react";
 import { classNames } from "@/utils/helpers";
-import { SortOption } from "@/components/events/FilterBar";
+import { SortOption } from "@/server/controllers/events";
 
 interface SortProps {
 	label?: string;

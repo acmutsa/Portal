@@ -7,8 +7,7 @@ import { SortOption } from "@/server/controllers/events";
 
 const sortOptions: Record<SortOption, string> = {
 	recent: "Most Recent",
-	rating: "Best Rating",
-	newest: "Newest",
+	attendance: "Most Popular",
 };
 const organizationOptions = [
 	{ value: "acm", label: "ACM" },
@@ -23,7 +22,7 @@ const semesterOptions = [
 	{ value: "spring-2023", label: "Spring 2023" },
 ];
 
-interface Filters {
+export interface Filters {
 	sort: SortOption | null;
 	past: boolean;
 	organizations: Record<string, boolean> | null;
@@ -59,7 +58,7 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({ onChange }: FilterBarPro
 				</div>
 			</Menu>
 			<div className="flex">
-				<div className="mr-8">
+				<div className="sm:mr-8">
 					<ShortToggle
 						screenReaderLabel="Show Past Events"
 						checked={showPastEvents}
