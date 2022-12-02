@@ -1,17 +1,18 @@
 import type { NextPage } from "next";
 import EventCard from "@/components/events/EventCard";
-import { prisma, Event } from "@/server/db/client";
+import { Event } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
-import FilterBar from "@/components/events/FilterBar";
+import FilterBar, { Filters } from "@/components/events/FilterBar";
+import { getEvents } from "@/server/controllers/events";
+import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "usehooks-ts";
+import { trpc } from "@/utils/trpc";
+import { removeEmpty } from "@/utils/helpers";
 
 export async function getStaticProps() {
-	let results = await prisma.event.findMany({
-		orderBy: {
-			eventStart: "desc",
-		},
-	});
+	const results = await getEvents();
 
 	return {
 		props: { results },
@@ -19,7 +20,45 @@ export async function getStaticProps() {
 	};
 }
 
-const Events: NextPage<{ results: Event[] }> = ({ results }) => {
+interface EventsProps {
+	results: Event[];
+}
+
+const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) => {
+	const [filters, setFilters] = useState<Filters | null>(null);
+	const [loading, setLoading] = useState<boolean>(false);
+	const debouncedFilters = useDebounce(filters, 800);
+
+	// TODO: Tune so this doesn't fire a query until a control has changed.
+	// TODO: Tune so this doesn't fire randomly.
+
+	useEffect(() => {
+		setLoading(true);
+	}, [filters]);
+	useEffect(() => {
+		setLoading(false);
+	}, [debouncedFilters]);
+
+	const debouncedFormattedFilters = useMemo(() => {
+		return removeEmpty({
+			past: debouncedFilters?.past,
+			sort: debouncedFilters?.sort,
+		});
+	}, [debouncedFilters]);
+	const { data: filteredEvents, isFetching } = trpc.useQuery(
+		["events.get", debouncedFormattedFilters],
+		{
+			enabled: debouncedFilters != null,
+			onSettled: () => {
+				setLoading(false);
+			},
+		}
+	);
+
+	const results = useMemo(() => {
+		return filteredEvents ?? staticResults;
+	}, [filteredEvents]);
+
 	const ogp = useOpenGraph({
 		description: "Find all the latest events hosted by ACM-UTSA!",
 		title: "Events",
@@ -36,12 +75,18 @@ const Events: NextPage<{ results: Event[] }> = ({ results }) => {
 			<div className="page-view bg-darken Xbg-zinc-200">
 				<div className="w-full w-[90%] mx-auto p-1">
 					<div className="mt-6">
-						<FilterBar />
+						<FilterBar onChange={setFilters} />
 					</div>
 					<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
-						{results.map((event) => {
-							return <EventCard key={event.id} event={event} />;
-						})}
+						{loading || isFetching
+							? results.map(() => (
+									<div className="shadow-lg rounded-xl bg-white w-full h-60 block col-span-3">
+										<div className="rounded-t-xl bg-zinc-300 animate-pulse w-full h-36"></div>
+									</div>
+							  ))
+							: results.map((event) => {
+									return <EventCard key={event.id} event={event} />;
+							  })}
 					</div>
 				</div>
 			</div>
