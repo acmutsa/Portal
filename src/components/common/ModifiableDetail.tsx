@@ -54,6 +54,11 @@ interface ModifiableDetailProps {
 	 * an error occurred and the ModifiableDetail will stay open.
 	 */
 	onSubmit?: (values: ModifiableDetailFormValues) => Promise<boolean>;
+	/**
+	 * @return {boolean} Returns a boolean. If true, the modification process will be allowed to continue.
+	 * If false, the form will not be presented. The user can press the button again.
+	 */
+	onModify?: () => Promise<boolean>;
 }
 
 const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
@@ -68,6 +73,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 	rules,
 	inputType,
 	onSubmit,
+	onModify,
 }: ModifiableDetailProps) => {
 	striped = striped ?? true;
 	const [isModifying, toggleModifying, setModifying] = useToggle();
@@ -111,7 +117,14 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 
 	return !isModifying ? (
 		<>
-			<Detail label={label} useButton={true} buttonAction={toggleModifying}>
+			<Detail
+				label={label}
+				useButton={true}
+				buttonAction={async () => {
+					const continueModify = onModify != null ? await onModify() : true;
+					setModifying(continueModify);
+				}}
+			>
 				{children}
 			</Detail>
 		</>
