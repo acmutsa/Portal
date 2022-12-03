@@ -1,5 +1,5 @@
 import majors from "@/utils/majors.json";
-import { FunctionComponent, useMemo, useRef, useState } from "react";
+import { Dispatch, FunctionComponent, useMemo, useRef, useState } from "react";
 import Badge from "@/components/common/Badge";
 import Detail from "@/components/common/Detail";
 import { lightFormat } from "date-fns";
@@ -11,6 +11,8 @@ import { setProperty } from "dot-prop";
 import { MemberWithData } from "@/server/controllers/member";
 import { getCookie, setCookie } from "cookies-next";
 import { cookies } from "@/utils/constants";
+import WarningDialog from "@/components/member/WarningDialog";
+import { AiFillWarning } from "react-icons/ai";
 
 interface ProfileViewProps {
 	member: MemberWithData;
@@ -27,6 +29,10 @@ const emailParser = z.string().email();
 const ProfileView: FunctionComponent<ProfileViewProps> = ({
 	member: initialMember,
 }: ProfileViewProps) => {
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [dialogPromise, setDialogPromise] = useState<Dispatch<
+		boolean | PromiseLike<boolean>
+	> | null>(null);
 	const [member, setMember] = useState(initialMember);
 	const statusColor = BadgeStatusColors.in_progress;
 	const statusText = "In Progress";
@@ -95,6 +101,21 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 	return (
 		<>
 			<Toast ref={toast} />
+			<WarningDialog
+				title="Change email address"
+				description="Since your email address is part of your login, changing it may lock you out of your account.
+				 While we will attempt to maintain your session, no guarantees can be made, and you may have to login again.
+				 Be careful about what you type here."
+				onClose={(value: boolean) => {
+					// Don't show the dialog again
+					if (value) localStorage.setItem("email-warning-dialog", "true");
+					if (dialogPromise) dialogPromise(value); // Resolve the promise for the modifiable email
+					setDialogOpen(false);
+				}}
+				open={dialogOpen}
+				iconParentClass="bg-red-100"
+				icon={<AiFillWarning className="h-6 w-6 text-red-600" />}
+			/>
 			<dl className="overflow-scroll overflow-x-auto relative">
 				<ModifiableDetail
 					id="name"
@@ -118,6 +139,17 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 						},
 					}}
 					onSubmit={updateHandler("email")}
+					onModify={() => {
+						// If we've seen the dialog, skip it and return a Promise that resolves instantly.
+						if (localStorage.getItem("email-warning-dialog") === "true")
+							return Promise.resolve(true);
+
+						setDialogOpen(true);
+						return new Promise<boolean>((resolve) => {
+							// Skip the dialog if we've seen it before.
+							setDialogPromise(() => resolve);
+						});
+					}}
 				>
 					{member.email}
 				</ModifiableDetail>
