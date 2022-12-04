@@ -3,7 +3,7 @@ import organizations from "@/config/organizations.json";
 import { BsImage } from "react-icons/bs";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "@/utils/trpc";
-import CustomSelect from "@/components/forms/CustomSelect";
+import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
 import { Switch } from "@headlessui/react";
 import { classNames } from "@/utils/helpers";
 import AdvancedInput from "@/components/forms/AdvancedInput";

@@ -1,5 +1,7 @@
 import { differenceInDays, format, isAfter, isBefore } from "date-fns";
 import { Event } from "@/server/db/client";
+import organizations from "@/config/organizations.json";
+import { Choice } from "@/components/forms/CustomSelect";
 
 export function pluralize(count: number) {
 	return count != 1 ? "s" : "";
@@ -148,4 +150,12 @@ export function isCheckinOpen(
  */
 export function isValuesNull(object: Object) {
 	return Object.values(object).every((v) => v == null);
+}
+
+/**
+ * A simple function to retrieve a organization from the JSON list by its identifier.
+ * @param organizationIdentifier The identifier of the organization.
+ */
+export function getOrganization(organizationIdentifier: string): Choice | null {
+	return organizations.find((org) => org.id == organizationIdentifier) ?? null;
 }

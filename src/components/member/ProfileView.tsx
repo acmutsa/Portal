@@ -63,6 +63,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 			showError(error.message);
 		},
 	});
+	// TODO: Switch from Primereact toast to a headless, Tailwind-based Toast system
 	const toast = useRef<Toast>(null);
 
 	const showSuccess = useMemo(() => {
@@ -88,6 +89,12 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 	}, [toast]);
 
 	const updateHandler = useMemo(() => {
+		/**
+		 * A memoized function that returns submit handlers for each of the ModifiableDetail components.
+		 * Each of the ModifiableDetail components hook directly into the same mutation.
+		 * Use `transformFunction` for the Multiselect components in order to transform a Choice object
+		 * into a string, if needed (like for the Major property).
+		 */
 		return (path: string, transformFunction?: (value: string | Choice | null) => any) => {
 			return async ({ value }: ModifiableDetailForms) => {
 				// use the transform function if available

@@ -1,5 +1,6 @@
 import { FunctionComponent } from "react";
 import { BsFillCalendarEventFill, BsClockFill, BsPinMapFill } from "react-icons/bs";
+import { getOrganization } from "@/utils/helpers";
 
 interface EventHeaderProps {
 	title: string;
@@ -31,7 +32,9 @@ const BigEventHeader: FunctionComponent<EventHeaderProps> = ({
 			></div>
 			<div className="flex flex-col justify-center p-[5px]">
 				<h1 className="text-5xl font-extrabold font-raleway">{title}</h1>
-				<p className="font-opensans font-bold">Hosted by {hostOrg}</p>
+				<p className="font-opensans font-bold">
+					Hosted by {getOrganization(hostOrg)?.name ?? "Unknown"}
+				</p>
 				<br></br>
 				<br></br>
 				<p className="font-semibold flex items-center">
