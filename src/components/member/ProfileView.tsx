@@ -119,7 +119,9 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 			<dl className="overflow-scroll overflow-x-auto relative">
 				<ModifiableDetail
 					id="name"
-					placeholder="John Doe"
+					inputDetails={{
+						placeholder: "you@example.org",
+					}}
 					label="Name"
 					initialValue={member.name}
 					onSubmit={updateHandler("name")}
@@ -128,9 +130,11 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 				</ModifiableDetail>
 				<ModifiableDetail
 					id="email"
-					placeholder="you@example.org"
+					inputDetails={{
+						placeholder: "you@example.org",
+						inputType: "email",
+					}}
 					label="Email address"
-					inputType="email"
 					initialValue={member.email}
 					rules={{
 						email: (email) => {
@@ -157,7 +161,9 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 				<ModifiableDetail
 					id="major"
 					label="Major"
-					choices={majors}
+					multiselectDetails={{
+						choices: majors,
+					}}
 					initialValue={member.data?.major}
 					onSubmit={updateHandler("data.major")}
 				>
