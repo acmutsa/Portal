@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useMemo } from "react";
 import {
 	createColumnHelper,
 	flexRender,
@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { RowActions } from "@/components/table/RowActions";
 import { BsPlus } from "react-icons/bs";
 import Link from "next/link";
+import { isAfter } from "date-fns";
 
 const columnHelper = createColumnHelper<Event>();
 const columns = [
@@ -55,6 +56,15 @@ const columns = [
 const EventView: FunctionComponent = () => {
 	const events = trpc.useQuery(["events.getAll"], { refetchOnWindowFocus: false });
 	const router = useRouter();
+
+	const [upcomingEvents, pastEvents] = useMemo(() => {
+		const now = new Date();
+		if (events.isFetched) {
+			const upcoming = events.data!.filter((e) => isAfter(e.eventStart, now)).length;
+			return [upcoming, events.data!.length - upcoming];
+		}
+		return [null, null];
+	}, [events]);
 
 	const triggerDelete = (id: string) => {
 		console.log(`Deleting Event ${id}`);
@@ -142,8 +152,8 @@ const EventView: FunctionComponent = () => {
 				<div className="flex gap-10 justify-start my-2 p-4 bg-white border-zinc-200 border-[1px] rounded-lg">
 					{/* TODO: Create truly useful statistics or implement the logic behind these ones. */}
 					<Stat label="Total Events" value={events.data?.length} />
-					<Stat label="Upcoming Events" value={events.data?.length} />
-					<Stat label="Past Events" value={events.data?.length} />
+					<Stat label="Upcoming Events" value={upcomingEvents} />
+					<Stat label="Past Events" value={pastEvents} />
 				</div>
 			</div>
 			<div className="p-4 bg-white rounded-lg border-zinc-200 border-[1px]">
