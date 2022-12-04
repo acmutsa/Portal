@@ -52,7 +52,7 @@ export default function CustomSelect<TFormValues>({
 								error
 									? "border-red-300 text-red-900 placeholder-red-300 focus:ring-red-400 focus:border-red-400"
 									: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-								"bg-white relative w-full border rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 sm:text-sm"
+								"min-h-[2.35rem] bg-white relative w-full border rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 sm:text-sm"
 							)}
 						>
 							<span className="block truncate">
