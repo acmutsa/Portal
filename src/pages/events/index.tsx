@@ -72,7 +72,7 @@ const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) 
 				<OpenGraph properties={ogp} />
 			</Head>
 
-			<div className="page-view bg-darken Xbg-zinc-200">
+			<div className="page-view bg-darken">
 				<div className="w-full w-[90%] mx-auto p-1">
 					<div className="mt-6">
 						<FilterBar onChange={setFilters} />

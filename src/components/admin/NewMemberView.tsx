@@ -48,6 +48,7 @@ const NewMemberView: FunctionComponent = () => {
 				  }
 				: null;
 
+		// TODO: Finish submission of member data to tRPC route
 		const parsed = PrettyMemberDataSchema.parse({
 			id: data.id,
 			classification,
@@ -58,6 +59,10 @@ const NewMemberView: FunctionComponent = () => {
 			birthday,
 		});
 	};
+
+	// TODO: Enable multiple ethnicity selection
+	// TODO: Enable multiple gender selection
+	// TODO: Enable organization selection
 
 	return (
 		<div className="w-full h-full p-[5px]">

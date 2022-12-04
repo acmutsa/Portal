@@ -69,8 +69,8 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 					title={event.name || "Error"}
 					imageURL={event.headerImage || "Error"}
 					hostOrg={event.organization || "ACM"}
-					startDate={event.eventEnd}
-					endDate={event.eventStart}
+					startDate={event.eventStart}
+					endDate={event.eventEnd}
 					location={event.location || "Error"}
 				/>
 				<div className="mt-5 bg-white mx-auto max-w-[1200px] min-h-[25rem] rounded-xl p-3">

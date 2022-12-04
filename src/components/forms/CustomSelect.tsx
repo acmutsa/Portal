@@ -36,7 +36,7 @@ export default function CustomSelect<TFormValues>({
 	fieldState: { error },
 }: CustomSelectProps<TFormValues>) {
 	const [internalValue, setInternalValue] = useState<Choice | null>(null);
-// TODO: Instead of providing properties for changing which property of Choice is sent, perhaps using a simple mapper function.
+	// TODO: Instead of providing properties for changing which property of Choice is sent, perhaps using a simple mapper function.
 	// Depending on the value we export, we need to use the correct property on Choice.
 	const choicePredicate = useMemo(
 		() => (selectType === "name" ? (c: Choice) => c.name === value : (c: Choice) => c.id),
