@@ -10,10 +10,12 @@ import ProfileView from "@/components/member/ProfileView";
 import AttendanceView from "@/components/member/AttendanceView";
 import StatusView, { SimpleCheckin } from "@/components/member/StatusView";
 import { Member, MemberData } from "@prisma/client";
+import { getMembershipStatus } from "@/server/controllers/checkin";
 
 interface ServerSideProps {
 	member: Member & { data: MemberData };
 	checkins: SimpleCheckin[];
+	status: boolean;
 }
 
 export async function getServerSideProps<ServerSideProps>({ req, res }: GetServerSidePropsContext) {
@@ -25,38 +27,45 @@ export async function getServerSideProps<ServerSideProps>({ req, res }: GetServe
 			},
 		};
 
-	const checkins = await prisma.checkin.findMany({
-		where: {
-			member: member!,
-		},
-		select: {
-			event: {
-				select: {
-					// Select ONLY the checkins name and start time.
-					name: true,
-					eventStart: true,
+	const checkins = (
+		await prisma.checkin.findMany({
+			where: {
+				member: member!,
+			},
+			select: {
+				event: {
+					select: {
+						// Select ONLY the checkins name and start time.
+						name: true,
+						eventStart: true,
+					},
 				},
 			},
-		},
-	});
+		})
+	).map((checkin) => ({
+		eventName: checkin.event.name,
+		eventDate: checkin.event.eventStart.toLocaleDateString(),
+		points: 1,
+	}));
 
 	return {
 		props: {
+			status: getMembershipStatus(checkins),
 			member,
-			checkins: checkins.map((checkin) => ({
-				eventName: checkin.event.name,
-				eventDate: checkin.event.eventStart.toLocaleDateString(),
-				points: 1,
-			})),
+			checkins,
 		},
 	};
 }
 
-const MeView: NextPage<ServerSideProps> = ({ member, checkins }: ServerSideProps) => {
+const MeView: NextPage<ServerSideProps> = ({ member, checkins, status }: ServerSideProps) => {
 	const [currentTabId, setCurrentTabId] = useState("profile");
 
 	const tabs: { [k: string]: { label: string; content: any; props: any } } = {
-		profile: { label: "Profile", content: ProfileView, props: { member } },
+		profile: {
+			label: "Profile",
+			content: ProfileView,
+			props: { member, status: status },
+		},
 		status: { label: "Status", content: StatusView, props: { checkins } },
 		attendance: { label: "Attendance", content: AttendanceView, props: { checkins } },
 	};

@@ -1,8 +1,19 @@
 import { Checkin, prisma } from "@/server/db/client";
 
-import { isCheckinOpen } from "@/utils/helpers";
+import { isCheckinOpen, sum } from "@/utils/helpers";
+import { SimpleCheckin } from "@/components/member/StatusView";
 
 export { isCheckinOpen };
+
+/**
+ * Determines the membership status of a member, given a list of Checkin objects.
+ * @param checkins {Checkin[]} The checkins to use to determine membership.
+ * @return {boolean} If true, the user is considered a member.
+ */
+export function getMembershipStatus(checkins: Checkin[] | SimpleCheckin[]): boolean {
+	// Rudimentary logic for now.
+	return checkins.map((checkin) => 1).reduce(sum) > 15.0;
+}
 
 /**
  * Check if a checkin exists for a given member and event.

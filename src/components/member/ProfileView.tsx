@@ -25,6 +25,7 @@ type ModifiableDetailForms = ModifiableDetailFormValues | ModifiableDetailMultis
 
 interface ProfileViewProps {
 	member: MemberWithData;
+	status: boolean;
 }
 
 const BadgeStatusColors = {
@@ -37,14 +38,26 @@ const emailParser = z.string().email();
 
 const ProfileView: FunctionComponent<ProfileViewProps> = ({
 	member: initialMember,
+	status,
 }: ProfileViewProps) => {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [dialogPromise, setDialogPromise] = useState<Dispatch<
 		boolean | PromiseLike<boolean>
 	> | null>(null);
 	const [member, setMember] = useState(initialMember);
-	const statusColor = BadgeStatusColors.in_progress;
-	const statusText = "In Progress";
+
+	const { statusColor, statusText } = useMemo(() => {
+		return status
+			? {
+					statusColor: BadgeStatusColors.success,
+					statusText: "Complete",
+			  }
+			: {
+					statusColor: BadgeStatusColors.in_progress,
+					statusText: "In Progress",
+			  };
+	}, [status]);
+
 	const formattedJoinDate = lightFormat(member.joinDate, "MM/dd/yyyy");
 	const updateProfile = trpc.useMutation(["member.updateProfile"], {
 		onSuccess: (data) => {
