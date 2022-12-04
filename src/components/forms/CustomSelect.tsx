@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { BsCheck, BsExclamationCircle } from "react-icons/bs";
 import { HiOutlineSelector } from "react-icons/hi";
@@ -11,8 +11,6 @@ export interface Choice {
 	name: string;
 }
 
-export type SelectValueType = "name" | "id" | "object";
-
 interface CustomSelectProps<TFormValues> {
 	field: ControllerRenderProps<TFormValues, any>;
 	fieldState: ControllerFieldState;
@@ -22,7 +20,6 @@ interface CustomSelectProps<TFormValues> {
 	unselectedText?: string;
 	buttonClass?: string;
 	flattenedValues?: boolean;
-	selectType?: SelectValueType | undefined;
 }
 
 export default function CustomSelect<TFormValues>({
@@ -31,31 +28,14 @@ export default function CustomSelect<TFormValues>({
 	buttonClass,
 	label,
 	labelFor,
-	selectType,
 	field: { onChange, value, name },
 	fieldState: { error },
 }: CustomSelectProps<TFormValues>) {
-	const [internalValue, setInternalValue] = useState<Choice | null>(null);
-	// TODO: Instead of providing properties for changing which property of Choice is sent, perhaps using a simple mapper function.
-	// Depending on the value we export, we need to use the correct property on Choice.
-	const choicePredicate = useMemo(
-		() => (selectType === "name" ? (c: Choice) => c.name === value : (c: Choice) => c.id),
-		[selectType]
-	);
-
-	useEffect(() => {
-		// If we don't use the object as the property to export, we won't get an object. So we find it here.
-		if (selectType != undefined && selectType !== "object") {
-			setInternalValue(choices.find(choicePredicate) ?? null);
-		} else setInternalValue(value as Choice);
-	}, [value]);
-
 	return (
 		<Listbox
-			value={internalValue}
+			value={value}
 			onChange={(value) => {
-				if (selectType == undefined || selectType === "object") onChange(value);
-				else onChange(selectType === "name" ? value?.name : value?.id);
+				onChange(value as Choice);
 			}}
 		>
 			{({ open }) => (
@@ -76,8 +56,8 @@ export default function CustomSelect<TFormValues>({
 							)}
 						>
 							<span className="block truncate">
-								{internalValue != null ? (
-									internalValue.name
+								{value != null ? (
+									(value as Choice).name
 								) : (
 									<span className="text-gray-300">{unselectedText ?? "Nothing selected"}</span>
 								)}
