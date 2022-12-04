@@ -39,15 +39,16 @@ const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) 
 		setLoading(false);
 	}, [debouncedFilters]);
 
-	const debouncedFormattedFilters = useMemo(() => {
-		return removeEmpty({
-			past: debouncedFilters?.past,
-			sort: debouncedFilters?.sort,
-		});
-	}, [debouncedFilters]);
 	const { data: filteredEvents, isFetching } = trpc.useQuery(
-		["events.get", debouncedFormattedFilters],
+		[
+			"events.get",
+			useMemo(() => {
+				return removeEmpty({ ...debouncedFilters });
+			}, [debouncedFilters]),
+		],
 		{
+			refetchOnWindowFocus: false,
+			initialData: staticResults,
 			enabled: debouncedFilters != null,
 			onSettled: () => {
 				setLoading(false);
@@ -56,7 +57,7 @@ const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) 
 	);
 
 	const results = useMemo(() => {
-		return filteredEvents ?? staticResults;
+		return filteredEvents;
 	}, [filteredEvents]);
 
 	const ogp = useOpenGraph({
@@ -79,12 +80,12 @@ const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) 
 					</div>
 					<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
 						{loading || isFetching
-							? results.map(() => (
+							? results!.map(() => (
 									<div className="shadow-lg rounded-xl bg-white w-full h-60 block col-span-3">
 										<div className="rounded-t-xl bg-zinc-300 animate-pulse w-full h-36"></div>
 									</div>
 							  ))
-							: results.map((event) => {
+							: results!.map((event) => {
 									return <EventCard key={event.id} event={event} />;
 							  })}
 					</div>

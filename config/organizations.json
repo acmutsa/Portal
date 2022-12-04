@@ -4,11 +4,11 @@
     "name": "ACM"
   },
   {
-    "id": "ACM-W",
+    "id": "ACM_W",
     "name": "ACM-W"
   },
   {
-    "id": "ROWDY-CREATORS",
+    "id": "ROWDY_CREATORS",
     "name": "Rowdy Creators"
   },
   {
@@ -16,7 +16,7 @@
     "name": "ICPC"
   },
   {
-    "id": "CODING-IN-COLOR",
+    "id": "CODING_IN_COLOR",
     "name": "Coding in Color"
   }
 ]

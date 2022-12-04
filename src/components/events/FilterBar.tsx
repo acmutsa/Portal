@@ -1,4 +1,4 @@
-import { Dispatch, FunctionComponent, useMemo, useState } from "react";
+import { Dispatch, FunctionComponent, useEffect, useState } from "react";
 import organizations from "@/config/organizations.json";
 import ShortToggle from "@/components/common/ShortToggle";
 import Filter from "@/components/events/Filter";
@@ -21,28 +21,29 @@ const semesterOptions: Choice[] = [
 export interface Filters {
 	sort: SortOption | null;
 	past: boolean;
-	organizations: Record<string, boolean> | null;
-	semesters: Record<string, boolean> | null;
+	organizations: string[] | null;
+	semesters: string[] | null;
 }
 
 interface FilterBarProps {
 	onChange?: Dispatch<Filters>;
 }
 
+const getValue = ([, v]: [string, boolean]): boolean => v;
+const getKey = ([k]: [string, boolean]): string => k;
+
 const FilterBar: FunctionComponent<FilterBarProps> = ({ onChange }: FilterBarProps) => {
 	const [showPastEvents, setShowPastEvents] = useState(false);
-	const [organizationFilter, setOrganizationFilter] = useState<Record<string, boolean> | null>(
-		null
-	);
-	const [semesterFilter, setSemesterFilter] = useState<Record<string, boolean> | null>(null);
+	const [organizationFilter, setOrganizationFilter] = useState<Record<string, boolean>>({});
+	const [semesterFilter, setSemesterFilter] = useState<Record<string, boolean>>({});
 	const [sort, setSort] = useState<SortOption>("recent");
-	useMemo(() => {
+	useEffect(() => {
 		if (onChange != null)
 			onChange({
 				sort,
 				past: showPastEvents,
-				organizations: organizationFilter,
-				semesters: semesterFilter,
+				organizations: Object.entries(organizationFilter).filter(getValue).map(getKey),
+				semesters: Object.entries(semesterFilter).filter(getValue).map(getKey),
 			});
 	}, [onChange, sort, showPastEvents, organizationFilter, semesterFilter]);
 
