@@ -1,25 +1,21 @@
 import { Dispatch, FunctionComponent, useMemo, useState } from "react";
+import organizations from "@/config/organizations.json";
 import ShortToggle from "@/components/common/ShortToggle";
 import Filter from "@/components/events/Filter";
 import { Menu, Popover } from "@headlessui/react";
 import Sort from "@/components/events/Sort";
 import { SortOption } from "@/server/controllers/events";
+import { Choice } from "@/components/forms/CustomSelect";
 
 const sortOptions: Record<SortOption, string> = {
 	recent: "Most Recent",
 	attendance: "Most Popular",
 };
-const organizationOptions = [
-	{ value: "acm", label: "ACM" },
-	{ value: "acm-w", label: "ACM-W" },
-	{ value: "rc", label: "Rowdy Creators" },
-	{ value: "icpc", label: "ICPC" },
-	{ value: "cic", label: "Coding in Color" },
-];
-const semesterOptions = [
-	{ value: "spring-2022", label: "Spring 2022" },
-	{ value: "fall-2022", label: "Fall 2022" },
-	{ value: "spring-2023", label: "Spring 2023" },
+
+const semesterOptions: Choice[] = [
+	{ id: "spring-2022", name: "Spring 2022" },
+	{ id: "fall-2022", name: "Fall 2022" },
+	{ id: "spring-2023", name: "Spring 2023" },
 ];
 
 export interface Filters {
@@ -70,7 +66,7 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({ onChange }: FilterBarPro
 				<Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
 					<Filter
 						onChange={setOrganizationFilter}
-						options={organizationOptions}
+						options={organizations}
 						id="organization"
 						name="Organizations"
 					/>

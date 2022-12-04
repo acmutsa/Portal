@@ -2,16 +2,12 @@ import { Popover, Transition } from "@headlessui/react";
 import { Dispatch, Fragment, FunctionComponent, useMemo } from "react";
 import { BiChevronDown } from "react-icons/bi";
 import { useForm } from "react-hook-form";
-
-interface FilterOption {
-	value: string;
-	label: string;
-}
+import { Choice } from "@/components/forms/CustomSelect";
 
 interface FilterProps {
 	id: string;
 	name: string;
-	options: FilterOption[];
+	options: Choice[];
 	count?: number | string;
 	onChange?: Dispatch<Record<string, boolean>>;
 }
@@ -58,18 +54,18 @@ const Filter: FunctionComponent<FilterProps> = ({
 				<Popover.Panel className="origin-top-right absolute right-0 mt-2 bg-white rounded-md shadow-2xl p-4 ring-1 ring-black ring-opacity-5 focus:outline-none">
 					<form className="space-y-4">
 						{options.map((option, optionIdx) => (
-							<div key={option.value} className="flex items-center">
+							<div key={option.id} className="flex items-center">
 								<input
 									id={`filter-${id}-${optionIdx}`}
 									type="checkbox"
 									className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-									{...register(option.value, { onChange: changeHandler })}
+									{...register(option.id, { onChange: changeHandler })}
 								/>
 								<label
 									htmlFor={`filter-${id}-${optionIdx}`}
 									className="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap cursor-pointer select-none"
 								>
-									{option.label}
+									{option.name}
 								</label>
 							</div>
 						))}
