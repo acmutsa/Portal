@@ -4,33 +4,27 @@ import { useToggle } from "usehooks-ts";
 import { classNames } from "@/utils/helpers";
 import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
 import { BsExclamationCircle } from "react-icons/bs";
-import { FunctionComponent, HTMLInputTypeAttribute, useEffect, useState } from "react";
+import { FunctionComponent, ReducerWithoutAction, useState } from "react";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css";
 import { CgSpinnerTwoAlt } from "react-icons/cg"; //icons
 
-export interface ModifiableDetailFormValues {
-	value: string | null;
+export interface ModifiableDetailMultiselectFormValues {
+	value: Choice | null;
 }
 
 interface ModifiableDetailProps {
 	id: string;
 	label: string;
-	initialValue?: string | null;
-	// Properties relevant only for a multiselect-type box.
+	initialValue?: Choice | null;
+	unselectedText?: string;
 	/**
-	 * The autocomplete accessibility property for the input box. Text input only.
+	 * If provided, the element is backed by a Controller and CustomSelect component. All properties
+	 * relating to text input only will not be used if this is set.
+	 * While objects are passed in, only the
 	 */
-	autoComplete?: string;
-	/**
-	 * The inputType accessibility property for the input box. Text input only.
-	 */
-	inputType?: HTMLInputTypeAttribute;
-	/**
-	 * The default text when the input box is empty. Text input only.
-	 */
-	placeholder?: string;
+	choices: Choice[];
 	// The displayed element when the detail is not currently being modified.
 	children: string | number | JSX.Element;
 	// Properties relevant only for a input-type box.
@@ -48,7 +42,7 @@ interface ModifiableDetailProps {
 	 * @return {boolean} Returns a boolean, if true, the submit was a success and the detail and quit. Otherwise,
 	 * an error occurred and the ModifiableDetail will stay open.
 	 */
-	onSubmit?: (values: ModifiableDetailFormValues) => Promise<boolean>;
+	onSubmit?: (values: ModifiableDetailMultiselectFormValues) => Promise<boolean>;
 	/**
 	 * @return {boolean} Returns a boolean. If true, the modification process will be allowed to continue.
 	 * If false, the form will not be presented. The user can press the button again.
@@ -56,18 +50,17 @@ interface ModifiableDetailProps {
 	onModify?: () => Promise<boolean>;
 }
 
-const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
+const ModifiableDetailMultiselect: FunctionComponent<ModifiableDetailProps> = ({
 	id,
+	rules,
 	label,
 	initialValue,
 	children,
 	striped,
-	rules,
 	onSubmit,
+	unselectedText,
+	choices,
 	onModify,
-	autoComplete,
-	placeholder,
-	inputType,
 }: ModifiableDetailProps) => {
 	striped = striped ?? true;
 	const [isModifying, toggleModifying, setModifying] = useToggle();
@@ -79,7 +72,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 		handleSubmit,
 		setValue,
 		formState: { errors },
-	} = useForm<ModifiableDetailFormValues>({
+	} = useForm<ModifiableDetailMultiselectFormValues>({
 		defaultValues: {
 			value: initialValue,
 		},
@@ -130,22 +123,17 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 				<dt className="text-sm font-medium text-gray-500">{label}</dt>
 				<dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2 items-center">
 					<span className="flex-grow">
-						<input
-							type={inputType ?? "text"}
-							id={id}
-							autoComplete={autoComplete}
-							placeholder={placeholder}
-							className={classNames(
-								errors.value
-									? "border-red-300 focus:border-red-300 focus:ring-red-300"
-									: "border-gray-300 focus:ring-indigo-500 focus:border-indigo-500",
-
-								"block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none sm:text-sm"
+						<Controller
+							name="value"
+							control={control}
+							render={({ field, fieldState }) => (
+								<CustomSelect
+									field={field}
+									fieldState={fieldState}
+									choices={choices}
+									unselectedText={unselectedText}
+								/>
 							)}
-							{...register("value", {
-								required: { value: true, message: "Required." },
-								validate: rules,
-							})}
 						/>
 						{errors.value ? (
 							<p
@@ -185,4 +173,4 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 	);
 };
 
-export default ModifiableDetail;
+export default ModifiableDetailMultiselect;
