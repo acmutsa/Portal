@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { BsCheck, BsExclamationCircle } from "react-icons/bs";
 import { HiOutlineSelector } from "react-icons/hi";
@@ -11,6 +11,8 @@ export interface Choice {
 	name: string;
 }
 
+export type SelectValueType = "name" | "id" | "object";
+
 interface CustomSelectProps<TFormValues> {
 	field: ControllerRenderProps<TFormValues, any>;
 	fieldState: ControllerFieldState;
@@ -20,6 +22,7 @@ interface CustomSelectProps<TFormValues> {
 	unselectedText?: string;
 	buttonClass?: string;
 	flattenedValues?: boolean;
+	selectType?: SelectValueType | undefined;
 }
 
 export default function CustomSelect<TFormValues>({
@@ -28,24 +31,31 @@ export default function CustomSelect<TFormValues>({
 	buttonClass,
 	label,
 	labelFor,
-	flattenedValues,
+	selectType,
 	field: { onChange, value, name },
 	fieldState: { error },
 }: CustomSelectProps<TFormValues>) {
-	flattenedValues = flattenedValues ?? false;
 	const [internalValue, setInternalValue] = useState<Choice | null>(null);
+// TODO: Instead of providing properties for changing which property of Choice is sent, perhaps using a simple mapper function.
+	// Depending on the value we export, we need to use the correct property on Choice.
+	const choicePredicate = useMemo(
+		() => (selectType === "name" ? (c: Choice) => c.name === value : (c: Choice) => c.id),
+		[selectType]
+	);
+
 	useEffect(() => {
-		if (flattenedValues) setInternalValue(choices.find((choice) => choice.name == value) ?? null);
-		else setInternalValue(value as Choice);
+		// If we don't use the object as the property to export, we won't get an object. So we find it here.
+		if (selectType != undefined && selectType !== "object") {
+			setInternalValue(choices.find(choicePredicate) ?? null);
+		} else setInternalValue(value as Choice);
 	}, [value]);
 
 	return (
 		<Listbox
 			value={internalValue}
 			onChange={(value) => {
-				// TODO: Extend this to support both id and name instead of hardcoding for name only.
-				if (flattenedValues) onChange(value?.name);
-				else onChange(value);
+				if (selectType == undefined || selectType === "object") onChange(value);
+				else onChange(selectType === "name" ? value?.name : value?.id);
 			}}
 		>
 			{({ open }) => (

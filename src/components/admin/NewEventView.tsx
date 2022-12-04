@@ -1,5 +1,5 @@
 import { FunctionComponent, useState } from "react";
-import public_config from "@/config/public_config.json";
+import organizations from "@/config/organizations.json";
 import { BsImage } from "react-icons/bs";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "@/utils/trpc";
@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 interface FormValues {
 	name: string;
 	description: string;
-	organization: { id: string; name: string };
+	organization: string;
 	location: string;
 	headerImage: string;
 	eventStart: Date;
@@ -43,10 +43,7 @@ const NewEventView: FunctionComponent = () => {
 
 	const onSubmit: SubmitHandler<FormValues> = async (data) => {
 		if (data == null) return;
-
-		const t = { ...data, organization: data.organization.name };
-
-		createEvent.mutate(t, {
+		createEvent.mutate(data, {
 			onSuccess: (res) => {
 				router.push(`/admin/events/${res.id}`);
 				window.open(`/events/${res.pageID}`, "_blank");
@@ -93,7 +90,8 @@ const NewEventView: FunctionComponent = () => {
 													field={field}
 													fieldState={fieldState}
 													label="Organization"
-													choices={public_config.organizations}
+													selectType="id"
+													choices={organizations}
 													unselectedText="RowdyHacks"
 												/>
 											)}

@@ -149,8 +149,8 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 										field={field}
 										fieldState={fieldState}
 										choices={majors}
+										selectType="name"
 										unselectedText="Computer Science"
-										flattenedValues={true}
 									/>
 								)}
 							/>
