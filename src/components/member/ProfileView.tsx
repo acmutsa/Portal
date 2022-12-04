@@ -13,6 +13,15 @@ import { getCookie, setCookie } from "cookies-next";
 import { cookies } from "@/utils/constants";
 import WarningDialog from "@/components/member/WarningDialog";
 import { AiFillWarning } from "react-icons/ai";
+import ModifiableDetailMultiselect, {
+	ModifiableDetailMultiselectFormValues,
+} from "@/components/common/ModifiableDetailMultiselect";
+import { Choice } from "@/components/forms/CustomSelect";
+import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css";
+
+type ModifiableDetailForms = ModifiableDetailFormValues | ModifiableDetailMultiselectFormValues;
 
 interface ProfileViewProps {
 	member: MemberWithData;

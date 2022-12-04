@@ -4,10 +4,7 @@ import { useToggle } from "usehooks-ts";
 import { classNames } from "@/utils/helpers";
 import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
 import { BsExclamationCircle } from "react-icons/bs";
-import { FunctionComponent, ReducerWithoutAction, useState } from "react";
-import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
-import "primereact/resources/primereact.min.css"; //core css
-import "primeicons/primeicons.css";
+import { FunctionComponent, useState } from "react";
 import { CgSpinnerTwoAlt } from "react-icons/cg"; //icons
 
 export interface ModifiableDetailMultiselectFormValues {
