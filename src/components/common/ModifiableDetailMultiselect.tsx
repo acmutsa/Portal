@@ -12,6 +12,7 @@ export interface ModifiableDetailMultiselectFormValues {
 }
 
 interface ModifiableDetailProps {
+	// TODO: Find purpose for id property, accessibility or CustomSelect HTML id??
 	id: string;
 	label: string;
 	initialValue?: Choice | null;
@@ -33,7 +34,8 @@ interface ModifiableDetailProps {
 	 * A place for optional validation rules. Can receive either a function or a object, where the values
 	 * are the validation functions. Must return either a boolean or a string message (only true is considered a "passing" rule).
 	 */
-	rules?: Validate<string | null | undefined> | Record<string, Validate<string | null | undefined>>;
+	// TODO: Implement passing rules to Controller
+	rules?: Validate<Choice | null | undefined> | Record<string, Validate<Choice | null | undefined>>;
 	/**
 	 * @param values The values of the form when submitted.
 	 * @return {boolean} Returns a boolean, if true, the submit was a success and the detail and quit. Otherwise,
@@ -48,8 +50,6 @@ interface ModifiableDetailProps {
 }
 
 const ModifiableDetailMultiselect: FunctionComponent<ModifiableDetailProps> = ({
-	id,
-	rules,
 	label,
 	initialValue,
 	children,
@@ -60,11 +60,10 @@ const ModifiableDetailMultiselect: FunctionComponent<ModifiableDetailProps> = ({
 	onModify,
 }: ModifiableDetailProps) => {
 	striped = striped ?? true;
-	const [isModifying, toggleModifying, setModifying] = useToggle();
+	const [isModifying, , setModifying] = useToggle();
 	const [loading, setLoading] = useState(false);
 
 	const {
-		register,
 		control,
 		handleSubmit,
 		setValue,

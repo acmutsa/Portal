@@ -14,7 +14,6 @@ interface ModifiableDetailProps {
 	id: string;
 	label: string;
 	initialValue?: string | null;
-	// Properties relevant only for a multiselect-type box.
 	/**
 	 * The autocomplete accessibility property for the input box. Text input only.
 	 */
