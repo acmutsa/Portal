@@ -3,9 +3,8 @@ import Detail from "@/components/common/Detail";
 import { useToggle } from "usehooks-ts";
 import { classNames } from "@/utils/helpers";
 import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
-import majors from "@/utils/majors.json";
 import { BsExclamationCircle } from "react-icons/bs";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, HTMLInputTypeAttribute, useState } from "react";
 import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css";
@@ -15,34 +14,45 @@ export interface ModifiableDetailFormValues {
 	value: string | null;
 }
 
-interface ModifiableDetailProps {
-	id: string;
-	label: string;
-	initialValue?: string | null;
-	// The displayed element when the detail is not currently being modified.
-	children: string | number | JSX.Element;
+interface InputProps {
 	/**
-	 * If true, the detail box will have a different background for each 'even' child of the parent element.
+	 * The autocomplete accessibility property for the input box. Text input only.
 	 */
-	striped?: boolean;
+	autoComplete: string;
+	/**
+	 * The inputType accessibility property for the input box. Text input only.
+	 */
+	inputType: HTMLInputTypeAttribute;
+	/**
+	 * The default text when the input box is empty. Text input only.
+	 */
+	placeholder: string;
+}
+
+interface MultiSelectProps {
+	unselectedText: string;
 	/**
 	 * If provided, the element is backed by a Controller and CustomSelect component. All properties
 	 * relating to text input only will not be used if this is set.
 	 * While objects are passed in, only the
 	 */
-	choices?: Choice[];
+	choices: Choice[];
+}
+
+interface ModifiableDetailProps {
+	id: string;
+	label: string;
+	initialValue?: string | null;
+	inputDetails?: InputProps;
+	// Properties relevant only for a multiselect-type box.
+	multiselectDetails?: MultiSelectProps;
+	// The displayed element when the detail is not currently being modified.
+	children: string | number | JSX.Element;
+	// Properties relevant only for a input-type box.
 	/**
-	 * The autocomplete accessibility property for the input box. Text input only.
+	 * If true, the detail box will have a different background for each 'even' child of the parent element.
 	 */
-	autoComplete?: string;
-	/**
-	 * The inputType accessibility property for the input box. Text input only.
-	 */
-	inputType?: string;
-	/**
-	 * The default text when the input box is empty. Text input only.
-	 */
-	placeholder?: string;
+	striped?: boolean;
 	/**
 	 * A place for optional validation rules. Can receive either a function or a object, where the values
 	 * are the validation functions. Must return either a boolean or a string message (only true is considered a "passing" rule).
@@ -67,20 +77,21 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 	initialValue,
 	children,
 	striped,
-	choices,
-	autoComplete,
-	placeholder,
 	rules,
-	inputType,
 	onSubmit,
 	onModify,
+	multiselectDetails,
+	inputDetails,
 }: ModifiableDetailProps) => {
 	striped = striped ?? true;
 	const [isModifying, toggleModifying, setModifying] = useToggle();
 	const [loading, setLoading] = useState(false);
 
 	// Delete the initial value if it cannot be found within the given choices.
-	if (choices != null && choices.find((choice) => choice.name == initialValue) == null)
+	if (
+		multiselectDetails != null &&
+		multiselectDetails.choices.find((choice) => choice.name == initialValue) == null
+	)
 		initialValue = null;
 
 	const {
@@ -140,7 +151,7 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 				<dt className="text-sm font-medium text-gray-500">{label}</dt>
 				<dd className="mt-1 flex text-sm text-gray-900 sm:mt-0 sm:col-span-2 items-center">
 					<span className="flex-grow">
-						{choices != null ? (
+						{multiselectDetails != null ? (
 							<Controller
 								name="value"
 								control={control}
@@ -148,18 +159,17 @@ const ModifiableDetail: FunctionComponent<ModifiableDetailProps> = ({
 									<CustomSelect
 										field={field}
 										fieldState={fieldState}
-										choices={majors}
-										selectType="name"
-										unselectedText="Computer Science"
+										choices={multiselectDetails.choices}
+										unselectedText={multiselectDetails.unselectedText}
 									/>
 								)}
 							/>
 						) : (
 							<input
-								type={inputType ?? "text"}
+								type={inputDetails?.inputType ?? "text"}
 								id={id}
-								autoComplete={autoComplete}
-								placeholder={placeholder}
+								autoComplete={inputDetails?.autoComplete}
+								placeholder={inputDetails?.placeholder}
 								className={classNames(
 									errors.value
 										? "border-red-300 focus:border-red-300 focus:ring-red-300"
