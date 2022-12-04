@@ -88,10 +88,13 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 	}, [toast]);
 
 	const updateHandler = useMemo(() => {
-		return (propertyName: string) => {
-			return async ({ value }: ModifiableDetailFormValues) => {
+		return (path: string, transformFunction?: (value: string | Choice | null) => any) => {
+			return async ({ value }: ModifiableDetailForms) => {
+				// use the transform function if available
+				if (transformFunction != undefined) value = transformFunction(value);
+
 				// setProperty is required for any MemberData table properties (major, ethnicity, classification)
-				const args = setProperty({}, propertyName, value!);
+				const args = setProperty({}, path, value!);
 
 				// Prevent multiple mutations at the same time.
 				if (updateProfile.isLoading) return Promise.resolve(false);
@@ -128,9 +131,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 			<dl className="overflow-scroll overflow-x-auto relative">
 				<ModifiableDetail
 					id="name"
-					inputDetails={{
-						placeholder: "you@example.org",
-					}}
+					placeholder="John Doe"
 					label="Name"
 					initialValue={member.name}
 					onSubmit={updateHandler("name")}
@@ -139,10 +140,8 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 				</ModifiableDetail>
 				<ModifiableDetail
 					id="email"
-					inputDetails={{
-						placeholder: "you@example.org",
-						inputType: "email",
-					}}
+					placeholder="you@example.org"
+					inputType="email"
 					label="Email address"
 					initialValue={member.email}
 					rules={{
@@ -167,17 +166,18 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 					{member.email}
 				</ModifiableDetail>
 				<Detail label="myUTSA ID">{member.id}</Detail>
-				<ModifiableDetail
+				<ModifiableDetailMultiselect
 					id="major"
 					label="Major"
-					multiselectDetails={{
-						choices: majors,
-					}}
-					initialValue={member.data?.major}
-					onSubmit={updateHandler("data.major")}
+					choices={majors}
+					initialValue={majors.find((c) => c.name == member.data?.major)}
+					onSubmit={updateHandler("data.major", (c) => {
+						// Since we only want to send the name of the major back, we transform the Choice into a string
+						return (c as Choice).name;
+					})}
 				>
 					{member.data?.major ?? "Unknown"}
-				</ModifiableDetail>
+				</ModifiableDetailMultiselect>
 				<Detail label="Join Date">{formattedJoinDate}</Detail>
 				<Detail label="Classification">{member.data?.classification ?? "Unknown"}</Detail>
 				<div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

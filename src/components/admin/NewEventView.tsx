@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 interface FormValues {
 	name: string;
 	description: string;
-	organization: string;
+	organization: Choice;
 	location: string;
 	headerImage: string;
 	eventStart: Date;
@@ -43,12 +43,15 @@ const NewEventView: FunctionComponent = () => {
 
 	const onSubmit: SubmitHandler<FormValues> = async (data) => {
 		if (data == null) return;
-		createEvent.mutate(data, {
-			onSuccess: (res) => {
-				router.push(`/admin/events/${res.id}`);
-				window.open(`/events/${res.pageID}`, "_blank");
-			},
-		});
+		createEvent.mutate(
+			{ ...data, organization: data.organization.id },
+			{
+				onSuccess: (res) => {
+					router.push(`/admin/events/${res.id}`);
+					window.open(`/events/${res.pageID}`, "_blank");
+				},
+			}
+		);
 	};
 
 	const [formTimesEnabled, setFormTimesEnabled] = useState(false);
@@ -90,7 +93,6 @@ const NewEventView: FunctionComponent = () => {
 													field={field}
 													fieldState={fieldState}
 													label="Organization"
-													selectType="id"
 													choices={organizations}
 													unselectedText="RowdyHacks"
 												/>
