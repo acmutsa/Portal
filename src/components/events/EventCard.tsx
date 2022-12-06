@@ -2,6 +2,7 @@ import { FunctionComponent, useEffect, useState } from "react";
 
 import {
 	addDays,
+	differenceInCalendarDays,
 	format,
 	formatDistanceStrict,
 	formatRelative,
@@ -28,6 +29,10 @@ const ping = (
 );
 
 const getTimeText = (now: Date, start: Date, end: Date): string => {
+	// Track whether the event is in a different year than right now (i.e. next year)
+	const nowYear = now.getUTCFullYear();
+	const differentYears = nowYear != start.getUTCFullYear() || nowYear != end.getUTCFullYear();
+
 	const isOngoing = start < now && now < end;
 	const isEventSameDay = isSameDay(start, end);
 	const isEventInPast = isPast(start);
@@ -39,9 +44,14 @@ const getTimeText = (now: Date, start: Date, end: Date): string => {
 
 	const front = isEventInPast ? "was " : "";
 	if (isEventSameDay) {
-		return `${front}${format(start, "EEEE, MM/dd 'from' h:mma")} to ${format(end, "h:mma")}`;
+		const preciseYear = differentYears ? "/yyyy" : "";
+		return `${front}${format(start, `EEEE, MM/dd${preciseYear} 'from' h:mma`)} to ${format(
+			end,
+			"h:mma"
+		)}`;
 	}
-	return `${front}${format(start, "E h:mma")} to ${format(end, "EEE h:mma")}`;
+	const preciseDate = differenceInCalendarDays(start, end) >= 6 ? "MM/dd" : "";
+	return `${front}${format(start, "E MM/dd h:mma")} to ${format(end, `EEE ${preciseDate} h:mma`)}`;
 };
 
 const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderProps) => {
@@ -67,6 +77,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 	const eventURL = `/events/${event.pageID}`;
 	const checkinURL = `${eventURL}/check-in`;
 
+	const isoString = isOngoing ? event.eventEnd.toISOString() : event.eventStart.toISOString();
 	return (
 		<div className="[&>*]:shadow-lg rounded-xl col-span-3">
 			<Link href={eventURL}>
@@ -107,7 +118,8 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 						</div>*/}
 					</span>
 					<time
-						dateTime={event.eventStart.toISOString()}
+						dateTime={isoString}
+						title={isoString}
 						className="text-sm ml-0.5 -mt-1 justify-self-end font-inter text-slate-700"
 					>
 						{timeText}
