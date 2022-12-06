@@ -107,14 +107,16 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 								{isOngoing ? ping : null}
 							</a>
 						</Link>
-						<Badge colorClass="bg-sky-100 text-sky-800 mx-2 my-0.5 font-inter">
-							{shortOrganizationName[event.organization] ?? event.organization}
-						</Badge>
-						{isEventPast ? (
-							<Badge colorClass="bg-red-100 text-red-800 mx-2 my-0.5 font-inter">Past</Badge>
-						) : isEventToday ? (
-							<Badge colorClass="bg-sky-100 text-sky-800 mx-2 my-0.5 font-inter">Today</Badge>
-						) : null}
+						<div className="space-x-2 mx-2">
+							<Badge colorClass="bg-sky-100 text-sky-800 my-0.5 font-inter">
+								{shortOrganizationName[event.organization] ?? event.organization}
+							</Badge>
+							{isEventPast ? (
+								<Badge colorClass="bg-red-100 text-red-800 my-0.5 font-inter">Past</Badge>
+							) : isEventToday ? (
+								<Badge colorClass="bg-sky-100 text-sky-800 my-0.5 font-inter">Today</Badge>
+							) : null}
+						</div>
 						{/*<div
 							className="text-[22px] text-red-600 ml-auto my-auto cursor-pointer p-1"
 							onClick={toggleLiked}
