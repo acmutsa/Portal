@@ -76,7 +76,7 @@ const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) 
 			<div className="page-view bg-darken">
 				<div className="w-full w-[90%] mx-auto p-1">
 					<div className="mt-6">
-						<FilterBar onChange={setFilters} />
+						<FilterBar onChange={setFilters} resultCount={results?.length} />
 					</div>
 					<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
 						{loading || isFetching
