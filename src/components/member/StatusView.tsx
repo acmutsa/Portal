@@ -48,7 +48,7 @@ const StatusView: FunctionComponent<StatusProps> = ({ checkins }: StatusProps) =
 					{(progress * 100).toFixed(0)}%
 				</span>
 			</div>
-			<dl className="overflow-scroll overflow-x-auto relative">
+			<dl className="overflow-hidden overflow-y-auto relative">
 				<Detail label="Current Points" useButton={false}>
 					{points.toFixed(1)}
 				</Detail>

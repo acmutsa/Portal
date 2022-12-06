@@ -148,7 +148,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 				iconParentClass="bg-red-100"
 				icon={<AiFillWarning className="h-6 w-6 text-red-600" />}
 			/>
-			<dl className="overflow-scroll overflow-x-auto relative">
+			<dl className="overflow-hidden overflow-y-auto relative">
 				<ModifiableDetail
 					id="name"
 					placeholder="John Doe"
