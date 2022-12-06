@@ -24,9 +24,9 @@ export async function getEvents(filters?: EventFilter) {
 		if (sort == SortOptionEnum.enum.recent) orderObject = { eventEnd: "asc" };
 		if (sort == SortOptionEnum.enum.attendance) orderObject = { checkins: { _count: "desc" } };
 
-		// TODO: Semester filtering logic
 		filters.past = filters.past ?? false;
 		filters.organizations = filters.organizations ?? [];
+		filters.semesters = filters.semesters ?? [];
 
 		const whereObject = {
 			AND: [
@@ -37,6 +37,13 @@ export async function getEvents(filters?: EventFilter) {
 					? {
 							OR: filters.organizations?.map((organizationName) => ({
 								organization: { equals: organizationName },
+							})),
+					  }
+					: null,
+				filters.semesters.length > 0
+					? {
+							OR: filters.semesters.map((semesterName) => ({
+								semester: { equals: semesterName },
 							})),
 					  }
 					: null,
@@ -65,4 +72,17 @@ export async function getEvents(filters?: EventFilter) {
 			eventEnd: "asc",
 		},
 	});
+}
+
+/**
+ * Returns all distinct Semester values
+ */
+export async function getSemesters() {
+	const events = await prisma.event.findMany({
+		select: {
+			semester: true,
+		},
+		distinct: ["semester"],
+	});
+	return events.map((e) => e.semester);
 }

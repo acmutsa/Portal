@@ -29,6 +29,7 @@ export interface Filters {
 interface FilterBarProps {
 	onChange?: Dispatch<Filters>;
 	resultCount?: number;
+	semesters: string[];
 }
 
 const getValue = ([, v]: [string, boolean]): boolean => v;
@@ -37,6 +38,7 @@ const getKey = ([k]: [string, boolean]): string => k;
 const FilterBar: FunctionComponent<FilterBarProps> = ({
 	onChange,
 	resultCount,
+	semesters,
 }: FilterBarProps) => {
 	const [showPastEvents, setShowPastEvents] = useState(false);
 	const [organizationFilter, setOrganizationFilter] = useState<Record<string, boolean>>({});
@@ -85,7 +87,7 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 					/>
 					<Filter
 						onChange={setSemesterFilter}
-						options={semesterOptions}
+						options={semesters.map((s) => ({ id: s, name: s }))}
 						id="semester"
 						name="Semesters"
 					/>

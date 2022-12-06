@@ -5,17 +5,19 @@ import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
 import FilterBar, { Filters } from "@/components/events/FilterBar";
-import { getEvents } from "@/server/controllers/events";
+import { getEvents, getSemesters } from "@/server/controllers/events";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { trpc } from "@/utils/trpc";
 import { removeEmpty } from "@/utils/helpers";
 
 export async function getStaticProps() {
-	const results = await getEvents();
+	const results = getEvents();
+	const semesters = getSemesters(); // Since semester filtering options are only queried here, it's possible for them to not show up in the UI until the page is reloaded.
+	await Promise.all([results, semesters]);
 
 	return {
-		props: { results },
+		props: { results: await results, semesters: await semesters },
 		revalidate: 60,
 	};
 }
@@ -24,7 +26,7 @@ interface EventsProps {
 	results: Event[];
 }
 
-const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) => {
+const Events: NextPage<EventsProps> = ({ results: staticResults, semesters }: EventsProps) => {
 	const [filters, setFilters] = useState<Filters | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const debouncedFilters = useDebounce(filters, 800);
@@ -39,7 +41,7 @@ const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) 
 		setLoading(false);
 	}, [debouncedFilters]);
 
-	const { data: filteredEvents, isFetching } = trpc.useQuery(
+	const { data: results, isFetching } = trpc.useQuery(
 		[
 			"events.get",
 			useMemo(() => {
@@ -55,10 +57,6 @@ const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) 
 			},
 		}
 	);
-
-	const results = useMemo(() => {
-		return filteredEvents;
-	}, [filteredEvents]);
 
 	const ogp = useOpenGraph({
 		description: "Find all the latest events hosted by ACM-UTSA!",
@@ -76,7 +74,7 @@ const Events: NextPage<EventsProps> = ({ results: staticResults }: EventsProps) 
 			<div className="page-view bg-darken">
 				<div className="w-full w-[90%] mx-auto p-1">
 					<div className="mt-6">
-						<FilterBar onChange={setFilters} resultCount={results?.length} />
+						<FilterBar semesters={semesters} onChange={setFilters} resultCount={results?.length} />
 					</div>
 					<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
 						{loading || isFetching
