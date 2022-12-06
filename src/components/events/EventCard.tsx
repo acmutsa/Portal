@@ -2,13 +2,13 @@ import { FunctionComponent, useEffect, useState } from "react";
 
 import {
 	addDays,
-	differenceInCalendarDays,
 	format,
 	formatDistanceStrict,
 	formatRelative,
 	isBefore,
 	isPast,
 	isSameDay,
+	isSameWeek,
 	isToday,
 } from "date-fns";
 import Link from "next/link";
@@ -50,7 +50,7 @@ const getTimeText = (now: Date, start: Date, end: Date): string => {
 			"h:mma"
 		)}`;
 	}
-	const preciseDate = differenceInCalendarDays(start, end) >= 6 ? "MM/dd" : "";
+	const preciseDate = !isSameWeek(start, end) ? "MM/dd" : "";
 	return `${front}${format(start, "E MM/dd h:mma")} to ${format(end, `EEE ${preciseDate} h:mma`)}`;
 };
 
