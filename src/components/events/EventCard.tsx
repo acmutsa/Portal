@@ -21,6 +21,14 @@ interface EventHeaderProps {
 	event: Event;
 }
 
+const shortOrganizationName: Record<string, string> = {
+	ACM: "ACM",
+	ACM_W: "ACM-W",
+	ROWDY_CREATORS: "RC",
+	ICPC: "ICPC",
+	CODING_IN_COLOR: "CIC",
+};
+
 const ping = (
 	<span className="flex relative h-[10px] w-[10px] top-0 left-0 -mr-1">
 		<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
@@ -99,6 +107,9 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 								{isOngoing ? ping : null}
 							</a>
 						</Link>
+						<Badge colorClass="bg-sky-100 text-sky-800 mx-2 my-0.5 font-inter">
+							{shortOrganizationName[event.organization] ?? event.organization}
+						</Badge>
 						{isEventPast ? (
 							<Badge colorClass="bg-red-100 text-red-800 mx-2 my-0.5 font-inter">Past</Badge>
 						) : isEventToday ? (
