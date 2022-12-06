@@ -63,13 +63,13 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 					</div>
 				</Menu>
 				{resultCount != undefined ? (
-					<span className="px-3 font-sm font-inter text-gray-700">
+					<span className="hidden lg:inline px-3 font-sm font-inter text-gray-700">
 						{resultCount} result{pluralize(resultCount)}
 					</span>
 				) : null}
 			</div>
 			<div className="flex">
-				<div className="sm:mr-8">
+				<div className="sm:mr-4 lg:mr-8">
 					<ShortToggle
 						screenReaderLabel="Show Past Events"
 						checked={showPastEvents}
@@ -78,7 +78,7 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 						<span className="text-gray-700">Show Past Events</span>
 					</ShortToggle>
 				</div>
-				<Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-8">
+				<Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-4 lg:space-x-8">
 					<Filter
 						onChange={setOrganizationFilter}
 						options={organizations}
