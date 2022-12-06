@@ -17,16 +17,17 @@ export async function getStaticProps() {
 	await Promise.all([results, semesters]);
 
 	return {
-		props: { results: await results, semesters: await semesters },
+		props: { events: await results, semesters: await semesters },
 		revalidate: 60,
 	};
 }
 
 interface EventsProps {
-	results: Event[];
+	events: Event[];
+	semesters: string[]
 }
 
-const Events: NextPage<EventsProps> = ({ results: staticResults, semesters }: EventsProps) => {
+const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: EventsProps) => {
 	const [filters, setFilters] = useState<Filters | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const debouncedFilters = useDebounce(filters, 800);
