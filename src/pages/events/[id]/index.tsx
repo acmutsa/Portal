@@ -91,7 +91,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 										{event.description!}
 									</ReactMarkdown>
 								) : (
-									<p className="text-gray-500">No description was provided for this event.</p>
+									<p className="mt-3 text-gray-500">No description was provided for this event.</p>
 								)}
 								<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-4 xs:grid-cols-2">
 									<div className="sm:col-span-1">
