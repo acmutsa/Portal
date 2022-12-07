@@ -159,3 +159,57 @@ export function isValuesNull(object: Object) {
 export function getOrganization(organizationIdentifier: string): Choice | null {
 	return organizations.find((org) => org.id == organizationIdentifier) ?? null;
 }
+
+/**
+ * Return true if any pair (left, right) of items in the array returns true given the function.
+ * @param array {any[]} The array of items. Nothing will happen if less than 2 items exist.
+ * @param func {(a: any, b: any) => boolean} The callback function. Takes two inputs, returns a boolean.
+ */
+export function pairwiseMatch(array: any[], func: (a: any, b: any) => boolean) {
+	for (let i = 0; i < array.length - 1; i++) {
+		if (func(array[i], array[i + 1])) return true;
+	}
+	return false;
+}
+
+/**
+ * Get the semester according to a date (defaults to now)
+ * @param time The time. If not specified, it defaults to now.
+ */
+export function getSemester(time: Date | null = null): string {
+	if (time == null) time = new Date();
+	return "Fall 2022";
+}
+
+const seasonMapping: Record<number | string, number | string> = {
+	Spring: 1,
+	Summer: 2,
+	Fall: 3,
+	1: "Spring",
+	2: "Summer",
+	3: "Fall",
+};
+
+export function getSemesterRange(
+	start: [season: 1 | 2 | 3, year: number],
+	endYear: number,
+	includeSummer: boolean = false
+): string[] {
+	const results: string[] = [];
+	let currentYear = start[1];
+
+	// First year
+	range(start[0], 3).forEach((n) => {
+		if (n != 2 || includeSummer) results.push(`${seasonMapping[n]} ${currentYear}`);
+	});
+
+	// Other years, if applicable
+	if (start[1] != endYear)
+			range(start[1] + 1, endYear).forEach((year) => {
+				results.push(`Spring ${year}`);
+				if (includeSummer) results.push(`Summer ${year}`);
+				results.push(`Fall ${year}`);
+			});
+
+	return results;
+}
