@@ -15,7 +15,7 @@ interface FormValues {
 	organization: Choice;
 	location: string;
 	headerImage: string;
-	semester: string;
+	semester: Choice;
 	eventStart: Date;
 	eventEnd: Date;
 	formOpen: Date | null;

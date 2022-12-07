@@ -79,6 +79,10 @@ export const removeEmpty = (object: Record<string, {} | null | undefined>): { [k
 	return Object.fromEntries(filteredEntries);
 };
 
+export const removeEmptyItems = (array: any[]): {}[] => {
+	return array.filter((v): v is {} => v != null);
+};
+
 export const generateGoogleCalendarLink = (
 	start: Date,
 	end: Date,
@@ -205,11 +209,11 @@ export function getSemesterRange(
 
 	// Other years, if applicable
 	if (start[1] != endYear)
-			range(start[1] + 1, endYear).forEach((year) => {
-				results.push(`Spring ${year}`);
-				if (includeSummer) results.push(`Summer ${year}`);
-				results.push(`Fall ${year}`);
-			});
+		range(start[1] + 1, endYear).forEach((year) => {
+			results.push(`Spring ${year}`);
+			if (includeSummer) results.push(`Summer ${year}`);
+			results.push(`Fall ${year}`);
+		});
 
 	return results;
 }

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { prisma } from "@/server/db/client";
 import { OrganizationEnum } from "@/utils/transform";
+import { removeEmptyItems } from "@/utils/helpers";
 
 export const SortOptionEnum = z.enum(["recent", "attendance"]);
 export type SortOption = z.TypeOf<typeof SortOptionEnum>;
@@ -28,30 +29,31 @@ export async function getEvents(filters?: EventFilter) {
 		filters.organizations = filters.organizations ?? [];
 		filters.semesters = filters.semesters ?? [];
 
-		const whereObject = {
-			AND: [
-				filters.past !== true
-					? { eventEnd: { gte: filters.past === false ? new Date() : filters.past } }
-					: null,
-				filters.organizations.length > 0
-					? {
-							OR: filters.organizations?.map((organizationName) => ({
-								organization: { equals: organizationName },
-							})),
-					  }
-					: null,
-				filters.semesters.length > 0
-					? {
-							OR: filters.semesters.map((semesterName) => ({
-								semester: { equals: semesterName },
-							})),
-					  }
-					: null,
-			],
-		};
+		const pastEventFilter =
+			(filters.past ?? false) !== true
+				? { eventEnd: { gte: filters.past === false ? new Date() : filters.past } }
+				: null;
 
-		// Remove any null filters from composition
-		whereObject.AND = whereObject.AND.filter((v) => v != null);
+		const organizationsFilter =
+			filters.organizations.length > 0
+				? {
+						OR: filters.organizations?.map((organizationName) => ({
+							organization: { equals: organizationName },
+						})),
+				  }
+				: null;
+		const semestersFilter =
+			filters.semesters.length > 0
+				? {
+						OR: filters.semesters.map((semesterName) => ({
+							semester: { equals: semesterName },
+						})),
+				  }
+				: null;
+
+		const whereObject = {
+			AND: removeEmptyItems([pastEventFilter, organizationsFilter, semestersFilter]),
+		};
 
 		// Development only:
 		// console.log(inspect(whereObject, { showHidden: false, depth: null, colors: true }));
