@@ -116,6 +116,10 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 										<dt className="text-gray-500">Location</dt>
 										<dd className="mt-1">{event.location}</dd>
 									</div>
+									<div className="sm:col-span-1">
+										<dt className="text-gray-500">Semester</dt>
+										<dd className="mt-1">{event.semester}</dd>
+									</div>
 								</dl>
 							</div>
 							<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
