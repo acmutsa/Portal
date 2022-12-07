@@ -1,23 +1,16 @@
-import { Dispatch, FunctionComponent, useEffect, useState } from "react";
+import { Dispatch, FunctionComponent, useEffect, useRef, useState } from "react";
 import organizations from "@/config/organizations.json";
 import ShortToggle from "@/components/common/ShortToggle";
 import Filter from "@/components/events/Filter";
 import { Menu, Popover } from "@headlessui/react";
 import Sort from "@/components/events/Sort";
 import { SortOption } from "@/server/controllers/events";
-import { Choice } from "@/components/forms/CustomSelect";
 import { pluralize } from "@/utils/helpers";
 
 const sortOptions: Record<SortOption, string> = {
 	recent: "Most Recent",
 	attendance: "Most Popular",
 };
-
-const semesterOptions: Choice[] = [
-	{ id: "spring-2022", name: "Spring 2022" },
-	{ id: "fall-2022", name: "Fall 2022" },
-	{ id: "spring-2023", name: "Spring 2023" },
-];
 
 export interface Filters {
 	sort: SortOption | null;
@@ -44,14 +37,18 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 	const [organizationFilter, setOrganizationFilter] = useState<Record<string, boolean>>({});
 	const [semesterFilter, setSemesterFilter] = useState<Record<string, boolean>>({});
 	const [sort, setSort] = useState<SortOption>("recent");
+	const didMount = useRef(false);
+
 	useEffect(() => {
-		if (onChange != null)
-			onChange({
-				sort,
-				past: showPastEvents,
-				organizations: Object.entries(organizationFilter).filter(getValue).map(getKey),
-				semesters: Object.entries(semesterFilter).filter(getValue).map(getKey),
-			});
+		if (didMount.current) {
+			if (onChange != null)
+				onChange({
+					sort,
+					past: showPastEvents,
+					organizations: Object.entries(organizationFilter).filter(getValue).map(getKey),
+					semesters: Object.entries(semesterFilter).filter(getValue).map(getKey),
+				});
+		} else didMount.current = true;
 	}, [onChange, sort, showPastEvents, organizationFilter, semesterFilter]);
 
 	return (
@@ -73,7 +70,9 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 					<ShortToggle
 						screenReaderLabel="Show Past Events"
 						checked={showPastEvents}
-						onChange={setShowPastEvents}
+						onChange={(checked) => {
+							setShowPastEvents(checked);
+						}}
 					>
 						<span className="text-gray-700">Show Past Events</span>
 					</ShortToggle>

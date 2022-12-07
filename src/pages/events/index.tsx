@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "usehooks-ts";
 import { trpc } from "@/utils/trpc";
 import { removeEmpty } from "@/utils/helpers";
+import { differenceInMilliseconds } from "date-fns";
 
 export async function getStaticProps() {
 	const results = getEvents();
@@ -24,20 +25,20 @@ export async function getStaticProps() {
 
 interface EventsProps {
 	events: Event[];
-	semesters: string[]
+	semesters: string[];
 }
 
 const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: EventsProps) => {
 	const [filters, setFilters] = useState<Filters | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const debouncedFilters = useDebounce(filters, 800);
+	const [mountTime] = useState(new Date()); // Store the time so we can enable the tRPC query later.
 
-	// TODO: Tune so this doesn't fire a query until a control has changed.
-	// TODO: Tune so this doesn't fire randomly.
-
+	// TODO: Simplify logic fighting against the tRPC query from firing on first load (use the static props as long as possible).
 	useEffect(() => {
-		setLoading(true);
+		if (differenceInMilliseconds(new Date(), mountTime) > 1000) setLoading(true);
 	}, [filters]);
+
 	useEffect(() => {
 		setLoading(false);
 	}, [debouncedFilters]);
@@ -52,7 +53,9 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 		{
 			refetchOnWindowFocus: false,
 			initialData: staticResults,
-			enabled: debouncedFilters != null,
+			enabled:
+				// Prevent queries from firing for 2 seconds
+				differenceInMilliseconds(new Date(), mountTime) > 2000 ? debouncedFilters != null : false,
 			onSettled: () => {
 				setLoading(false);
 			},
@@ -79,8 +82,11 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 					</div>
 					<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
 						{loading || isFetching
-							? results!.map(() => (
-									<div className="shadow-lg rounded-xl bg-white w-full h-60 block col-span-3">
+							? results!.map((_, index) => (
+									<div
+										key={index}
+										className="shadow-lg rounded-xl bg-white w-full h-60 block col-span-3"
+									>
 										<div className="rounded-t-xl bg-zinc-300 animate-pulse w-full h-36"></div>
 									</div>
 							  ))
