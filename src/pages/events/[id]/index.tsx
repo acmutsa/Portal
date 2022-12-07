@@ -5,17 +5,17 @@ import Disclosure from "@/components/util/Disclosure";
 import { prisma } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
-import { absUrl, generateGoogleCalendarLink } from "@/utils/helpers";
+import { absUrl, generateGoogleCalendarLink, getOrganization } from "@/utils/helpers";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { SiGooglecalendar, SiTwitch } from "react-icons/si";
-import { format, lightFormat } from "date-fns";
-import BigEventHeader from "@/components/events/BigEventHeader";
+import { format, formatRelative, isPast, lightFormat } from "date-fns";
 import QRCode from "react-qr-code";
 import NoSSR from "@/components/common/NoSSR";
 import { env } from "@/env/server.mjs";
 import { Event } from "@prisma/client";
+import { BsBookmarkPlusFill } from "react-icons/bs";
 
 interface eventPageParams {
 	params: { id: string };
@@ -44,10 +44,10 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 			["Where", event.location!],
 		],
 	});
-
 	const formatString = "h:mmaaaaaa";
 	const startString = lightFormat(event.eventStart, formatString);
 	const endString = lightFormat(event.eventEnd, formatString);
+
 	const calendarLink = generateGoogleCalendarLink(
 		event.eventStart,
 		event.eventEnd,
@@ -58,6 +58,12 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 		event.location
 	);
 
+	const now = new Date();
+	const relativeText = formatRelative(
+		now,
+		!isPast(event.eventStart) ? event.eventStart : event.eventEnd
+	);
+
 	return (
 		<>
 			<Head>
@@ -65,60 +71,118 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 				<OpenGraph properties={ogp} />
 			</Head>
 			<div className="page-view bg-darken !pt-[100px]">
-				<BigEventHeader
-					title={event.name || "Error"}
-					imageURL={event.headerImage || "Error"}
-					hostOrg={event.organization || "ACM"}
-					startDate={event.eventStart}
-					endDate={event.eventEnd}
-					location={event.location || "Error"}
-				/>
-				<div className="mt-5 bg-white mx-auto max-w-[1200px] min-h-[25rem] rounded-xl p-3">
-					<div className="grid grid-cols-4 w-full min-h-[25rem]">
-						<div className="col-span-3 pr-4 py-2">
-							<div className="mx-3 prose prose-md max-w-none font-raleway font-semibold">
-								<h2 className="border-b-2 mb-1">Description</h2>
-								{event.description !== null && event.description.length > 0 ? (
-									<ReactMarkdown className="ml-3 [&>*]:my-0" remarkPlugins={[remarkGfm]}>
+				<div className="flex justify-center w-full mb-3">
+					<div className="bg-white z-30 max-w-[1200px] mx-3 p-3 md:p-2 lg:p-4 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 rounded-lg">
+						<div className="flex items-center justify-center overflow-hidden ml-3">
+							<div
+								className="w-full drop-shadow-xl md:drop-shadow-lg max-h-[25rem] aspect-[9/16] bg-top md:bg-center lg:bg-top lg:aspect-video rounded-lg bg-cover hover:bg-contain hover:bg-center bg-no-repeat"
+								style={{ backgroundImage: `url(${event.headerImage})` }}
+							/>
+						</div>
+						<div className="flex flex-col font-inter justify-start p-3 md:p-4">
+							<div className="text-gray-700">
+								<h1 className="text-3xl text-gray-900 font-extrabold font-raleway">{event.name}</h1>
+								<p className="text-sm text-gray-500 ml-2">
+									Hosted by {getOrganization(event.organization)?.name ?? "Unknown"} &#8226;{" "}
+									{relativeText}
+								</p>
+								{event.description != null && event.description.length > 0 ? (
+									<ReactMarkdown className="mt-3 [&>*]:my-0" remarkPlugins={[remarkGfm]}>
 										{event.description!}
 									</ReactMarkdown>
 								) : (
-									<p className="ml-3 text-zinc-500 font-medium">
-										No description was provided for this event.
-									</p>
+									<p className="text-gray-500">No description was provided for this event.</p>
 								)}
-								<h2 className="border-b-2 mb-1 mt-4">About ACM</h2>
-								<p className="ml-3">
-									ACM is the premier organization on campus for students interested in technology.
-									ACM is dedicated to providing members with opportunities for professional,
-									academic, and social growth outside the classroom in order to prepare students for
-									their career in tech or fuel their interest in the tech field. Anyone who has an
-									interest in technology can join ACM.
-								</p>
+								<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-4 xs:grid-cols-2">
+									<div className="sm:col-span-1">
+										<dt className="text-gray-500">Start Time</dt>
+										<dd className="mt-1">
+											{event.eventStart.toLocaleString("en", {
+												dateStyle: "medium",
+												timeStyle: "short",
+											})}
+										</dd>
+									</div>
+									<div className="sm:col-span-1">
+										<dt className="text-gray-500">End Time</dt>
+										<dd className="mt-1">
+											{event.eventEnd.toLocaleString("en", {
+												dateStyle: "medium",
+												timeStyle: "short",
+											})}
+										</dd>
+									</div>
+									<div className="sm:col-span-1">
+										<dt className="text-gray-500">Location</dt>
+										<dd className="mt-1">{event.location}</dd>
+									</div>
+								</dl>
+							</div>
+							<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
+								<Link href={`/events/${id}/check-in`}>
+									<button
+										type="button"
+										className="w-full bg-primary-500 hover:bg-primary-800 border border-transparent rounded-md py-3 px-8 flex items-center justify-center  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+									>
+										<BsBookmarkPlusFill className="mr-2 w-5 h-5" />
+										Check-in
+									</button>
+								</Link>
+								<Link href={calendarLink} target="_blank">
+									<button
+										type="button"
+										className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+									>
+										<SiGooglecalendar className="mr-2 w-5 h-5" />
+										Add to Google Calendar
+									</button>
+								</Link>
+								<Link href={"https://twitch.tv/acmutsa"} target="_blank">
+									<button
+										type="button"
+										className="w-full bg-twitch border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+									>
+										<SiTwitch className="mr-2 w-5 h-5" />
+										Watch on Twitch
+									</button>
+								</Link>
 							</div>
 						</div>
-						<div className="border-l-2 space-y-2">
-							<h2 className="text-center font-bold">Actions</h2>
-							<Link href={`/events/${id}/check-in`}>
-								<button className="h-12 w-full bg-primary text-white rounded-lg font-semibold mx-2 !mt-0.5">
-									Check-in
-								</button>
-							</Link>
-							<Link href={calendarLink} target="_blank">
-								<button className="h-12 w-full bg-secondary text-white rounded-lg font-semibold mx-2 flex items-center justify-center">
-									<SiGooglecalendar className="mr-2 w-5 h-5" />
-									Add To Google Calendar
-								</button>
-							</Link>
-							<Link href={"https://twitch.tv/acmutsa"} target="_blank">
-								<button className="h-12 w-full bg-twitch text-white rounded-lg font-semibold mx-2 flex items-center justify-center">
-									<SiTwitch className="mr-2 w-5 h-5" />
-									Watch on Twitch
-								</button>
-							</Link>
-							<NoSSR>
-								<QRCode className="mx-auto scale-75" value={qrcodeData} />
-							</NoSSR>
+						{/*<div className="md:block" />*/}
+						<div className="px-5 md:pl-0 pb-5 prose prose-md max-w-none font-inter">
+							<h2 className="border-b-2 mb-1 mt-2 md:mt-4">About ACM</h2>
+							<p className="ml-3 tracking-tight md:tracking-normal">
+								ACM is the premier organization on campus for students interested in technology. ACM
+								is dedicated to providing members with opportunities for professional, academic, and
+								social growth outside the classroom in order to prepare students for their career in
+								tech or fuel their interest in the tech field. Anyone who has an interest in
+								technology can join ACM.
+							</p>
+						</div>
+						<div className="px-5 md:pl-0 pb-5 prose prose-md max-w-none font-inter">
+							<h2 className="border-b-2 mb-1 md:mt-4">Checking In</h2>
+							<p className="ml-3 mb-1 tracking-tight md:tracking-normal">
+								The membership portal is ACM's new method of tracking member check-ins and awarding
+								points. By simply visiting this page during the event and clicking the 'Check-in'
+								button, you can easily garner points towards your membership for the semester.
+							</p>
+							<p className="ml-3 my-0 tracking-tight md:tracking-normal">
+								Share this event's check-in page quickly using this QR Code:
+							</p>
+							<div className="w-48 h-48 mx-auto py-4 mb-3">
+								<NoSSR>
+									<div
+										style={{ height: "auto", margin: "0 auto", maxWidth: "100%", width: "100%" }}
+									>
+										<QRCode
+											size={256}
+											style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+											value={qrcodeData}
+											viewBox="0 0 256 256"
+										/>
+									</div>
+								</NoSSR>
+							</div>
 						</div>
 					</div>
 				</div>
