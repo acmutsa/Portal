@@ -14,6 +14,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import { useRouter } from "next/router";
 import { classNames } from "@/utils/helpers";
+import { Toaster } from "react-hot-toast";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
@@ -85,6 +86,15 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 						"bg-fixed bg-center bg-cover h-[calc(100vh)] overflow-y-auto"
 					)}
 				>
+					<Toaster
+						toastOptions={{
+							duration: 3000,
+							position: "top-right",
+						}}
+						containerStyle={{
+							top: "calc(72px + 1rem)",
+						}}
+					/>
 					<Component {...pageProps} />
 				</div>
 			</GlobalContext.Provider>

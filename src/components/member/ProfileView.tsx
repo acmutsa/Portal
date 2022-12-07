@@ -6,7 +6,6 @@ import { lightFormat } from "date-fns";
 import ModifiableDetail, { ModifiableDetailFormValues } from "@/components/common/ModifiableDetail";
 import { z } from "zod";
 import { trpc } from "@/utils/trpc";
-import { Toast } from "primereact/toast";
 import { setProperty } from "dot-prop";
 import { MemberWithData } from "@/server/controllers/member";
 import { getCookie, setCookie } from "cookies-next";
@@ -17,9 +16,8 @@ import ModifiableDetailMultiselect, {
 	ModifiableDetailMultiselectFormValues,
 } from "@/components/common/ModifiableDetailMultiselect";
 import { Choice } from "@/components/forms/CustomSelect";
-import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
-import "primereact/resources/primereact.min.css"; //core css
-import "primeicons/primeicons.css";
+import { toast } from "react-hot-toast";
+import Toast from "@/components/common/Toast";
 
 type ModifiableDetailForms = ModifiableDetailFormValues | ModifiableDetailMultiselectFormValues;
 
@@ -63,7 +61,18 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 		onSuccess: (data) => {
 			// Populate ProfileView with the latest data.
 			setMember((prevState) => ({ ...prevState, ...data }));
-			showSuccess();
+			toast.custom(
+				({ id, visible }) => (
+					<Toast
+						title="Profile Updated"
+						description="Your profile has been updated successfully."
+						type="success"
+						toastId={id}
+						visible={visible}
+					/>
+				),
+				{ id: "profile-update-success" }
+			);
 
 			// Change the member email cookie if the email property has changed.
 			// This shouldn't help anyone survive lockouts by an officer changing their email, so
@@ -76,30 +85,23 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 			showError(error.message);
 		},
 	});
-	// TODO: Switch from Primereact toast to a headless, Tailwind-based Toast system
-	const toast = useRef<Toast>(null);
-
-	const showSuccess = useMemo(() => {
-		return (message?: string) => {
-			toast?.current?.show({
-				severity: "success",
-				summary: "Profile Updated",
-				detail: message ?? "The profile was updated successfully.",
-				life: 3000,
-			});
-		};
-	}, [toast]);
 
 	const showError = useMemo(() => {
 		return (message?: string) => {
-			toast?.current?.show({
-				severity: "error",
-				summary: "Failed to Update Profile",
-				detail: message ?? "No message provided.",
-				life: 4000,
-			});
+			toast.custom(
+				({ id, visible }) => (
+					<Toast
+						title="An error has occurred."
+						description={message ?? "No message provided."}
+						type="error"
+						toastId={id}
+						visible={visible}
+					/>
+				),
+				{ id: "profile-update-error" }
+			);
 		};
-	}, [toast]);
+	}, []);
 
 	const updateHandler = useMemo(() => {
 		/**
@@ -132,7 +134,6 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 
 	return (
 		<>
-			<Toast ref={toast} />
 			<WarningDialog
 				title="Change email address"
 				description="Since your email address is part of your login, changing it may lock you out of your account.
