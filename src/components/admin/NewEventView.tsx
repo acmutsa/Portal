@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "@/utils/trpc";
 import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
 import { Switch } from "@headlessui/react";
-import { classNames } from "@/utils/helpers";
+import { classNames, getSemester } from "@/utils/helpers";
 import AdvancedInput from "@/components/forms/AdvancedInput";
 import { useRouter } from "next/router";
 
@@ -15,11 +15,18 @@ interface FormValues {
 	organization: Choice;
 	location: string;
 	headerImage: string;
+	semester: string;
 	eventStart: Date;
 	eventEnd: Date;
 	formOpen: Date | null;
 	formClose: Date | null;
 }
+
+const currentSemester = getSemester();
+const semesters: Choice[] = ["Fall 2022", "Spring 2023", "Fall 2023", "Spring 2024"].map((s) => ({
+	id: s,
+	name: s,
+}));
 
 const NewEventView: FunctionComponent = () => {
 	const router = useRouter();
@@ -44,7 +51,7 @@ const NewEventView: FunctionComponent = () => {
 	const onSubmit: SubmitHandler<FormValues> = async (data) => {
 		if (data == null) return;
 		createEvent.mutate(
-			{ ...data, organization: data.organization.id },
+			{ ...data, organization: data.organization.id, semester: data.semester.id },
 			{
 				onSuccess: (res) => {
 					router.push(`/admin/events/${res.id}`);
@@ -70,7 +77,7 @@ const NewEventView: FunctionComponent = () => {
 									</p>
 								</div>
 								<div className="grid grid-cols-12 gap-6">
-									<div className="col-span-12 sm:col-span-8">
+									<div className="col-span-12 sm:col-span-8 lg:col-span-6">
 										<AdvancedInput
 											label="Name"
 											placeholder="Group Mock Interviews"
@@ -83,7 +90,23 @@ const NewEventView: FunctionComponent = () => {
 											errors={errors}
 										/>
 									</div>
-									<div className="col-span-12 sm:col-span-6 md:col-span-4">
+									<div className="col-span-6 sm:col-span-4 lg:col-span-3">
+										<Controller
+											name={"semester"}
+											rules={{ required: true }}
+											control={control}
+											render={({ field, fieldState }) => (
+												<CustomSelect<FormValues>
+													field={field}
+													fieldState={fieldState}
+													label="Semester"
+													choices={semesters}
+													unselectedText={currentSemester}
+												/>
+											)}
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-4 lg:col-span-3">
 										<Controller
 											name={"organization"}
 											rules={{ required: true }}

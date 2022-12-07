@@ -46,6 +46,7 @@ export const adminRouter = createRouter()
 			description: z.string(),
 			headerImage: z.string(),
 			organization: z.string(),
+			semester: z.string().regex(/(?:Fall|Spring|Summer) 20\d{2}/),
 			location: z.string(),
 			eventStart: z.date(),
 			eventEnd: z.date(),

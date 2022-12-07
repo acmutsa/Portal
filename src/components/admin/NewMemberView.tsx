@@ -181,7 +181,6 @@ const NewMemberView: FunctionComponent = () => {
 													field={field}
 													fieldState={fieldState}
 													label="Major"
-													selectType="name"
 													choices={majors}
 													unselectedText="Computer Science"
 												/>
