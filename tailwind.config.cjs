@@ -1,8 +1,15 @@
 /** @type {import("tailwindcss").Config} */
+
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
 	darkMode: "class",
 	content: ["./src/**/*.{js,ts,jsx,tsx}"],
 	theme: {
+		screens: {
+			"xs": "450px",
+			...defaultTheme.screens,
+		},
 		extend: {
 			boxShadow: {
 				"inner-md": "inset 1px 4px 6px 0 rgb(0 0 0 / 0.1)",
@@ -13,9 +20,7 @@ module.exports = {
 				"inner-xl": "inset 4px 9px 9px 0 rgb(0 0 0 / 0.3)",
 				"inner-2xl": "inset 4px 11px 12px 0 rgb(0 0 0 / 0.3)",
 			},
-			screens: {
-				"xs": "450px",
-			},
+
 			colors: {
 				twitch: "#9146FF",
 				accent: {
@@ -31,17 +36,17 @@ module.exports = {
 					900: "#301207",
 				},
 				primary: {
-						50: "#C4D4E6",
-						100: "#84A0C1",
-						200: "#5C7D9E",
-						300: "#34526F",
-						400: "#213659",
-						500: "#162448",
-						600: "#0F1E40",
-						700: "#0A1939",
-						800: "#051330",
-						900: "#040D29",
-						DEFAULT: "#0C2340",
+					50: "#C4D4E6",
+					100: "#84A0C1",
+					200: "#5C7D9E",
+					300: "#34526F",
+					400: "#213659",
+					500: "#162448",
+					600: "#0F1E40",
+					700: "#0A1939",
+					800: "#051330",
+					900: "#040D29",
+					DEFAULT: "#0C2340",
 				},
 				secondary: {
 					DEFAULT: "#179bd5",
