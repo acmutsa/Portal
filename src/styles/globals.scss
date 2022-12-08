@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap");
+
+@import "animations";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body,
+html {
+  background-color: #0c2340;
+  height: 100vh;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  /* For Webkit-based browsers (Chrome, Safari and Opera) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.page-view {
+  height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+  padding-top: 72px;
+
+  &.bg-darken {
+    padding-bottom: 60px;
+  }
+}
+
+.grayscale {
+  -webkit-transition: -webkit-filter 100ms linear;
+}
+
+table {
+  @apply w-full;
+  font-family: "Inter", arial, sans-serif;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  @apply text-left p-2 relative;
+  border: 1px solid #dddddd;
+}
+
+.resizer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+
+  &.isResizing {
+    @apply bg-accent opacity-90;
+  }
+}
+
+@media (hover: hover) {
+  .resizer {
+    opacity: 0;
+  }
+
+  *:hover > .resizer {
+    opacity: 1;
+  }
+}
+
+.card-buttongroup > * {
+  @apply p-1 pb-2 hover:text-sky-700;
+}
+
+.disclosure-symbol {
+  font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
+}
+
+input.login {
+  @apply disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
+  focus:border-sky-500 focus:ring-sky-500  focus:ring-1
+  invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500
+  focus:invalid:ring-pink-500 disabled:shadow-none;
+}
+
+input[type="date"]::-moz-placeholder {
+  @apply text-gray-500;
+}

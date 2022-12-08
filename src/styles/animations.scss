@@ -1,0 +1,73 @@
+// Navbar Items underline animation feature
+.under-hover {
+  display: inline-block;
+  position: relative;
+
+  // The underline itself
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    @apply bg-accent;
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+  }
+
+  // Animate the underline when hovered over, or when '.force' class is applied
+  &:hover:after,
+  &.force:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+}
+
+// Show after 2.5 seconds
+.late-fade-in {
+  animation: fadeIn 1s forwards;
+  animation-delay: 2.5s;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-enter {
+  animation: enter .2s ease-out
+}
+
+@keyframes enter {
+  0% {
+    transform: scale(.9);
+    opacity: 0
+  }
+  to {
+    transform: scale(1);
+    opacity: 1
+  }
+}
+
+.animate-leave {
+  animation: leave .15s ease-in forwards
+}
+
+@keyframes leave {
+  0% {
+    transform: scale(1);
+    opacity: 1
+  }
+  to {
+    transform: scale(.9);
+    opacity: 0
+  }
+}
+
