@@ -78,23 +78,23 @@ const Navbar: FunctionComponent = () => {
 
 	return (
 		<div className="h-[4.5rem] p-1 w-full bg-primary-600 font-inter drop-shadow-lg z-50 text-white text-xl fixed">
-			<div className="grid grid-cols-2 h-full w-full max-w-[100vw] px-3 sm:px-6 md:px-16 lg:pr-32 mx-auto">
-				<div className="flex items-center">
-					<Link href="/">
-						<div className="h-full mx-1 sm:mx-2 flex items-center cursor-pointer">
-							<Image src="/img/logo.png" width={40} height={40} />
-							<h1 className="ml-1 font-bold">Portal</h1>
-						</div>
-					</Link>
-				</div>
-				<div className="flex items-center justify-end font-inter text-base [&>*]:mx-1.5 [&>*]:xs:mx-2 [&>*]:md:mx-4">
-					<NavbarItem router={router} route={"/"}>
-						Home
-					</NavbarItem>
-					<NavbarItem router={router} route={"/events"}>
-						Events
-					</NavbarItem>
-					{dynamicNavbarElements}
+			<div className="flex justify-between h-full w-full max-w-[100vw] px-0.5 xs:px-1 sm:px-6 md:px-16 lg:pr-32 mx-auto">
+				<Link href="/">
+					<div className="h-full mx-1 sm:mx-2 flex items-center cursor-pointer">
+						<Image src="/img/logo.png" className="aspect-square" width={40} height={40} />
+						<h1 className="ml-1 font-bold">Portal</h1>
+					</div>
+				</Link>
+				<div className="grow flex items-center justify-end font-inter text-base">
+					<div className="flex gap-1 gap-2 sm:gap-3">
+						<NavbarItem router={router} route={"/"}>
+							Home
+						</NavbarItem>
+						<NavbarItem router={router} route={"/events"}>
+							Events
+						</NavbarItem>
+						{dynamicNavbarElements}
+					</div>
 				</div>
 			</div>
 		</div>
