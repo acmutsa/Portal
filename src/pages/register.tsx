@@ -21,7 +21,7 @@ const Join: NextPage = () => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view pv-darken h-full rounded-none">
+			<div className="page-view bg-darken h-full rounded-none">
 				<div className="w-full h-full rounded-none">
 					<Widget
 						className="w-full h-full"

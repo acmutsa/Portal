@@ -22,6 +22,7 @@ module.exports = {
 			},
 
 			colors: {
+				darken: "#00000066",
 				twitch: "#9146FF",
 				accent: {
 					DEFAULT: "#f15a22",

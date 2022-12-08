@@ -70,16 +70,16 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-darken !pt-[100px]">
-				<div className="flex justify-center w-full mb-3">
-					<div className="bg-white z-30 max-w-[1200px] mx-3 p-3 md:p-2 lg:p-4 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 rounded-lg">
-						<div className="flex items-center justify-center overflow-hidden ml-3">
+			<div className="page-view bg-white sm:bg-darken sm:!pt-[100px]">
+				<div className="flex justify-center w-full">
+					<div className="bg-white z-30 max-w-[1200px] sm:mx-3 md:mx-6 p-5 md:p-2 lg:p-3 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 sm:rounded-lg">
+						<div className="flex items-center justify-center overflow-hidden md:ml-3">
 							<div
 								className="w-full drop-shadow-xl md:drop-shadow-lg max-h-[25rem] aspect-[9/16] bg-top md:bg-center lg:bg-top lg:aspect-video rounded-lg bg-cover hover:bg-contain hover:bg-center bg-no-repeat"
 								style={{ backgroundImage: `url(${event.headerImage})` }}
 							/>
 						</div>
-						<div className="flex flex-col font-inter justify-start p-3 md:p-4">
+						<div className="flex flex-col font-inter justify-start p-3">
 							<div className="text-gray-700">
 								<h1 className="text-3xl text-gray-900 font-extrabold font-raleway">{event.name}</h1>
 								<p className="text-sm text-gray-500 ml-2">
@@ -93,10 +93,10 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 								) : (
 									<p className="mt-3 text-gray-500">No description was provided for this event.</p>
 								)}
-								<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-4 xs:grid-cols-2">
+								<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-4 md:grid-cols-2">
 									<div className="sm:col-span-1">
-										<dt className="text-gray-500">Start Time</dt>
-										<dd className="mt-1">
+										<dt className="text-sm text-gray-500">Start Time</dt>
+										<dd className="mt-0.5">
 											{event.eventStart.toLocaleString("en", {
 												dateStyle: "medium",
 												timeStyle: "short",
@@ -104,8 +104,8 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 										</dd>
 									</div>
 									<div className="sm:col-span-1">
-										<dt className="text-gray-500">End Time</dt>
-										<dd className="mt-1">
+										<dt className="text-sm text-gray-500">End Time</dt>
+										<dd className="mt-0.5">
 											{event.eventEnd.toLocaleString("en", {
 												dateStyle: "medium",
 												timeStyle: "short",
@@ -113,12 +113,12 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 										</dd>
 									</div>
 									<div className="sm:col-span-1">
-										<dt className="text-gray-500">Location</dt>
-										<dd className="mt-1">{event.location}</dd>
+										<dt className="text-sm text-gray-500">Location</dt>
+										<dd className="mt-0.5">{event.location}</dd>
 									</div>
 									<div className="sm:col-span-1">
-										<dt className="text-gray-500">Semester</dt>
-										<dd className="mt-1">{event.semester}</dd>
+										<dt className="text-sm text-gray-500">Semester</dt>
+										<dd className="mt-0.5">{event.semester}</dd>
 									</div>
 								</dl>
 							</div>
@@ -173,7 +173,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 							<p className="ml-3 my-0 tracking-tight md:tracking-normal">
 								Share this event's check-in page quickly using this QR Code:
 							</p>
-							<div className="w-48 h-48 mx-auto py-4 mb-3">
+							<div className="w-48 h-48 mx-auto my-3 mb-3">
 								<NoSSR>
 									<div
 										style={{ height: "auto", margin: "0 auto", maxWidth: "100%", width: "100%" }}
@@ -190,7 +190,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 						</div>
 					</div>
 				</div>
-				<Disclosure />
+				<Disclosure className="!pt-0 text-gray-700" />
 			</div>
 		</>
 	);
