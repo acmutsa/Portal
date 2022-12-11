@@ -5,8 +5,11 @@ import { cookies } from "@/utils/constants";
 
 const Login: NextPage = () => {
 	const onSubmit = (username: string, password: string) => {
-		setCookie(cookies.admin_username, username);
-		setCookie(cookies.admin_password, password);
+		const expDate = new Date();
+		expDate.setMonth(expDate.getMonth() + 3);
+
+		setCookie(cookies.admin_username, username, { expires: expDate });
+		setCookie(cookies.admin_password, password, { expires: expDate });
 
 		window.location.reload();
 	};
