@@ -17,7 +17,7 @@ const Disclosure: FunctionComponent<DisclosureProps> = ({ className }: Disclosur
 			<a href="https://forms.gle/eqj1gMRRhZKitAn47" target={"_blank"} className="underline">
 				Report a Bug
 			</a>
-			<br />© Association of Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
+			<br />© The Association for Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
 			Reserved.
 		</p>
 	);
