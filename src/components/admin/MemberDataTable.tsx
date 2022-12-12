@@ -2,15 +2,19 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { trpc } from "@/utils/trpc";
-import { toPrettyMemberData, PrettyMemberData } from "@/utils/transform";
+import { IdentityType, PrettyMemberData, toPrettyMemberData } from "@/utils/transform";
 import type { Member, MemberData } from "@prisma/client";
 import { Prisma } from "@prisma/client";
-import { Fragment } from "react";
+import identities from "@/utils/identities.json";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
+import Badge from "@/components/common/Badge";
+import { Choice } from "@/components/forms/CustomSelect";
+import { classNames } from "@/utils/helpers";
+import { IdentityColors } from "@/components/util/EnumerationData";
 
 FilterService.register("MATCH_TAG", (a, b) => {
 	let enumName = "";
@@ -155,59 +159,25 @@ const ethnicityBodyTemplate = (rowData: any) => {
 	);
 };
 
-const identityBodyTemplate = (rowData: any) => {
-	const ref = useRef<any>();
-
-	useEffect(() => {
-		const handleScroll = (e: any) => {
-			if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
-			else e.currentTarget.scrollLeft -= 10;
-		};
-
-		const ele = ref.current;
-		if (ele) {
-			ele.addEventListener("wheel", handleScroll);
-		} else {
-			// console.log("ele is null");
-		}
-	}, []);
-
-	const idenTags: JSX.Element[] = [];
-	if (rowData.prettyMemberData.identity?.has("MALE"))
-		idenTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-orange-700">Male</span>
-		);
-	if (rowData.prettyMemberData.identity?.has("FEMALE")) {
-		idenTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-900">Female</span>
-		);
-		if (rowData.prettyMemberData.identity?.has("NON_BINARY"))
-			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-500">Non-binary</span>
-			);
-		if (rowData.prettyMemberData.identity?.has("TRANSGENDER"))
-			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-violet-500">Transgender</span>
-			);
-		if (rowData.prettyMemberData.identity?.has("INTERSEX"))
-			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-fuchsia-700">Intersex</span>
-			);
-		if (rowData.prettyMemberData.identity?.has("DOES_NOT_IDENTIFY"))
-			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-500">
-					Does Not Identify
-				</span>
-			);
-		if (rowData.prettyMemberData.identity?.has("OTHER"))
-			idenTags.push(
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">Other</span>
-			);
-	}
-
+const identityBodyTemplate = ({ prettyMemberData: { identity } }: MemberTableItem) => {
+	if (identity == null || identity.size == 0) return null;
 	return (
-		<div ref={ref} className="flex items-center !max-w-[150px] overflow-x-hidden scrollbar-hide">
-			{idenTags}
+		<div
+			onWheel={(e: React.WheelEvent<HTMLDivElement>) => {
+				if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
+				else e.currentTarget.scrollLeft -= 10;
+			}}
+			className="flex items-center !max-w-[150px] overflow-x-hidden scrollbar-hide"
+		>
+			{identities
+				.filter((i): i is Choice<IdentityType> => identity.has(i.id))
+				.map((i: Choice<IdentityType>) => {
+					return (
+						<Badge colorClass={classNames("text-white m-0.5", IdentityColors[i.id])}>
+							{i.name}
+						</Badge>
+					);
+				})}
 		</div>
 	);
 };
@@ -354,8 +324,7 @@ const orgItemTemplate = (option: string) => {
 
 const DataTableDemo = () => {
 	const [selectedCustomers, setSelectedCustomers] = useState(null);
-	const [memberTableItems, setMemberTableItem] = useState<MemberTableItem[]>([]);
-	const [filters, setFilters] = useState({
+	const [filters] = useState({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 		"member.name": {
 			operator: FilterOperator.AND,
@@ -391,24 +360,23 @@ const DataTableDemo = () => {
 		},
 	});
 
-	const memberTableItemsStaging: MemberTableItem[] = [];
-
-	const { isSuccess, data: members } = trpc.useQuery(["member.getAll"], {
+	const { data: members } = trpc.useQuery(["member.getAll"], {
 		refetchOnWindowFocus: false,
 	});
 
 	// TODO: make this less gross
 
-	useEffect(() => {
-		if (members) {
+	const memberTableItems = useMemo<MemberTableItem[]>(() => {
+		const items: MemberTableItem[] = [];
+		if (members)
 			for (let member of members as MemberWithData[]) {
-				memberTableItemsStaging.push({
+				items.push({
 					member: member,
 					prettyMemberData: toPrettyMemberData(member, member.data || ({} as MemberData)),
 				});
 			}
-			setMemberTableItem(memberTableItemsStaging);
-		}
+
+		return items;
 	}, [members]);
 
 	return (

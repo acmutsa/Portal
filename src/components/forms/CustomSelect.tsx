@@ -6,9 +6,9 @@ import { ControllerFieldState } from "react-hook-form";
 import { ControllerRenderProps } from "react-hook-form/dist/types/controller";
 import { classNames } from "@/utils/helpers";
 
-export interface Choice {
-	id: string;
-	name: string;
+export interface Choice<IDType = string, NameType = string> {
+	id: IDType;
+	name: NameType;
 }
 
 interface CustomSelectProps<TFormValues> {
