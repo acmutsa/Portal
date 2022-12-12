@@ -15,7 +15,8 @@ import QRCode from "react-qr-code";
 import NoSSR from "@/components/common/NoSSR";
 import { env } from "@/env/server.mjs";
 import { Event } from "@prisma/client";
-import { BsBookmarkPlusFill } from "react-icons/bs";
+import { BsBookmarkPlusFill, BsPencilFill, BsTrashFill } from "react-icons/bs";
+import { useGlobalContext } from "@/components/common/GlobalContext";
 
 interface eventPageParams {
 	params: { id: string };
@@ -47,6 +48,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 	const formatString = "h:mmaaaaaa";
 	const startString = lightFormat(event.eventStart, formatString);
 	const endString = lightFormat(event.eventEnd, formatString);
+	const [globalState] = useGlobalContext();
 
 	const calendarLink = generateGoogleCalendarLink(
 		event.eventStart,
@@ -72,7 +74,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 			</Head>
 			<div className="page-view bg-white sm:bg-darken sm:!pt-[100px]">
 				<div className="flex justify-center w-full">
-					<div className="bg-white z-30 max-w-[1200px] sm:mx-3 md:mx-6 p-5 md:p-2 lg:p-3 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 sm:rounded-lg">
+					<div className="bg-white z-30 max-w-[1200px] sm:mx-3 md:mx-6 p-5 md:p-2 md:p-3 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 sm:rounded-lg">
 						<div className="flex items-center justify-center overflow-hidden md:ml-3">
 							<div
 								className="w-full drop-shadow-xl md:drop-shadow-lg max-h-[25rem] aspect-[9/16] bg-top md:bg-center lg:bg-top lg:aspect-video rounded-lg bg-cover hover:bg-contain hover:bg-center bg-no-repeat"
@@ -93,7 +95,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 								) : (
 									<p className="mt-3 text-gray-500">No description was provided for this event.</p>
 								)}
-								<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-4 md:grid-cols-2">
+								<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-2 lg:gap-y-4 md:grid-cols-2">
 									<div className="sm:col-span-1">
 										<dt className="text-sm text-gray-500">Start Time</dt>
 										<dd className="md:mt-0.5">
@@ -150,6 +152,25 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 										Watch on Twitch
 									</button>
 								</Link>
+								{globalState.admin ? (
+									<span className="w-full flex relative z-0 inline-flex shadow-sm rounded-md text-base font-medium text-white">
+										<Link href={`/admin/events/${id}`}>
+											<button
+												type="button"
+												className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+											>
+												<BsPencilFill className="mr-2 w-4 h-4" />
+												Edit
+											</button>
+										</Link>
+										<Link href={`/admin/events/${id}?delete`}>
+											<button className="bg-rose-500 hover:bg-rose-600 relative inline-flex items-center px-2 py-3 rounded-r-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+												<span className="sr-only">Open options</span>
+												<BsTrashFill className="h-5 w-5" aria-hidden="true" />
+											</button>
+										</Link>
+									</span>
+								) : null}
 							</div>
 						</div>
 						{/*<div className="md:block" />*/}
