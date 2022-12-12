@@ -12,6 +12,10 @@
     "name": "Transgender"
   },
   {
+    "id": "NON_BINARY",
+    "name": "Non-binary"
+  },
+  {
     "id": "INTERSEX",
     "name": "Intersex"
   },

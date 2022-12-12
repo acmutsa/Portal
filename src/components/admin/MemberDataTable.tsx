@@ -23,6 +23,7 @@ import {
 	EthnicityById,
 	EthnicityByName,
 	IdentityBadgeClasses,
+	IdentityById,
 	IdentityByName,
 	OrganizationBadgeClasses,
 	OrganizationById,
@@ -118,7 +119,7 @@ const identityCell = ({ prettyMemberData: { identity: identities } }: MemberTabl
 								IdentityBadgeClasses[identity as IdentityType]
 							)}
 						>
-							{IdentityByName[identity]!}
+							{IdentityById[identity as IdentityType]}
 						</Badge>
 					);
 				return <Badge>{identity}</Badge>;
@@ -255,7 +256,7 @@ const DataTableDemo = () => {
 				header="Identity"
 				body={identityCell}
 				filter
-				filterElement={getFilterElement("Select a Identity", Object.keys(EthnicityByName))}
+				filterElement={getFilterElement("Select a Identity", Object.keys(IdentityByName))}
 				filterMatchModeOptions={[{ label: "Match", value: "MATCH_IDENTITY" }]}
 				filterMatchMode="custom"
 			/>
