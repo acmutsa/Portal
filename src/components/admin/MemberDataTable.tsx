@@ -16,7 +16,6 @@ import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
 import Badge from "@/components/common/Badge";
-import { Choice } from "@/components/forms/CustomSelect";
 import { classNames } from "@/utils/helpers";
 import {
 	EthnicityBadgeClasses,
@@ -31,9 +30,25 @@ import {
 } from "@/components/util/EnumerationData";
 import { MemberWithData } from "@/server/controllers/member";
 
+const preventDefault = (e: Event) => e.preventDefault();
+const mouseLeaveHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+	document.removeEventListener("wheel", preventDefault, false);
+};
+const mouseEnterHandler = (e: React.MouseEvent<HTMLDivElement>) => {
+	document.addEventListener("wheel", preventDefault, {
+		passive: false,
+	});
+};
 const wheelHandler = (e: React.WheelEvent<HTMLDivElement>) => {
 	if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
 	else e.currentTarget.scrollLeft -= 10;
+	e.preventDefault();
+};
+
+const scrollHandlers = {
+	onWheel: wheelHandler,
+	onMouseEnter: mouseEnterHandler,
+	onMouseLeave: mouseLeaveHandler,
 };
 
 FilterService.register("MATCH_ORGANIZATION", (a: Set<OrganizationType>, b?: string) => {
@@ -62,18 +77,15 @@ interface MemberTableItem {
 const organizationCell = ({ prettyMemberData: { organizations } }: MemberTableItem) => {
 	if (organizations == null || organizations.size == 0) return null;
 	return (
-		<div>
+		<div {...scrollHandlers} className="badges">
 			{Array.from(organizations).map((organization) => {
 				const badgeClass = OrganizationBadgeClasses[organization];
 
+				const isCIC = organization == "CODING_IN_COLOR";
 				return (
 					<Badge
-						parentClass={
-							organization == "CODING_IN_COLOR"
-								? "bg-primary-700 !font-semibold m-0.5 rounded"
-								: undefined
-						}
-						colorClass={classNames("m-0.5", badgeClass)}
+						parentClass={isCIC ? "bg-primary-700 !font-semibold m-0.5 rounded" : undefined}
+						colorClass={classNames(isCIC ? null : "m-0.5", badgeClass)}
 					>
 						{OrganizationById[organization]}
 					</Badge>
@@ -86,7 +98,7 @@ const organizationCell = ({ prettyMemberData: { organizations } }: MemberTableIt
 const ethnicityCell = ({ prettyMemberData: { ethnicity: ethnicities } }: MemberTableItem) => {
 	if (ethnicities == null || ethnicities.size == 0) return null;
 	return (
-		<div className="flex items-center flex-wrap !max-w-[12rem] overflow-x-hidden scrollbar-hide">
+		<div {...scrollHandlers} className="badges">
 			{Array.from(ethnicities).map((ethnicity) => {
 				return (
 					<Badge
@@ -106,23 +118,22 @@ const ethnicityCell = ({ prettyMemberData: { ethnicity: ethnicities } }: MemberT
 const identityCell = ({ prettyMemberData: { identity: identities } }: MemberTableItem) => {
 	if (identities == null || identities.size == 0) return null;
 	return (
-		<div
-			onWheel={wheelHandler}
-			className="flex items-center flex-wrap !max-w-[150px] overflow-x-hidden scrollbar-hide"
-		>
+		<div {...scrollHandlers} className="badges">
 			{Array.from(identities).map((identity) => {
 				if (IdentityType.safeParse(identity).success)
 					return (
 						<Badge
 							colorClass={classNames(
-								"text-white m-0.5",
+								"text-white m-0.5 whitespace-nowrap",
 								IdentityBadgeClasses[identity as IdentityType]
 							)}
 						>
 							{IdentityById[identity as IdentityType]}
 						</Badge>
 					);
-				return <Badge>{identity}</Badge>;
+				return (
+					<Badge colorClass="text-gray-800 bg-gray-100 whitespace-nowrap m-0.5">{identity}</Badge>
+				);
 			})}
 		</div>
 	);

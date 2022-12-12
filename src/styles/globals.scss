@@ -126,3 +126,22 @@ input[type="date"]::-moz-placeholder {
     }
   }
 }
+
+.badges {
+  display: flex;
+  flex-flow: column wrap;
+  justify-items: flex-start;
+  align-items: flex-start; // Prevents stretching
+  justify-content: flex-start;
+
+  max-width: 150px;
+  max-height: 3.8rem;
+  overflow-x: hidden;
+
+  > * {
+    //&:nth-child(2n+1) { order: 1; }
+    //&:nth-child(2n)   { order: 2; }
+  }
+
+  //@apply flex flex-col justify-items-start items-start flex-wrap overflow-x-hidden scrollbar-hide;
+}
