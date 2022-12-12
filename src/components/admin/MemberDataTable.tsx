@@ -1,5 +1,5 @@
 import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
+import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
 import React, { useMemo, useState } from "react";
@@ -14,9 +14,14 @@ import Badge from "@/components/common/Badge";
 import { Choice } from "@/components/forms/CustomSelect";
 import { classNames } from "@/utils/helpers";
 import {
+	EthnicityBadgeClasses,
+	EthnicityById,
+	EthnicityByName,
 	IdentityBadgeClasses,
+	IdentityByName,
 	OrganizationBadgeClasses,
 	OrganizationById,
+	OrganizationByName,
 } from "@/components/util/EnumerationData";
 import { MemberWithData } from "@/server/controllers/member";
 
@@ -92,7 +97,7 @@ interface MemberTableItem {
 	prettyMemberData: PrettyMemberData;
 }
 
-const organizationBody = ({ prettyMemberData: { organizations } }: MemberTableItem) => {
+const organizationCell = ({ prettyMemberData: { organizations } }: MemberTableItem) => {
 	if (organizations == null || organizations.size == 0) return null;
 	return (
 		<div>
@@ -116,51 +121,23 @@ const organizationBody = ({ prettyMemberData: { organizations } }: MemberTableIt
 	);
 };
 
-const ethnicityBodyTemplate = (rowData: any) => {
-	const ethTags: JSX.Element[] = [];
-	if (rowData.prettyMemberData.ethnicity?.has("WHITE"))
-		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-emerald-800">White</span>
-		);
-	if (rowData.prettyMemberData.ethnicity?.has("BLACK_OR_AFRICAN_AMERICAN"))
-		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-800">
-				Black or African American
-			</span>
-		);
-	if (rowData.prettyMemberData.ethnicity?.has("NATIVE_AMERICAN_ALASKAN_NATIVE"))
-		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-600">
-				Native American / Alaskan Native
-			</span>
-		);
-	if (rowData.prettyMemberData.ethnicity?.has("ASIAN"))
-		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-pink-500">Asian</span>
-		);
-	if (rowData.prettyMemberData.ethnicity?.has("NATIVE_HAWAIIAN_PACIFIC_ISLANDER"))
-		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-teal-500">
-				Native Hawaiian / Pacific Islander
-			</span>
-		);
-	if (rowData.prettyMemberData.ethnicity?.has("HISPANIC_OR_LATINO"))
-		ethTags.push(
-			<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">
-				Hispanic or Latino
-			</span>
-		);
+const ethnicityCell = ({ prettyMemberData: { ethnicity: ethnicities } }: MemberTableItem) => {
+	if (ethnicities == null || ethnicities.size == 0) return null;
 	return (
-		<div
-			onWheel={wheelHandler}
-			className="flex items-center flex-wrap !max-w-[150px] overflow-x-hidden scrollbar-hide"
-		>
-			{ethTags}
+		<div>
+			{Array.from(ethnicities).map((ethnicity) => {
+				const badgeClass = EthnicityBadgeClasses[ethnicity];
+				return (
+					<Badge colorClass={classNames("m-0.5", badgeClass)}>
+						{EthnicityById[ethnicity] ?? ethnicity}
+					</Badge>
+				);
+			})}
 		</div>
 	);
 };
 
-const identityBodyTemplate = ({ prettyMemberData: { identity } }: MemberTableItem) => {
+const identityCell = ({ prettyMemberData: { identity } }: MemberTableItem) => {
 	if (identity == null || identity.size == 0) return null;
 	return (
 		<div
@@ -178,145 +155,6 @@ const identityBodyTemplate = ({ prettyMemberData: { identity } }: MemberTableIte
 				})}
 		</div>
 	);
-};
-
-const identityItemTemplate = (option: string) => {
-	switch (option) {
-		case "Male":
-			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-orange-700">Male</span>;
-		case "Female":
-			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-900">Female</span>;
-		case "Non-binary":
-			return (
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-500">Non-binary</span>
-			);
-		case "Transgender":
-			return (
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-violet-500">Transgender</span>
-			);
-		case "Intersex":
-			return (
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-fuchsia-700">Intersex</span>
-			);
-		case "Does Not Identify":
-			return (
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-500">
-					Does Not Identify
-				</span>
-			);
-		case "Other":
-			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">Other</span>;
-	}
-};
-
-const ethnicityItemTemplate = (option: string) => {
-	switch (option) {
-		case "White":
-			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-emerald-800">White</span>;
-		case "Black or African American":
-			return (
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-blue-800">
-					Black or African American
-				</span>
-			);
-		case "Native American / Alaskan Native":
-			return (
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-red-600">
-					Native American / Alaskan Native
-				</span>
-			);
-		case "Asian":
-			return <span className="p-tag m-[2px] rounded whitespace-nowrap !bg-pink-500">Asian</span>;
-		case "Native Hawaiian / Pacific Islander":
-			return (
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-teal-500">
-					Native Hawaiian / Pacific Islander
-				</span>
-			);
-		case "Hispanic or Latino":
-			return (
-				<span className="p-tag m-[2px] rounded whitespace-nowrap !bg-[#A020F0]">
-					Hispanic or Latino
-				</span>
-			);
-	}
-};
-
-const identityFilterTemplate = (options: any) => {
-	return (
-		<Dropdown
-			value={options.value}
-			options={[
-				"Male",
-				"Female",
-				"Non-binary",
-				"Transgender",
-				"Intersex",
-				"Does Not Identify",
-				"Other",
-			]}
-			onChange={(e: any) => {
-				options.filterCallback(e.value);
-			}}
-			itemTemplate={identityItemTemplate}
-			placeholder="Select a Identity"
-			className="p-column-filter"
-			showClear
-		/>
-	);
-};
-
-const ethnicityFilterTemplate = (options: any) => {
-	return (
-		<Dropdown
-			value={options.value}
-			options={[
-				"White",
-				"Black or African American",
-				"Native Hawaiian / Pacific Islander",
-				"Asian",
-				"Native American / Alaskan Native",
-				"Hispanic or Latino",
-			]}
-			onChange={(e: any) => {
-				options.filterCallback(e.value);
-			}}
-			itemTemplate={ethnicityItemTemplate}
-			placeholder="Select a Ethnicity"
-			className="p-column-filter"
-			showClear
-		/>
-	);
-};
-
-const orgFilterTemplate = (options: any) => {
-	return (
-		<Dropdown
-			value={options.value}
-			options={["ACM", "ACM W", "ICPC", "Rowdy Creators", "CIC"]}
-			onChange={(e: any) => {
-				options.filterCallback(e.value);
-			}}
-			placeholder="Select a Organization"
-			className="p-column-filter"
-			showClear
-		/>
-	);
-};
-
-const orgItemTemplate = (option: string) => {
-	switch (option) {
-		case "ACM":
-			return <span className="p-tag m-[2px] rounded !bg-secondary">ACM</span>;
-		case "ACM W":
-			return <span className="p-tag m-[2px] rounded !bg-[#F2751B]">ACM W</span>;
-		case "ICPC":
-			return <span className="p-tag m-[2px] rounded !bg-[#FFD51E]">ICPC</span>;
-		case "Rowdy Creators":
-			return <span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Rowdy Creators</span>;
-		case "CIC":
-			return <span className="p-tag m-[2px] rounded !bg-[#000000]">CIC</span>;
-	}
 };
 
 const DataTableDemo = () => {
@@ -360,8 +198,6 @@ const DataTableDemo = () => {
 	const { data: members } = trpc.useQuery(["member.getAll"], {
 		refetchOnWindowFocus: false,
 	});
-
-	// TODO: make this less gross
 
 	const memberTableItems = useMemo<MemberTableItem[]>(() => {
 		const items: MemberTableItem[] = [];
@@ -412,30 +248,65 @@ const DataTableDemo = () => {
 			<Column
 				field="prettyMemberData.organizations"
 				header="Organizations"
-				body={organizationBody}
+				body={organizationCell}
 				filter
-				filterElement={orgFilterTemplate}
+				filterElement={({ value, filterCallback }) => (
+					<Dropdown
+						value={value}
+						options={Object.keys(OrganizationByName)}
+						onChange={(e) => {
+							filterCallback(e.value);
+						}}
+						placeholder="Select a Organization"
+						className="p-column-filter"
+						showClear
+					/>
+				)}
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
 				filterMatchMode="custom"
 			></Column>
 			<Column
 				field="prettyMemberData.ethnicity"
 				header="Ethnicity"
-				body={ethnicityBodyTemplate}
+				body={ethnicityCell}
 				filter
-				filterElement={ethnicityFilterTemplate}
+				filterElement={({ value, filterCallback }) => (
+					<Dropdown
+						value={value}
+						options={Object.keys(EthnicityByName)}
+						onChange={(e) => {
+							filterCallback(e.value);
+						}}
+						placeholder="Select a Ethnicity"
+						className="p-column-filter"
+						showClear
+					/>
+				)}
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
 				filterMatchMode="custom"
-			></Column>
+			/>
 			<Column
 				field="prettyMemberData.identity"
 				header="Identity"
-				body={identityBodyTemplate}
+				body={identityCell}
 				filter
-				filterElement={identityFilterTemplate}
+				filterElement={({ value, filterCallback }: ColumnFilterElementTemplateOptions) => {
+					return (
+						<Dropdown
+							value={value}
+							options={Object.keys(IdentityByName)}
+							onChange={(e: any) => {
+								filterCallback(e.value);
+							}}
+							placeholder="Select a Identity"
+							className="p-column-filter"
+							showClear
+						/>
+					);
+				}}
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
 				filterMatchMode="custom"
-			></Column>
+			/>
 			<Column filter field="member.data.address" header="Address"></Column>
 		</DataTable>
 	);
