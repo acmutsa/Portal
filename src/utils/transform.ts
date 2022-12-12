@@ -104,8 +104,6 @@ type Classification = z.TypeOf<typeof ClassificationType>;
 type Organization = z.TypeOf<typeof OrganizationType>;
 type Ethnicity = z.TypeOf<typeof EthnicityType>;
 
-// TODO: Create a toPrettyMemberData function to transform the database representation into a usable version.
-
 export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberData => {
 	const organizations = new Set<Organization>();
 	const ethnicities = new Set<Ethnicity>();
@@ -113,16 +111,16 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 
 	if (memberData.isInACM) organizations.add(OrganizationType.enum.ACM);
 	if (memberData.isInACMW) organizations.add(OrganizationType.enum.ACM_W);
-	if (memberData.isInRC) organizations.add(OrganizationType.enum.ROWDY_CREATORS);
 	if (memberData.isInICPC) organizations.add(OrganizationType.enum.ICPC);
+	if (memberData.isInRC) organizations.add(OrganizationType.enum.ROWDY_CREATORS);
 	if (memberData.isInCIC) organizations.add(OrganizationType.enum.CODING_IN_COLOR);
 
-	if (memberData.isBlackorAA) ethnicities.add(EthnicityType.enum.BLACK_OR_AFRICAN_AMERICAN);
+	if (memberData.isWhite) ethnicities.add(EthnicityType.enum.WHITE);
 	if (memberData.isAsian) ethnicities.add(EthnicityType.enum.ASIAN);
+	if (memberData.isHispanicorLatinx) ethnicities.add(EthnicityType.enum.HISPANIC_OR_LATINO);
+	if (memberData.isBlackorAA) ethnicities.add(EthnicityType.enum.BLACK_OR_AFRICAN_AMERICAN);
 	if (memberData.isNAorAN) ethnicities.add(EthnicityType.enum.NATIVE_AMERICAN_ALASKAN_NATIVE);
 	if (memberData.isNHorPI) ethnicities.add(EthnicityType.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER);
-	if (memberData.isHispanicorLatinx) ethnicities.add(EthnicityType.enum.HISPANIC_OR_LATINO);
-	if (memberData.isWhite) ethnicities.add(EthnicityType.enum.WHITE);
 
 	if (memberData.isMale) identities.add(IdentityType.enum.MALE);
 	if (memberData.isFemale) identities.add(IdentityType.enum.FEMALE);
