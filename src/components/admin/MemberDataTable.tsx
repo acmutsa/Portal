@@ -2,11 +2,10 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import { IdentityType, PrettyMemberData, toPrettyMemberData } from "@/utils/transform";
 import type { Member, MemberData } from "@prisma/client";
-import { Prisma } from "@prisma/client";
 import identities from "@/utils/identities.json";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -14,7 +13,17 @@ import "primereact/resources/primereact.css";
 import Badge from "@/components/common/Badge";
 import { Choice } from "@/components/forms/CustomSelect";
 import { classNames } from "@/utils/helpers";
-import { IdentityColors } from "@/components/util/EnumerationData";
+import {
+	IdentityBadgeClasses,
+	OrganizationBadgeClasses,
+	OrganizationById,
+} from "@/components/util/EnumerationData";
+import { MemberWithData } from "@/server/controllers/member";
+
+const wheelHandler = (e: React.WheelEvent<HTMLDivElement>) => {
+	if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
+	else e.currentTarget.scrollLeft -= 10;
+};
 
 FilterService.register("MATCH_TAG", (a, b) => {
 	let enumName = "";
@@ -83,42 +92,31 @@ interface MemberTableItem {
 	prettyMemberData: PrettyMemberData;
 }
 
-type MemberWithData = Prisma.MemberGetPayload<{ include: { data: true } }>;
+const organizationBody = ({ prettyMemberData: { organizations } }: MemberTableItem) => {
+	if (organizations == null || organizations.size == 0) return null;
+	return (
+		<div>
+			{Array.from(organizations).map((organization) => {
+				const badgeClass = OrganizationBadgeClasses[organization];
 
-// TODO: Try to make this all typed? AFAIK there is a way to type the PrimeReact rowData. In the meantime going to YOLO it.
-
-const orgBodyTemplate = (rowData: any) => {
-	const orgTags: JSX.Element[] = [];
-	if (rowData.prettyMemberData.organizations?.has("ACM"))
-		orgTags.push(<span className="p-tag m-[2px] rounded !bg-secondary">ACM</span>);
-	if (rowData.prettyMemberData.organizations?.has("ACM_W"))
-		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#F2751B]">ACM W</span>);
-	if (rowData.prettyMemberData.organizations?.has("ICPC"))
-		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#FFD51E]">ICPC</span>);
-	if (rowData.prettyMemberData.organizations?.has("CODING_IN_COLOR"))
-		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#000000]">CIC</span>);
-	if (rowData.prettyMemberData.organizations?.has("ROWDY_CREATORS"))
-		orgTags.push(<span className="p-tag m-[2px] rounded !bg-[#2EC4EF]">Rowdy Creators</span>);
-	return <div>{orgTags}</div>;
+				return (
+					<Badge
+						parentClass={
+							organization == "CODING_IN_COLOR"
+								? "bg-primary-700 !font-semibold m-0.5 rounded"
+								: undefined
+						}
+						colorClass={classNames("m-0.5", badgeClass)}
+					>
+						{OrganizationById[organization]}
+					</Badge>
+				);
+			})}
+		</div>
+	);
 };
 
 const ethnicityBodyTemplate = (rowData: any) => {
-	const ref = useRef<any>();
-
-	useEffect(() => {
-		const handleScroll = (e: any) => {
-			if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
-			else e.currentTarget.scrollLeft -= 10;
-		};
-
-		const ele = ref.current;
-		if (ele) {
-			ele.addEventListener("wheel", handleScroll);
-		} else {
-			// console.log("ele is null");
-		}
-	}, []);
-
 	const ethTags: JSX.Element[] = [];
 	if (rowData.prettyMemberData.ethnicity?.has("WHITE"))
 		ethTags.push(
@@ -153,7 +151,10 @@ const ethnicityBodyTemplate = (rowData: any) => {
 			</span>
 		);
 	return (
-		<div ref={ref} className="flex items-center !max-w-[150px] overflow-x-hidden scrollbar-hide">
+		<div
+			onWheel={wheelHandler}
+			className="flex items-center flex-wrap !max-w-[150px] overflow-x-hidden scrollbar-hide"
+		>
 			{ethTags}
 		</div>
 	);
@@ -163,17 +164,14 @@ const identityBodyTemplate = ({ prettyMemberData: { identity } }: MemberTableIte
 	if (identity == null || identity.size == 0) return null;
 	return (
 		<div
-			onWheel={(e: React.WheelEvent<HTMLDivElement>) => {
-				if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
-				else e.currentTarget.scrollLeft -= 10;
-			}}
-			className="flex items-center !max-w-[150px] overflow-x-hidden scrollbar-hide"
+			onWheel={wheelHandler}
+			className="flex items-center flex-wrap !max-w-[150px] overflow-x-hidden scrollbar-hide"
 		>
 			{identities
 				.filter((i): i is Choice<IdentityType> => identity.has(i.id))
 				.map((i: Choice<IdentityType>) => {
 					return (
-						<Badge colorClass={classNames("text-white m-0.5", IdentityColors[i.id])}>
+						<Badge colorClass={classNames("text-white m-0.5", IdentityBadgeClasses[i.id])}>
 							{i.name}
 						</Badge>
 					);
@@ -299,7 +297,6 @@ const orgFilterTemplate = (options: any) => {
 			onChange={(e: any) => {
 				options.filterCallback(e.value);
 			}}
-			itemTemplate={orgItemTemplate}
 			placeholder="Select a Organization"
 			className="p-column-filter"
 			showClear
@@ -381,12 +378,14 @@ const DataTableDemo = () => {
 
 	return (
 		<DataTable
+			id="members"
 			rowHover
 			onSelectionChange={(e) => setSelectedCustomers(e.value)}
 			selection={selectedCustomers}
 			responsiveLayout="scroll"
 			value={memberTableItems}
 			selectionAriaLabel="name"
+			size="small"
 			paginator
 			rows={10}
 			rowsPerPageOptions={[10, 25, 50, 100]}
@@ -413,7 +412,7 @@ const DataTableDemo = () => {
 			<Column
 				field="prettyMemberData.organizations"
 				header="Organizations"
-				body={orgBodyTemplate}
+				body={organizationBody}
 				filter
 				filterElement={orgFilterTemplate}
 				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
