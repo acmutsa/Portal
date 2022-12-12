@@ -12,7 +12,6 @@ import {
 	toPrettyMemberData,
 } from "@/utils/transform";
 import type { Member, MemberData } from "@prisma/client";
-import identities from "@/utils/identities.json";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
@@ -86,11 +85,15 @@ const organizationCell = ({ prettyMemberData: { organizations } }: MemberTableIt
 const ethnicityCell = ({ prettyMemberData: { ethnicity: ethnicities } }: MemberTableItem) => {
 	if (ethnicities == null || ethnicities.size == 0) return null;
 	return (
-		<div>
+		<div className="flex items-center flex-wrap !max-w-[12rem] overflow-x-hidden scrollbar-hide">
 			{Array.from(ethnicities).map((ethnicity) => {
-				const badgeClass = EthnicityBadgeClasses[ethnicity];
 				return (
-					<Badge colorClass={classNames("m-0.5", badgeClass)}>
+					<Badge
+						colorClass={classNames(
+							"m-0.5 overflow-hidden overflow-ellipsis whitespace-nowrap",
+							EthnicityBadgeClasses[ethnicity]
+						)}
+					>
 						{EthnicityById[ethnicity] ?? ethnicity}
 					</Badge>
 				);
@@ -99,22 +102,27 @@ const ethnicityCell = ({ prettyMemberData: { ethnicity: ethnicities } }: MemberT
 	);
 };
 
-const identityCell = ({ prettyMemberData: { identity } }: MemberTableItem) => {
-	if (identity == null || identity.size == 0) return null;
+const identityCell = ({ prettyMemberData: { identity: identities } }: MemberTableItem) => {
+	if (identities == null || identities.size == 0) return null;
 	return (
 		<div
 			onWheel={wheelHandler}
 			className="flex items-center flex-wrap !max-w-[150px] overflow-x-hidden scrollbar-hide"
 		>
-			{identities
-				.filter((i): i is Choice<IdentityType> => identity.has(i.id))
-				.map((i: Choice<IdentityType>) => {
+			{Array.from(identities).map((identity) => {
+				if (IdentityType.safeParse(identity).success)
 					return (
-						<Badge colorClass={classNames("text-white m-0.5", IdentityBadgeClasses[i.id])}>
-							{i.name}
+						<Badge
+							colorClass={classNames(
+								"text-white m-0.5",
+								IdentityBadgeClasses[identity as IdentityType]
+							)}
+						>
+							{IdentityByName[identity]!}
 						</Badge>
 					);
-				})}
+				return <Badge>{identity}</Badge>;
+			})}
 		</div>
 	);
 };
