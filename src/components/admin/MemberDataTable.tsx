@@ -4,7 +4,13 @@ import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
 import React, { useMemo, useState } from "react";
 import { trpc } from "@/utils/trpc";
-import { IdentityType, PrettyMemberData, toPrettyMemberData } from "@/utils/transform";
+import {
+	EthnicityType,
+	IdentityType,
+	OrganizationType,
+	PrettyMemberData,
+	toPrettyMemberData,
+} from "@/utils/transform";
 import type { Member, MemberData } from "@prisma/client";
 import identities from "@/utils/identities.json";
 import "primeicons/primeicons.css";
@@ -30,66 +36,22 @@ const wheelHandler = (e: React.WheelEvent<HTMLDivElement>) => {
 	else e.currentTarget.scrollLeft -= 10;
 };
 
-FilterService.register("MATCH_TAG", (a, b) => {
-	let enumName = "";
-	switch (b) {
-		case "ACM":
-			enumName = "ACM";
-			break;
-		case "ACM W":
-			enumName = "ACM_W";
-			break;
-		case "Rowdy Creators":
-			enumName = "ROWDY_CREATORS";
-			break;
-		case "ICPC":
-			enumName = "ICPC";
-			break;
-		case "CIC":
-			enumName = "CODING_IN_COLOR";
-			break;
-		case "White":
-			enumName = "WHITE";
-			break;
-		case "Black or African American":
-			enumName = "BLACK_OR_AFRICAN_AMERICAN";
-			break;
-		case "Native American / Alaskan Native":
-			enumName = "NATIVE_AMERICAN_ALASKAN_NATIVE";
-			break;
-		case "Asian":
-			enumName = "ASIAN";
-			break;
-		case "Native Hawaiian / Pacific Islander":
-			enumName = "NATIVE_HAWAIIAN_PACIFIC_ISLANDER";
-			break;
-		case "Hispanic or Latino":
-			enumName = "HISPANIC_OR_LATINO";
-			break;
-		case "Male":
-			enumName = "MALE";
-			break;
-		case "Female":
-			enumName = "FEMALE";
-			break;
-		case "Non-binary":
-			enumName = "NON_BINARY";
-			break;
-		case "Transgender":
-			enumName = "TRANSGENDER";
-			break;
-		case "Intersex":
-			enumName = "INTERSEX";
-			break;
-		case "Does Not Identify":
-			enumName = "DOES_NOT_IDENTIFY";
-			break;
-		case "Other":
-			enumName = "OTHER";
-			break;
-	}
+FilterService.register("MATCH_ORGANIZATION", (a: Set<OrganizationType>, b?: string) => {
+	if (b == undefined) return true;
+	if (OrganizationByName[b] != undefined) return a.has(OrganizationByName[b] as OrganizationType);
+	return false;
+});
 
-	return a.has(enumName);
+FilterService.register("MATCH_ETHNICITY", (a: Set<EthnicityType>, b?: string) => {
+	if (b == undefined) return true;
+	if (EthnicityByName[b] != undefined) return a.has(EthnicityByName[b] as EthnicityType);
+	return false;
+});
+
+FilterService.register("MATCH_IDENTITY", (a: Set<IdentityType>, b?: string) => {
+	if (b == undefined) return true;
+	if (IdentityByName[b] != undefined) return a.has(IdentityByName[b] as IdentityType);
+	return false;
 });
 
 interface MemberTableItem {
@@ -156,6 +118,23 @@ const identityCell = ({ prettyMemberData: { identity } }: MemberTableItem) => {
 		</div>
 	);
 };
+
+function getFilterElement<ItemType>(placeholder: string, options: string[]) {
+	return ({ value, filterCallback }: ColumnFilterElementTemplateOptions) => {
+		return (
+			<Dropdown
+				value={value}
+				options={options}
+				onChange={(e: any) => {
+					filterCallback(e.value);
+				}}
+				placeholder={placeholder}
+				className="p-column-filter"
+				showClear
+			/>
+		);
+	};
+}
 
 const DataTableDemo = () => {
 	const [selectedCustomers, setSelectedCustomers] = useState(null);
@@ -246,43 +225,21 @@ const DataTableDemo = () => {
 			<Column sortable filter field="member.data.major" header="Major"></Column>
 			<Column sortable filter field="member.data.classification" header="Classification"></Column>
 			<Column
+				filter
 				field="prettyMemberData.organizations"
 				header="Organizations"
 				body={organizationCell}
-				filter
-				filterElement={({ value, filterCallback }) => (
-					<Dropdown
-						value={value}
-						options={Object.keys(OrganizationByName)}
-						onChange={(e) => {
-							filterCallback(e.value);
-						}}
-						placeholder="Select a Organization"
-						className="p-column-filter"
-						showClear
-					/>
-				)}
-				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
+				filterElement={getFilterElement("Select a Organization", Object.keys(OrganizationByName))}
+				filterMatchModeOptions={[{ label: "Match", value: "MATCH_ORGANIZATION" }]}
 				filterMatchMode="custom"
-			></Column>
+			/>
 			<Column
+				filter
 				field="prettyMemberData.ethnicity"
 				header="Ethnicity"
 				body={ethnicityCell}
-				filter
-				filterElement={({ value, filterCallback }) => (
-					<Dropdown
-						value={value}
-						options={Object.keys(EthnicityByName)}
-						onChange={(e) => {
-							filterCallback(e.value);
-						}}
-						placeholder="Select a Ethnicity"
-						className="p-column-filter"
-						showClear
-					/>
-				)}
-				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
+				filterElement={getFilterElement("Select a Ethnicity", Object.keys(EthnicityByName))}
+				filterMatchModeOptions={[{ label: "Match", value: "MATCH_ETHNICITY" }]}
 				filterMatchMode="custom"
 			/>
 			<Column
@@ -290,21 +247,8 @@ const DataTableDemo = () => {
 				header="Identity"
 				body={identityCell}
 				filter
-				filterElement={({ value, filterCallback }: ColumnFilterElementTemplateOptions) => {
-					return (
-						<Dropdown
-							value={value}
-							options={Object.keys(IdentityByName)}
-							onChange={(e: any) => {
-								filterCallback(e.value);
-							}}
-							placeholder="Select a Identity"
-							className="p-column-filter"
-							showClear
-						/>
-					);
-				}}
-				filterMatchModeOptions={[{ label: "Match Tag", value: "MATCH_TAG" }]}
+				filterElement={getFilterElement("Select a Identity", Object.keys(EthnicityByName))}
+				filterMatchModeOptions={[{ label: "Match", value: "MATCH_IDENTITY" }]}
 				filterMatchMode="custom"
 			/>
 			<Column filter field="member.data.address" header="Address"></Column>
