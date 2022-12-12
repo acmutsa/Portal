@@ -144,7 +144,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 								<Link href={"https://twitch.tv/acmutsa"} target="_blank">
 									<button
 										type="button"
-										className="w-full bg-twitch border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+										className="w-full bg-twitch-light hover:bg-twitch-dark border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
 									>
 										<SiTwitch className="mr-2 w-5 h-5" />
 										Watch on Twitch
