@@ -1,13 +1,13 @@
 import { Member, prisma } from "@/server/db/client";
-import { MemberData } from "@prisma/client";
+import { MemberData, Prisma } from "@prisma/client";
 import { PrettyMemberDataWithoutId, toMemberData } from "@/utils/transform";
 import { z } from "zod";
 import { isValuesNull, removeEmpty } from "@/utils/helpers";
 
 /**
- * A explicit type containing a nullable `data` property. Used for the Member.MemberData relation.
+ * An explicit type containing a nullable `data` property. Used for the Member.MemberData relation.
  */
-export type MemberWithData = Member & { data: MemberData | null };
+export type MemberWithData = Prisma.MemberGetPayload<{ include: { data: true } }>;
 
 /**
  * A zod schema containing the updatable properties in the Member table.
