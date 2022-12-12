@@ -60,8 +60,8 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 
 	const now = new Date();
 	const relativeText = formatRelative(
-		now,
-		!isPast(event.eventStart) ? event.eventStart : event.eventEnd
+		!isPast(event.eventStart) ? event.eventStart : event.eventEnd,
+		now
 	);
 
 	return (
@@ -96,7 +96,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 								<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-4 md:grid-cols-2">
 									<div className="sm:col-span-1">
 										<dt className="text-sm text-gray-500">Start Time</dt>
-										<dd className="mt-0.5">
+										<dd className="md:mt-0.5">
 											{event.eventStart.toLocaleString("en", {
 												dateStyle: "medium",
 												timeStyle: "short",
@@ -105,7 +105,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 									</div>
 									<div className="sm:col-span-1">
 										<dt className="text-sm text-gray-500">End Time</dt>
-										<dd className="mt-0.5">
+										<dd className="md:mt-0.5">
 											{event.eventEnd.toLocaleString("en", {
 												dateStyle: "medium",
 												timeStyle: "short",
@@ -114,11 +114,11 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 									</div>
 									<div className="sm:col-span-1">
 										<dt className="text-sm text-gray-500">Location</dt>
-										<dd className="mt-0.5">{event.location}</dd>
+										<dd className="md:mt-0.5">{event.location}</dd>
 									</div>
 									<div className="sm:col-span-1">
 										<dt className="text-sm text-gray-500">Semester</dt>
-										<dd className="mt-0.5">{event.semester}</dd>
+										<dd className="md:mt-0.5">{event.semester}</dd>
 									</div>
 								</dl>
 							</div>
