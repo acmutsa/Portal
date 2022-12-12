@@ -95,19 +95,16 @@ export const PrettyMemberDataSchema = z.object({
 	organizations: z.set(OrganizationType).optional(),
 	birthday: z.date().min(subYears(now, 50)).max(subYears(now, 14)).optional(),
 	ethnicity: z.set(EthnicityType).optional(),
-	identity: z.set(z.string()).optional(),
+	identity: z.set(IdentityType.or(z.string())).optional(),
 });
 export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
 export const PrettyMemberDataWithoutIdSchema = PrettyMemberDataSchema.omit({ id: true });
 export type PrettyMemberDataWithoutId = z.infer<typeof PrettyMemberDataWithoutIdSchema>;
-type Classification = z.TypeOf<typeof ClassificationType>;
-type Organization = z.TypeOf<typeof OrganizationType>;
-type Ethnicity = z.TypeOf<typeof EthnicityType>;
 
 export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberData => {
-	const organizations = new Set<Organization>();
-	const ethnicities = new Set<Ethnicity>();
-	const identities = new Set<string>();
+	const organizations = new Set<OrganizationType>();
+	const ethnicities = new Set<EthnicityType>();
+	const identities = new Set<IdentityType | string>();
 
 	if (memberData.isInACM) organizations.add(OrganizationType.enum.ACM);
 	if (memberData.isInACMW) organizations.add(OrganizationType.enum.ACM_W);
@@ -148,7 +145,7 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 		id: member.id,
 		major: memberData.major ?? undefined,
 		classification: ClassificationType.safeParse(memberData.classification).success
-			? (memberData.classification as Classification)
+			? (memberData.classification as ClassificationType)
 			: undefined,
 		graduationDate,
 		organizations: organizations,

@@ -55,7 +55,7 @@ const NewMemberView: FunctionComponent = () => {
 			major,
 			graduationDate,
 			identity,
-			ethnicity,
+			ethnicity: ethnicities,
 			birthday,
 		});
 	};

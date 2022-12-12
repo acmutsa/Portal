@@ -27,13 +27,13 @@ const EventView: FunctionComponent = () => {
 					{isSuccess ? (
 						<div className="flex justify-start font-inter">
 							<span className="text-xl tracking-wide text-zinc-800 font-bold my-auto">Members</span>
-							<span className="ml-2 px-2 pt-0.5 text-zinc-600 text-sm my-auto">
+							<span className="ml-2 px-2 pt-0.5 text-zinc-600 text-sm my-auto overflow-hidden overflow-ellipsis whitespace-nowrap">
 								viewing {members.length} member{pluralize(members.length)}
 							</span>
 							<div className="grow" />
 							<div className="justify-self-end">
 								<Link href="/admin/members/new">
-									<button className="inline-flex h-9 justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 shadow-inner hover:shadow-inner-md-2 rounded-lg text-white font-inter font-medium">
+									<button className="inline-flex h-8 md:h-9 text-sm whitespace-nowrap md:text-base justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 shadow-inner hover:shadow-inner-md-2 rounded-lg text-white font-inter font-medium">
 										<BsPlus className="h-6 w-6" />
 										New Member
 									</button>
