@@ -6,3 +6,5 @@ import { z } from "zod";
 const addMember = async (req: NextApiRequest, res: NextApiResponse) => {
 	res.status(200).json({ example: "test" });
 };
+
+export default addMember;
