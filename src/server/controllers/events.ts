@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { prisma } from "@/server/db/client";
-import { OrganizationEnum } from "@/utils/transform";
+import { OrganizationType } from "@/utils/transform";
 import { removeEmptyItems } from "@/utils/helpers";
 
 export const SortOptionEnum = z.enum(["recent", "attendance"]);
@@ -10,7 +10,7 @@ export const EventFilterSchema = z
 	.object({
 		past: z.boolean().or(z.date()),
 		sort: SortOptionEnum,
-		organizations: OrganizationEnum.array(),
+		organizations: OrganizationType.array(),
 		semesters: z.string().array(),
 	})
 	.partial()

@@ -48,15 +48,17 @@ function defaultValues<TRecord>(obj: TRecord, defaultValue: any): TRecord {
 	) as TRecord;
 }
 
-export const OrganizationEnum = z.enum([
+export const OrganizationType = z.enum([
 	"ACM",
 	"ACM_W",
 	"ROWDY_CREATORS",
 	"ICPC",
 	"CODING_IN_COLOR",
 ]);
-const ClassificationEnum = z.enum(["FRESHMAN", "SOPHOMORE", "JUNIOR", "SENIOR", "Unknown"]);
-const EthnicityEnum = z.enum([
+export type OrganizationType = z.infer<typeof OrganizationType>;
+export const ClassificationType = z.enum(["FRESHMAN", "SOPHOMORE", "JUNIOR", "SENIOR", "Unknown"]);
+export type ClassificationType = z.infer<typeof ClassificationType>;
+export const EthnicityType = z.enum([
 	"WHITE",
 	"BLACK_OR_AFRICAN_AMERICAN",
 	"NATIVE_AMERICAN_ALASKAN_NATIVE",
@@ -64,7 +66,8 @@ const EthnicityEnum = z.enum([
 	"NATIVE_HAWAIIAN_PACIFIC_ISLANDER",
 	"HISPANIC_OR_LATINO",
 ]);
-const IdentityEnum = z.enum([
+export type EthnicityType = z.infer<typeof EthnicityType>;
+export const IdentityType = z.enum([
 	"MALE",
 	"FEMALE",
 	"NON_BINARY",
@@ -72,13 +75,14 @@ const IdentityEnum = z.enum([
 	"INTERSEX",
 	"DOES_NOT_IDENTIFY",
 ]);
+export type IdentityType = z.infer<typeof IdentityType>;
 
 // TODO: Figure out why required doesn't allow a mask like partial, remove all .optionals for .partial and .required
 
 export const PrettyMemberDataSchema = z.object({
 	id: z.string().min(1),
 	major: z.string().optional(),
-	classification: ClassificationEnum.optional(),
+	classification: ClassificationType.optional(),
 	graduationDate: z
 		.object({
 			month: z.number().min(1).max(12),
@@ -88,17 +92,17 @@ export const PrettyMemberDataSchema = z.object({
 				.max(currentYear + 10),
 		})
 		.optional(),
-	organizations: z.set(OrganizationEnum).optional(),
+	organizations: z.set(OrganizationType).optional(),
 	birthday: z.date().min(subYears(now, 50)).max(subYears(now, 14)).optional(),
-	ethnicity: z.set(EthnicityEnum).optional(),
+	ethnicity: z.set(EthnicityType).optional(),
 	identity: z.set(z.string()).optional(),
 });
 export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
 export const PrettyMemberDataWithoutIdSchema = PrettyMemberDataSchema.omit({ id: true });
 export type PrettyMemberDataWithoutId = z.infer<typeof PrettyMemberDataWithoutIdSchema>;
-type Classification = z.TypeOf<typeof ClassificationEnum>;
-type Organization = z.TypeOf<typeof OrganizationEnum>;
-type Ethnicity = z.TypeOf<typeof EthnicityEnum>;
+type Classification = z.TypeOf<typeof ClassificationType>;
+type Organization = z.TypeOf<typeof OrganizationType>;
+type Ethnicity = z.TypeOf<typeof EthnicityType>;
 
 // TODO: Create a toPrettyMemberData function to transform the database representation into a usable version.
 
@@ -107,25 +111,25 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 	const ethnicities = new Set<Ethnicity>();
 	const identities = new Set<string>();
 
-	if (memberData.isInACM) organizations.add(OrganizationEnum.enum.ACM);
-	if (memberData.isInACMW) organizations.add(OrganizationEnum.enum.ACM_W);
-	if (memberData.isInRC) organizations.add(OrganizationEnum.enum.ROWDY_CREATORS);
-	if (memberData.isInICPC) organizations.add(OrganizationEnum.enum.ICPC);
-	if (memberData.isInCIC) organizations.add(OrganizationEnum.enum.CODING_IN_COLOR);
+	if (memberData.isInACM) organizations.add(OrganizationType.enum.ACM);
+	if (memberData.isInACMW) organizations.add(OrganizationType.enum.ACM_W);
+	if (memberData.isInRC) organizations.add(OrganizationType.enum.ROWDY_CREATORS);
+	if (memberData.isInICPC) organizations.add(OrganizationType.enum.ICPC);
+	if (memberData.isInCIC) organizations.add(OrganizationType.enum.CODING_IN_COLOR);
 
-	if (memberData.isBlackorAA) ethnicities.add(EthnicityEnum.enum.BLACK_OR_AFRICAN_AMERICAN);
-	if (memberData.isAsian) ethnicities.add(EthnicityEnum.enum.ASIAN);
-	if (memberData.isNAorAN) ethnicities.add(EthnicityEnum.enum.NATIVE_AMERICAN_ALASKAN_NATIVE);
-	if (memberData.isNHorPI) ethnicities.add(EthnicityEnum.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER);
-	if (memberData.isHispanicorLatinx) ethnicities.add(EthnicityEnum.enum.HISPANIC_OR_LATINO);
-	if (memberData.isWhite) ethnicities.add(EthnicityEnum.enum.WHITE);
+	if (memberData.isBlackorAA) ethnicities.add(EthnicityType.enum.BLACK_OR_AFRICAN_AMERICAN);
+	if (memberData.isAsian) ethnicities.add(EthnicityType.enum.ASIAN);
+	if (memberData.isNAorAN) ethnicities.add(EthnicityType.enum.NATIVE_AMERICAN_ALASKAN_NATIVE);
+	if (memberData.isNHorPI) ethnicities.add(EthnicityType.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER);
+	if (memberData.isHispanicorLatinx) ethnicities.add(EthnicityType.enum.HISPANIC_OR_LATINO);
+	if (memberData.isWhite) ethnicities.add(EthnicityType.enum.WHITE);
 
-	if (memberData.isMale) identities.add(IdentityEnum.enum.MALE);
-	if (memberData.isFemale) identities.add(IdentityEnum.enum.FEMALE);
-	if (memberData.isNonBinary) identities.add(IdentityEnum.enum.NON_BINARY);
-	if (memberData.isTransgender) identities.add(IdentityEnum.enum.TRANSGENDER);
-	if (memberData.isIntersex) identities.add(IdentityEnum.enum.INTERSEX);
-	if (memberData.doesNotIdentify) identities.add(IdentityEnum.enum.DOES_NOT_IDENTIFY);
+	if (memberData.isMale) identities.add(IdentityType.enum.MALE);
+	if (memberData.isFemale) identities.add(IdentityType.enum.FEMALE);
+	if (memberData.isNonBinary) identities.add(IdentityType.enum.NON_BINARY);
+	if (memberData.isTransgender) identities.add(IdentityType.enum.TRANSGENDER);
+	if (memberData.isIntersex) identities.add(IdentityType.enum.INTERSEX);
+	if (memberData.doesNotIdentify) identities.add(IdentityType.enum.DOES_NOT_IDENTIFY);
 	if (memberData.otherIdentity) identities.add(memberData.otherIdentity);
 
 	let graduationDate: { year: number; month: number } | undefined = undefined;
@@ -145,7 +149,7 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 	return {
 		id: member.id,
 		major: memberData.major ?? undefined,
-		classification: ClassificationEnum.safeParse(memberData.classification).success
+		classification: ClassificationType.safeParse(memberData.classification).success
 			? (memberData.classification as Classification)
 			: undefined,
 		graduationDate,
@@ -180,12 +184,12 @@ export function toMemberData(data: PrettyMemberData): MemberData {
 	};
 
 	if (data.organizations != null) {
-		if (data.organizations.has(OrganizationEnum.enum.ACM)) organizationData.isInACM = true;
-		if (data.organizations.has(OrganizationEnum.enum.ACM_W)) organizationData.isInACMW = true;
-		if (data.organizations.has(OrganizationEnum.enum.ROWDY_CREATORS))
+		if (data.organizations.has(OrganizationType.enum.ACM)) organizationData.isInACM = true;
+		if (data.organizations.has(OrganizationType.enum.ACM_W)) organizationData.isInACMW = true;
+		if (data.organizations.has(OrganizationType.enum.ROWDY_CREATORS))
 			organizationData.isInRC = true;
-		if (data.organizations.has(OrganizationEnum.enum.ICPC)) organizationData.isInICPC = true;
-		if (data.organizations.has(OrganizationEnum.enum.CODING_IN_COLOR))
+		if (data.organizations.has(OrganizationType.enum.ICPC)) organizationData.isInICPC = true;
+		if (data.organizations.has(OrganizationType.enum.CODING_IN_COLOR))
 			organizationData.isInCIC = true;
 		organizationData = defaultValues<OrganizationData>(organizationData, false);
 	}
@@ -200,15 +204,15 @@ export function toMemberData(data: PrettyMemberData): MemberData {
 	};
 
 	if (data.ethnicity != null) {
-		if (data.ethnicity.has(EthnicityEnum.enum.WHITE)) ethnicityData.isWhite = true;
-		if (data.ethnicity.has(EthnicityEnum.enum.ASIAN)) ethnicityData.isAsian = true;
-		if (data.ethnicity.has(EthnicityEnum.enum.BLACK_OR_AFRICAN_AMERICAN))
+		if (data.ethnicity.has(EthnicityType.enum.WHITE)) ethnicityData.isWhite = true;
+		if (data.ethnicity.has(EthnicityType.enum.ASIAN)) ethnicityData.isAsian = true;
+		if (data.ethnicity.has(EthnicityType.enum.BLACK_OR_AFRICAN_AMERICAN))
 			ethnicityData.isBlackorAA = true;
-		if (data.ethnicity.has(EthnicityEnum.enum.HISPANIC_OR_LATINO))
+		if (data.ethnicity.has(EthnicityType.enum.HISPANIC_OR_LATINO))
 			ethnicityData.isHispanicorLatinx = true;
-		if (data.ethnicity.has(EthnicityEnum.enum.NATIVE_AMERICAN_ALASKAN_NATIVE))
+		if (data.ethnicity.has(EthnicityType.enum.NATIVE_AMERICAN_ALASKAN_NATIVE))
 			ethnicityData.isNAorAN = true;
-		if (data.ethnicity.has(EthnicityEnum.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER))
+		if (data.ethnicity.has(EthnicityType.enum.NATIVE_HAWAIIAN_PACIFIC_ISLANDER))
 			ethnicityData.isNHorPI = true;
 
 		// if (data.ethnicity == EthnicityEnum.enum.WHITE) ethnicityData.isWhite = true;
@@ -231,15 +235,15 @@ export function toMemberData(data: PrettyMemberData): MemberData {
 	};
 
 	if (data.identity != null) {
-		if (IdentityEnum.safeParse(data.identity).success) {
+		if (IdentityType.safeParse(data.identity).success) {
 			for (let val of data.identity) {
-				if (data.identity.has(IdentityEnum.enum.MALE)) identityData.isMale = true;
-				else if (data.identity.has(IdentityEnum.enum.FEMALE)) identityData.isFemale = true;
-				else if (data.identity.has(IdentityEnum.enum.NON_BINARY)) identityData.isNonBinary = true;
-				else if (data.identity.has(IdentityEnum.enum.TRANSGENDER))
+				if (data.identity.has(IdentityType.enum.MALE)) identityData.isMale = true;
+				else if (data.identity.has(IdentityType.enum.FEMALE)) identityData.isFemale = true;
+				else if (data.identity.has(IdentityType.enum.NON_BINARY)) identityData.isNonBinary = true;
+				else if (data.identity.has(IdentityType.enum.TRANSGENDER))
 					identityData.isTransgender = true;
-				else if (data.identity.has(IdentityEnum.enum.INTERSEX)) identityData.isIntersex = true;
-				else if (data.identity.has(IdentityEnum.enum.DOES_NOT_IDENTIFY))
+				else if (data.identity.has(IdentityType.enum.INTERSEX)) identityData.isIntersex = true;
+				else if (data.identity.has(IdentityType.enum.DOES_NOT_IDENTIFY))
 					identityData.doesNotIdentify = true;
 				else {
 					// Only first value in sequence is taken.
