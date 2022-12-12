@@ -26,7 +26,7 @@ model Event {
     forcedIsOpen  Boolean   @default(false)
     pageID        String    @unique @default("")
     checkins      Checkin[]
-    semester      String    @default("Fall 2022")
+    semester      String
 }
 
 model Checkin {
