@@ -39,10 +39,10 @@ const NavbarItem: FunctionComponent<HighlightProps> = ({
 };
 
 const Navbar: FunctionComponent = () => {
-	const [globalState, setGlobalState] = useGlobalContext();
+	const [globalState] = useGlobalContext();
 	const router = useRouter();
 
-	let dynamicNavbarElements = [];
+	let dynamicNavbarElements: JSX.Element[];
 
 	if (globalState.ready) {
 		if (globalState.member)
@@ -72,8 +72,8 @@ const Navbar: FunctionComponent = () => {
 			);
 	} else
 		dynamicNavbarElements = [
-			<div key={1} className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
-			<div key={2} className="animate-pulse h-3 bg-gray-400 rounded-full w-10 mx-4" />,
+			<div key={1} className="animate-pulse h-3 bg-gray-400 rounded-full w-12" />,
+			<div key={2} className="animate-pulse h-3 bg-gray-400 rounded-full w-12" />,
 		];
 
 	return (
@@ -86,7 +86,7 @@ const Navbar: FunctionComponent = () => {
 					</div>
 				</Link>
 				<div className="grow flex items-center justify-end font-inter text-base">
-					<div className="flex gap-1 gap-2 sm:gap-3">
+					<div className="flex items-center gap-1 gap-2 sm:gap-3">
 						<NavbarItem router={router} route={"/"}>
 							Home
 						</NavbarItem>
