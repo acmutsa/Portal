@@ -63,11 +63,11 @@ const getTimeText = (now: Date, start: Date, end: Date): string => {
 };
 
 const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderProps) => {
-	const [now, setDate] = useState(new Date()); // Save the current date to be able to trigger an update
+	const [now, setNow] = useState(new Date()); // Save the current date to be able to trigger an update
 
 	useEffect(() => {
 		const timer = setInterval(() => {
-			setDate(new Date());
+			setNow(new Date());
 		}, 60 * 1000);
 		return () => {
 			clearInterval(timer); // Return a function to clear the timer so that it will stop being called on unmount
@@ -114,7 +114,9 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 							{isEventPast ? (
 								<Badge colorClass="bg-red-100 text-red-800 my-0.5 font-inter">Past</Badge>
 							) : isEventToday ? (
-								<Badge colorClass="bg-sky-100 text-sky-800 my-0.5 font-inter">Today</Badge>
+								<Badge colorClass="bg-sky-100 text-sky-800 my-0.5 font-inter">
+									{isOngoing ? "Ongoing" : "Today"}
+								</Badge>
 							) : null}
 						</div>
 						{/*<div

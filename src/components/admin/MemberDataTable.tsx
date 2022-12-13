@@ -271,7 +271,7 @@ const DataTableDemo = () => {
 				filterMatchModeOptions={[{ label: "Match", value: "MATCH_IDENTITY" }]}
 				filterMatchMode="custom"
 			/>
-			<Column filter field="member.data.address" header="Address"></Column>
+			<Column filter field="member.data.address" header="Address" />
 		</DataTable>
 	);
 };
