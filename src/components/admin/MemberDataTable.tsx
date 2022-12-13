@@ -40,7 +40,7 @@ const mouseEnterHandler = (e: React.MouseEvent<HTMLDivElement>) => {
 	});
 };
 const wheelHandler = (e: React.WheelEvent<HTMLDivElement>) => {
-	if (e.deltaY > 0) e.currentTarget.scrollLeft += 10;
+	if (e.deltaY > 0 || e.deltaX > 0) e.currentTarget.scrollLeft += 10;
 	else e.currentTarget.scrollLeft -= 10;
 	e.preventDefault();
 };
