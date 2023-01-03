@@ -8,7 +8,8 @@ import Disclosure from "@/components/util/Disclosure";
 
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({
-		description: "The premier Computer Science organization at UTSA",
+		description:
+			"The Membership Portal for ACM-UTSA. Sign-in or register to learn about upcoming events, track your membership status, and become more involved.",
 		title: "ACM UTSA",
 		suffix: false,
 		url: "/",
@@ -54,6 +55,14 @@ const Home: NextPage = () => {
 									Status
 								</button>
 							</Link>
+							<button
+								className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 hover:bg-primary-dark-hover rounded transition ease-in"
+								onClick={() => {
+									throw new Error("Test Frontend Sentry Error");
+								}}
+							>
+								Test Error
+							</button>
 						</div>
 					</div>
 				</div>

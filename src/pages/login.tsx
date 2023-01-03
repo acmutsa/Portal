@@ -21,7 +21,7 @@ const EventView: NextPage = () => {
 
 	const ogp = useOpenGraph({
 		description:
-			"Login to your ACM-UTSA Member account to view your membership progress and check in to ongoing events.",
+			"Login to your ACM-UTSA member account to view your membership progress and check-in to ongoing events.",
 		title: "Login",
 		url: "/login",
 	});
@@ -77,7 +77,10 @@ const EventView: NextPage = () => {
 									className="login peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300
 									 block w-full rounded-md md:text-base placeholder-slate-400"
 								/>
-								<p className="mb-1 text-base invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
+								<p
+									data-nosnippet=""
+									className="mb-1 text-base invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm"
+								>
 									Please provide a valid email address.
 								</p>
 							</label>
@@ -100,7 +103,10 @@ const EventView: NextPage = () => {
 									className="login peer px-3 py-1.5 md:py-2 lg:py-2.5 bg-white border shadow-sm border-slate-300
 									 block w-full rounded-md md:text-base placeholder-slate-400"
 								/>
-								<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
+								<p
+									data-nosnippet=""
+									className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm"
+								>
 									Please provide a valid abc123.
 								</p>
 							</label>

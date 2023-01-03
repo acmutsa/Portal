@@ -48,7 +48,8 @@ const OpenGraph = ({
 			<meta property="og:locale" content={locale || "en_US"} />
 			<meta property="og:title" content={title} />
 			<meta property="og:type" content={type} />
-			<meta property="og:description" content={description || ""} />
+			<meta property="description" content={description} />
+			<meta property="og:description" content={description} />
 			<meta property="og:url" content={url} />
 			<meta property="og:site_name" content={site_name} />
 			{type === "article" && (
