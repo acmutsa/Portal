@@ -55,14 +55,6 @@ const Home: NextPage = () => {
 									Status
 								</button>
 							</Link>
-							<button
-								className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 hover:bg-primary-dark-hover rounded transition ease-in"
-								onClick={() => {
-									throw new Error("Test Frontend Sentry Error");
-								}}
-							>
-								Test Error
-							</button>
 						</div>
 					</div>
 				</div>
