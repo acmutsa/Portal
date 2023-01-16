@@ -12,6 +12,9 @@ export { isCheckinOpen };
  */
 export function getMembershipStatus(checkins: Checkin[] | SimpleCheckin[]): boolean {
 	// Rudimentary logic for now.
+	if (checkins.length === 0) {
+		return false;
+	}
 	return checkins.map((checkin) => 1).reduce(sum) > 15.0;
 }
 
