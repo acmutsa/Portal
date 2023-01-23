@@ -182,7 +182,14 @@ export function pairwiseMatch(array: any[], func: (a: any, b: any) => boolean) {
  */
 export function getSemester(time: Date | null = null): string {
 	if (time == null) time = new Date();
-	return "Fall 2022";
+	const [month, year] = [time.getUTCMonth(), time.getUTCFullYear()];
+
+	// Before June
+	if (month < 5) return `Spring ${year}`;
+	// Before August
+	if (month < 7) return `Summer ${year}`;
+	// Until January
+	return `Fall ${year}`;
 }
 
 const seasonMapping: Record<number | string, number | string> = {
