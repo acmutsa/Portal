@@ -1,3 +1,6 @@
+The following is a work in progress and should not be considered a legitimate terms of service.
+The site is a work-in-progress and so is this page.
+
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis commodo odio aenean sed adipiscing diam. Id interdum velit laoreet id donec ultrices tincidunt. Nisl purus in mollis nunc. Amet massa vitae tortor condimentum lacinia quis. Facilisis volutpat est velit egestas. Vitae congue mauris rhoncus aenean vel elit scelerisque. Id diam vel quam elementum pulvinar etiam non quam. Non quam lacus suspendisse faucibus interdum posuere. Massa tincidunt dui ut ornare. Elit at imperdiet dui accumsan sit amet. Non arcu risus quis varius quam quisque id diam. Sagittis aliquam malesuada bibendum arcu vitae.
 
 ## Collection of personal information

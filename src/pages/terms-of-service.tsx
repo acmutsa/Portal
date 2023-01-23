@@ -11,7 +11,7 @@ interface TosProps {
 	text: string;
 }
 
-const lastUpdated = new Date("April 6, 2003");
+const lastUpdated = new Date("11-20-2022");
 
 export function getStaticProps() {
 	const text = readFileSync(path.resolve(process.cwd(), "./src/utils/tos.md"), "utf-8");
