@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { trpc } from "@/utils/trpc";
 import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
 import { Switch } from "@headlessui/react";
-import { classNames, getSemester, getSemesterRange } from "@/utils/helpers";
+import { classNames, getPreciseSemester, getSemesterRange } from "@/utils/helpers";
 import AdvancedInput from "@/components/forms/AdvancedInput";
 import { useRouter } from "next/router";
 
@@ -22,7 +22,7 @@ interface FormValues {
 	formClose: Date | null;
 }
 
-const currentSemester = getSemester();
+const currentSemester = getPreciseSemester();
 const now = new Date();
 // Include up to 3 years in the past, and one year in the future, but no semesters before Fall 2022.
 const semesters: Choice[] = getSemesterRange(

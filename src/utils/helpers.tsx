@@ -176,20 +176,23 @@ export function pairwiseMatch(array: any[], func: (a: any, b: any) => boolean) {
 	return false;
 }
 
+export function getSemester(time: Date | null = null): "Spring" | "Summer" | "Fall" {
+	if (time == null) time = new Date();
+	const month = time.getUTCMonth();
+
+	if (month < 5) return "Spring";
+	if (month < 7) return "Summer";
+	return "Fall";
+}
+
 /**
  * Get the semester according to a date (defaults to now)
  * @param time The time. If not specified, it defaults to now.
  */
-export function getSemester(time: Date | null = null): string {
+export function getPreciseSemester(time: Date | null = null): string {
 	if (time == null) time = new Date();
-	const [month, year] = [time.getUTCMonth(), time.getUTCFullYear()];
-
-	// Before June
-	if (month < 5) return `Spring ${year}`;
-	// Before August
-	if (month < 7) return `Summer ${year}`;
-	// Until January
-	return `Fall ${year}`;
+	const year = time.getUTCFullYear();
+	return `${getSemester(time)} ${year}`;
 }
 
 const seasonMapping: Record<number | string, number | string> = {

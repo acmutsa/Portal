@@ -1,6 +1,7 @@
 import CustomDisclosure from "@/components/member/CustomDisclosure";
 import { FunctionComponent } from "react";
 import Detail from "@/components/common/Detail";
+import { getSemester } from "@/utils/helpers";
 
 const disclosures = [
 	[
@@ -29,8 +30,9 @@ interface StatusProps {
 	checkins: SimpleCheckin[];
 }
 
-const requiredPoints = 15;
 const StatusView: FunctionComponent<StatusProps> = ({ checkins }: StatusProps) => {
+	const semester = getSemester();
+	const requiredPoints = semester === "Spring" ? 9 : semester === "Fall" ? 7 : -1;
 	const points: number = checkins.map((event) => event.points).reduce((a, b) => a + b, 0);
 	const progress: number = Math.min(1, points / requiredPoints);
 	const remainingPoints = Math.max(0, requiredPoints - points);
