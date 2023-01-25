@@ -19,7 +19,7 @@ import { BsBookmarkPlusFill, BsPencilFill, BsTrashFill } from "react-icons/bs";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { toast } from "react-hot-toast";
 import Toast from "@/components/common/Toast";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 interface eventPageParams {
 	params: { id: string };
@@ -53,27 +53,31 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 	const endString = lightFormat(event.eventEnd, formatString);
 	const [globalState] = useGlobalContext();
 
-	/*
-	The router query parameters are not immediately made available on first render.
-	Here I use a reference to track when the router's query parameter were first made available.
-	A reference is used instead of state to ensure no unnecessary re-renders are made.
+	/**
+	 * If any issue crops up where the form toast keeps being shown despite my attempts to ensure it won't,
+	 * Check this gist for an alternative solution: https://gist.github.com/Xevion/11ba3c06cd0ca374a11acb18e4d4360b
 	 */
-	const routerExecutionRef = useRef(false);
 	useEffect(() => {
-		if (!routerExecutionRef.current && notify == "formClosed") {
-			routerExecutionRef.current = true;
-			toast.custom(
-				({ id, visible }) => (
-					<Toast
-						title="Form Closed"
-						description="The form you tried to access is closed."
-						type="error"
-						toastId={id}
-						visible={visible}
-					/>
-				),
-				{ id: "form-closed", duration: 8000 }
-			);
+		if (router.isReady) {
+			if (notify == "formClosed") {
+				toast.custom(
+					({ id, visible }) => (
+						<Toast
+							title="Form Closed"
+							description="The form you tried to access is closed."
+							type="error"
+							toastId={id}
+							visible={visible}
+						/>
+					),
+					{ id: "form-closed", duration: 8000 }
+				);
+			}
+
+			if (notify != undefined) {
+				const { notify: _, ...omittedQuery } = router.query;
+				router.replace({ query: omittedQuery }, undefined, { shallow: true });
+			}
 		}
 	}, [router]);
 
