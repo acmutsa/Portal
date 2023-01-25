@@ -1,4 +1,4 @@
-import { Dispatch, Fragment, FunctionComponent, useRef } from "react";
+import { Dispatch, Fragment, FunctionComponent, ReactFragment, ReactNode, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { classNames } from "@/utils/helpers";
 
@@ -7,7 +7,7 @@ interface DialogProps {
 	iconClass?: string;
 	icon?: JSX.Element;
 	title: string;
-	description: string;
+	description: string | ReactNode | ReactFragment;
 	open: boolean;
 	onClose: Dispatch<boolean>;
 }

@@ -49,11 +49,17 @@ export type EventFormValues = {
 
 type EventFormProps = {
 	onSubmit: SubmitHandler<EventFormValues>;
+	onDelete?: () => void;
 	initialValues?: InitialEventFormValues;
 	context: "create" | "modify";
 };
 
-const EventForm: FunctionComponent<EventFormProps> = ({ context, onSubmit, initialValues }) => {
+const EventForm: FunctionComponent<EventFormProps> = ({
+	context,
+	onSubmit,
+	onDelete,
+	initialValues,
+}) => {
 	const currentSemester = getPreciseSemester();
 	const now = new Date();
 	// Include up to 3 years in the past, and one year in the future, but no semesters before Fall 2022.
@@ -279,7 +285,16 @@ const EventForm: FunctionComponent<EventFormProps> = ({ context, onSubmit, initi
 						</div>
 					</div>
 				</div>
-				<div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+				<div className="px-4 py-3 bg-gray-50 text-right sm:px-6 space-x-3">
+					{onDelete != undefined ? (
+						<button
+							type="button"
+							onClick={onDelete}
+							className="bg-red-500 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+						>
+							Delete
+						</button>
+					) : null}
 					<button
 						type="submit"
 						className="bg-primary border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

@@ -194,7 +194,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 												Edit
 											</button>
 										</Link>
-										<Link href={`/admin/events/${id}?delete`}>
+										<Link href={`/admin/events/${id}?action=delete`}>
 											<button className="bg-rose-500 hover:bg-rose-600 relative inline-flex items-center px-2 py-3 rounded-r-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
 												<span className="sr-only">Open options</span>
 												<BsTrashFill className="h-5 w-5" aria-hidden="true" />

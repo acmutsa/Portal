@@ -3,6 +3,8 @@ import { nanoid } from "nanoid";
 import { Context, createRouter } from "@/server/router/context";
 import * as trpc from "@trpc/server";
 import { env } from "@/env/server.mjs";
+import { getUnique } from "@/server/controllers/events";
+import { TRPCError } from "@trpc/server";
 
 export const validateAdmin = async (
 	ctx: Context | { admin_username: string; admin_password: string }
@@ -111,6 +113,28 @@ export const adminRouter = createRouter()
 					...input,
 					formOpen,
 					formClose,
+				},
+			});
+		},
+	})
+	.mutation("deleteEvent", {
+		input: z.object({
+			id: z.string(),
+		}),
+		async resolve({ input, ctx }) {
+			await validateAdmin(ctx);
+
+			const event = await getUnique({ id: input.id });
+
+			if (event == null)
+				throw new TRPCError({
+					message: "The event you tried to delete does not exist.",
+					code: "NOT_FOUND",
+				});
+
+			await ctx.prisma.event.delete({
+				where: {
+					id: input.id,
 				},
 			});
 		},

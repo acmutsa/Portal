@@ -1,10 +1,12 @@
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useRef, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import { useRouter } from "next/router";
 import EventForm, {
 	InitialEventFormSchema,
 	InitialEventFormValues,
 } from "@/components/forms/EventForm";
+import { AiFillWarning } from "react-icons/ai";
+import WarningDialog from "@/components/member/WarningDialog";
 
 const EditEventView: FunctionComponent = () => {
 	const router = useRouter();
@@ -13,7 +15,8 @@ const EditEventView: FunctionComponent = () => {
 	const slug = router?.query?.slug;
 	if (slug == undefined || slug[1] == undefined) return <>Bad event ID.</>;
 
-	let updateEvent = trpc.useMutation(["admin.updateEvent"]);
+	const updateEvent = trpc.useMutation(["admin.updateEvent"]);
+	const deleteEvent = trpc.useMutation(["admin.deleteEvent"]);
 
 	// Pull in the event's current data, parsing it in the process.
 	const [initialData, setInitialData] = useState<InitialEventFormValues | null>(null);
@@ -24,37 +27,72 @@ const EditEventView: FunctionComponent = () => {
 		},
 	});
 
+	// TODO: Implement ?action= query parameter handling for deletes
+	const [deleteDialog, setDeleteDialog] = useState(false);
+
 	return (
-		<div className="w-full h-full p-[5px]">
-			<div className="max-w-[50rem] mx-auto">
-				<div className="sm:px-6 lg:px-0 lg:col-span-9">
-					{isSuccess && initialData != null ? (
-						<EventForm
-							context="modify"
-							initialValues={initialData!}
-							onSubmit={async (data) => {
-								if (data == null) return;
-								updateEvent.mutate(
-									{
-										id: event.id,
-										...data,
-										organization: data.organization.id,
-										semester: data.semester.id,
-									},
-									{
-										onSuccess: (res) => {
-											router.push(`/events/${res.pageID}`);
+		<>
+			<WarningDialog
+				title="Delete Event"
+				description={
+					<p>
+						Once deleted, the event will not be recovered. <br />
+						All checkins associated with this event will also disappear.
+					</p>
+				}
+				onClose={(confirmed: boolean) => {
+					if (confirmed) {
+						deleteEvent.mutate(
+							{
+								id: event!.id,
+							},
+							{
+								onSuccess: (res) => {
+									router.push("/admin/events");
+								},
+							}
+						);
+					}
+					setDeleteDialog(false);
+				}}
+				open={deleteDialog}
+				iconParentClass="bg-red-100"
+				icon={<AiFillWarning className="h-6 w-6 text-red-600" />}
+			/>
+			<div className="w-full h-full p-[5px]">
+				<div className="max-w-[50rem] mx-auto">
+					<div className="sm:px-6 lg:px-0 lg:col-span-9">
+						{isSuccess && initialData != null ? (
+							<EventForm
+								context="modify"
+								initialValues={initialData!}
+								onDelete={() => {
+									setDeleteDialog(true);
+								}}
+								onSubmit={async (data) => {
+									if (data == null) return;
+									updateEvent.mutate(
+										{
+											id: event.id,
+											...data,
+											organization: data.organization.id,
+											semester: data.semester.id,
 										},
-									}
-								);
-							}}
-						/>
-					) : (
-						<p>Loading...</p>
-					)}
+										{
+											onSuccess: (res) => {
+												router.push(`/events/${res.pageID}`);
+											},
+										}
+									);
+								}}
+							/>
+						) : (
+							<p>Loading...</p>
+						)}
+					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
