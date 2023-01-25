@@ -27,6 +27,15 @@ export const nextConfig = {
 		locales: ["en"],
 		defaultLocale: "en",
 	},
+	async redirects() {
+		return [
+			{
+				source: '/tos',
+				destination: '/terms-of-service',
+				permanent: true
+			}
+		]
+	},
 	// TODO: Remove this once we don't use external images
 	images: {
 		remotePatterns: [
