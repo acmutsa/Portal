@@ -17,6 +17,9 @@ import { env } from "@/env/server.mjs";
 import { Event } from "@prisma/client";
 import { BsBookmarkPlusFill, BsPencilFill, BsTrashFill } from "react-icons/bs";
 import { useGlobalContext } from "@/components/common/GlobalContext";
+import { toast } from "react-hot-toast";
+import Toast from "@/components/common/Toast";
+import { useEffect, useRef } from "react";
 
 interface eventPageParams {
 	params: { id: string };
@@ -27,7 +30,7 @@ interface eventPageParams {
 
 const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrcodeData }) => {
 	const router = useRouter();
-	const { id } = router.query;
+	const { id, notify } = router.query;
 
 	const ogp = useOpenGraph({
 		title: event.name,
@@ -39,7 +42,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 					type: "image/png",
 			  }
 			: null,
-		url: `/events/${id}`,
+		url: `/events/${event.id}`,
 		labels: [
 			["When", format(event.eventStart, "E, MM/dd/yyyy h:mma")],
 			["Where", event.location!],
@@ -49,6 +52,30 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 	const startString = lightFormat(event.eventStart, formatString);
 	const endString = lightFormat(event.eventEnd, formatString);
 	const [globalState] = useGlobalContext();
+
+	/*
+	The router query parameters are not immediately made available on first render.
+	Here I use a reference to track when the router's query parameter were first made available.
+	A reference is used instead of state to ensure no unnecessary re-renders are made.
+	 */
+	const routerExecutionRef = useRef(false);
+	useEffect(() => {
+		if (!routerExecutionRef.current && notify == "formClosed") {
+			routerExecutionRef.current = true;
+			toast.custom(
+				({ id, visible }) => (
+					<Toast
+						title="Form Closed"
+						description="The form you tried to access is closed."
+						type="error"
+						toastId={id}
+						visible={visible}
+					/>
+				),
+				{ id: "form-closed", duration: 8000 }
+			);
+		}
+	}, [router]);
 
 	const calendarLink = generateGoogleCalendarLink(
 		event.eventStart,
