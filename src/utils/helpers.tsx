@@ -138,7 +138,7 @@ export const range = (start: number, stop: number, step: number = 1) =>
  * @param now The time to be compared to in all checks. Defaults to now.
  */
 export function isCheckinOpen(
-	event: Event,
+	event: Pick<Event, "forcedIsOpen" | "eventStart" | "eventEnd" | "formOpen" | "formClose">,
 	useEventTimes: boolean = false,
 	now: Date | null = null
 ): boolean {

@@ -5,7 +5,7 @@ import { trpc } from "@/utils/trpc";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { GetServerSidePropsContext, NextPage } from "next";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
-import { classNames } from "@/utils/helpers";
+import { classNames, isCheckinOpen } from "@/utils/helpers";
 import { validateMember } from "@/utils/server_helpers";
 import { useEffect } from "react";
 import useOpenGraph from "@/components/common/useOpenGraph";
@@ -14,6 +14,7 @@ import Head from "next/head";
 
 interface CheckinPageParams {
 	[key: string]: string;
+
 	id: string;
 }
 
@@ -44,6 +45,11 @@ export async function getServerSideProps<ServerSideProps>({
 			id: true,
 			name: true,
 			pageID: true,
+			formClose: true,
+			formOpen: true,
+			eventStart: true,
+			eventEnd: true,
+			forcedIsOpen: true,
 		},
 	});
 
@@ -60,6 +66,13 @@ export async function getServerSideProps<ServerSideProps>({
 			},
 		},
 	});
+
+	if (!isCheckinOpen(event))
+		return {
+			redirect: {
+				destination: `/events/${event.pageID}?notify=formClosed`,
+			},
+		};
 
 	return {
 		props: {
