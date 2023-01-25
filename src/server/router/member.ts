@@ -13,7 +13,7 @@ import {
 	updateMemberData,
 } from "@/server/controllers/member";
 import { getCheckin, isCheckinOpen } from "@/server/controllers/checkin";
-import { isValuesNull } from "@/utils/helpers";
+import { getPreciseSemester, isValuesNull } from "@/utils/helpers";
 import { PrettyMemberDataWithoutIdSchema } from "@/utils/transform";
 import { Member } from "@prisma/client";
 
@@ -195,5 +195,35 @@ export const memberRouter = createRouter()
 		async resolve({ ctx }) {
 			await validateAdmin(ctx);
 			return getAllMembers(true);
+		},
+	})
+	.query("countActive", {
+		async resolve({ ctx }) {
+			await validateAdmin(ctx);
+
+			// Count the total number of members that have checked in at least once
+			const activeMembersPromise = ctx.prisma.member.count({
+				where: {
+					checkins: {
+						some: {
+							event: {
+								semester: getPreciseSemester(),
+							},
+						},
+					},
+				},
+			});
+
+			const allMembersPromise = ctx.prisma.member.count();
+
+			const [activeMembers, allMembers] = await Promise.all([
+				activeMembersPromise,
+				allMembersPromise,
+			]);
+
+			return {
+				active: activeMembers,
+				inactive: allMembers - activeMembers,
+			};
 		},
 	});
