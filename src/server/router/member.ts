@@ -164,7 +164,7 @@ export const memberRouter = createRouter()
 
 			if (!isCheckinOpen(event))
 				throw new TRPCError({
-					message: "You cannot checkin to this event anymore, the form has closed.",
+					message: "The form for this event is closed.",
 					code: "PRECONDITION_FAILED",
 				});
 
