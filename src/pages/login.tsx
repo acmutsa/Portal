@@ -57,7 +57,8 @@ const EventView: NextPage = () => {
 			setCookie(cookies.member_email, data.email);
 			setCookie(cookies.member_id, data.id);
 			setGlobalState({ ...globalState, member: true });
-			await router.push(safeUrl(router.query.next, "/me"));
+			// await router.push(safeUrl(router.query.next, "/me"));
+			await router.push("/events");
 		} else {
 			setIsErrorOpen(true);
 		}
