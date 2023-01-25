@@ -33,7 +33,7 @@ export const useOpenGraph = (data: PageOgData) => {
 			url: data.url,
 			// Provide a suffix to the title, but only if it's not disabled explicitly.
 			// Otherwise, always provide a default title.
-			title: data.title ? `${data.title}${data.suffix ?? false ? " | ACM-UTSA" : ""}` : "ACM-UTSA",
+			title: data.title ? `${data.title}${data.suffix ?? true ? " | ACM-UTSA" : ""}` : "ACM-UTSA",
 			type: data.type ?? "website",
 			author: data.author,
 			site_name: "ACM UTSA",

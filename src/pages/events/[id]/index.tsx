@@ -30,7 +30,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 	const { id } = router.query;
 
 	const ogp = useOpenGraph({
-		title: (event.name ?? "Something") + " | ACM",
+		title: event.name,
 		description: `Come and join ${event.organization} for ${event.name}!`,
 		image: event.headerImage
 			? {
