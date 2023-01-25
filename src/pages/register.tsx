@@ -32,7 +32,6 @@ const Join: NextPage = () => {
 							console.log(e);
 						}}
 					/>
-					<Disclosure />
 				</div>
 			</div>
 		</>
