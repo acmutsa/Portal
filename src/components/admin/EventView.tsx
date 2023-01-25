@@ -84,7 +84,7 @@ const EventView: FunctionComponent = () => {
 							triggerDelete(ctx.row.original.id);
 						}}
 						onEdit={() => {
-							return router.push(`/admin/events/${ctx.row.original.id}`);
+							return router.push(`/admin/events/${ctx.row.original.pageID}`);
 						}}
 					/>
 				),

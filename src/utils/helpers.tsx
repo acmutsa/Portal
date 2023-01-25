@@ -2,6 +2,7 @@ import { differenceInDays, format, isAfter, isBefore } from "date-fns";
 import { Event } from "@/server/db/client";
 import organizations from "@/config/organizations.json";
 import { Choice } from "@/components/forms/CustomSelect";
+import { RefinementCtx } from "zod";
 
 export function pluralize(count: number) {
 	return count != 1 ? "s" : "";
@@ -240,4 +241,21 @@ export function safeUrl(
 	if (parameter == null || typeof parameter !== "string") return alternative;
 	if (parameter.startsWith("/")) return parameter;
 	return alternative;
+}
+
+/**
+ * Returns a function for Zod schemas useful for parsing unknown inputs into a Choice correctly.
+ * For example, the EventForm is given an organization (string) as an input, but needs a Choice
+ * type (an object with string properties 'id' and 'name'). This function helps with processing that.
+ *
+ */
+export function getCustomChoiceParser(
+	choices: Choice[]
+): (value: string, ctx: RefinementCtx) => Choice | undefined {
+	return (value, ctx) => {
+		for (const choice of choices) {
+			if (value === choice.id) return choice;
+		}
+		return undefined;
+	};
 }
