@@ -137,8 +137,9 @@ export const memberRouter = createRouter()
 				pageID: z.string(),
 				id: z.string(),
 				feedback: z.string().nullish(),
+				inPerson: z.boolean(),
 			})
-			.partial()
+			.partial({ pageID: true, id: true })
 			.refine(
 				(data) => data.pageID !== undefined || data.id !== undefined,
 				"Either pageID or id should be specified"
@@ -156,11 +157,6 @@ export const memberRouter = createRouter()
 				});
 
 			const existing_checkin = await getCheckin(self.id, event.id);
-			if (existing_checkin != null)
-				throw new TRPCError({
-					message: "You have already checked in for this event.",
-					code: "CONFLICT",
-				});
 
 			if (!isCheckinOpen(event))
 				throw new TRPCError({
@@ -168,8 +164,14 @@ export const memberRouter = createRouter()
 					code: "PRECONDITION_FAILED",
 				});
 
-			await ctx.prisma.checkin.create({
-				data: {
+			await ctx.prisma.checkin.upsert({
+				where: {
+					eventID_memberID: {
+						eventID: event.id,
+						memberID: self.id,
+					},
+				},
+				create: {
 					event: {
 						connect: {
 							id: event.id,
@@ -180,8 +182,13 @@ export const memberRouter = createRouter()
 							id: self.id,
 						},
 					},
-					isInPerson: true,
+					isInPerson: input.inPerson,
 					feedback: input.feedback,
+				},
+				update: {
+					isInPerson: input.inPerson,
+					feedback: input.feedback,
+					timestamp: new Date(),
 				},
 			});
 		},

@@ -104,7 +104,7 @@ const CheckinView: NextPage<{
 		const feedback = (data.feedback ?? "").length > 0 ? data.feedback : null;
 
 		checkin.mutate(
-			{ pageID: event!.pageID, feedback },
+			{ pageID: event!.pageID, feedback, inPerson: true },
 			{
 				onSuccess: async () => {
 					// TODO: Add special interaction here, maybe? Set off a serotonin boosting animation?
@@ -148,6 +148,7 @@ const CheckinView: NextPage<{
 								Add your suggestions & comments
 							</label>
 							<div className="mt-1">
+								{/* TODO: Implement inperson/virtual form buttons */}
 								<textarea
 									className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
 									rows={4}
