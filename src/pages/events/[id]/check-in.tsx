@@ -3,11 +3,15 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";
 import { useGlobalContext } from "@/components/common/GlobalContext";
-import { NextPage } from "next";
+import { GetServerSidePropsContext, NextPage } from "next";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { classNames } from "@/utils/helpers";
+import { validateMember } from "@/utils/server_helpers";
+import { useEffect } from "react";
 
-interface eventPageParams {
+interface CheckinPageParams {
+	[key: string]: any;
+
 	params: { id: string };
 	locales: string[];
 	locale: string;
@@ -18,10 +22,73 @@ interface FormValues {
 	feedback: string;
 }
 
-const CheckinView: NextPage<{ event: Event }> = ({ event }) => {
+export async function getServerSideProps<ServerSideProps>({
+	req,
+	res,
+	params,
+}: GetServerSidePropsContext<CheckinPageParams>) {
+	const [valid, member] = await validateMember(req, res, true);
+
+	if (!valid)
+		return {
+			redirect: { destination: `/login?next=${req.url}` },
+		};
+
+	const idParam = params!.id;
+
+	// Limit selection of properties for SSR
+	const event = await prisma.event.findUnique({
+		where: {
+			pageID: idParam.toLowerCase(),
+		},
+		select: {
+			id: true,
+			name: true,
+			pageID: true,
+		},
+	});
+
+	if (event == null)
+		return {
+			notFound: true,
+		};
+
+	const checkin = await prisma.checkin.findUnique({
+		where: {
+			eventID_memberID: {
+				eventID: event.id,
+				memberID: member!.id,
+			},
+		},
+	});
+
+	return {
+		props: {
+			form:
+				checkin != null
+					? {
+							feedback: checkin.feedback,
+							inPerson: checkin.isInPerson,
+					  }
+					: null,
+			event,
+		},
+	};
+}
+
+const CheckinView: NextPage<{
+	event: Event;
+	form: { feedback: string; inPerson: boolean } | null;
+}> = ({ event, form }) => {
 	const checkin = trpc.useMutation(["member.checkin"]);
 	const router = useRouter();
 	const [globalState] = useGlobalContext();
+
+	useEffect(() => {
+		return () => {
+			console.log(form);
+		};
+	}, []);
 
 	const {
 		register,
@@ -29,7 +96,7 @@ const CheckinView: NextPage<{ event: Event }> = ({ event }) => {
 		watch,
 		formState: { errors },
 	} = useForm({
-		defaultValues: { feedback: "" },
+		defaultValues: { feedback: form?.feedback ?? "" },
 	});
 
 	const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -113,7 +180,7 @@ const CheckinView: NextPage<{ event: Event }> = ({ event }) => {
 								{remainingCharacters}
 							</span>
 							<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[12rem]">
-								Submit
+								{form == null ? "Submit" : "Save"}
 							</button>
 						</div>
 					</form>
@@ -123,40 +190,6 @@ const CheckinView: NextPage<{ event: Event }> = ({ event }) => {
 	);
 };
 
-export async function getStaticProps(urlParams: eventPageParams) {
-	const params = urlParams.params;
-
-	// Limit selection of properties for SSR
-	const event = await prisma.event.findUnique({
-		where: {
-			pageID: params.id.toLowerCase(),
-		},
-		select: {
-			id: true,
-			name: true,
-			pageID: true,
-		},
-	});
-
-	if (event == null)
-		return {
-			notFound: true,
-			revalidate: 5,
-		};
-
-	return {
-		props: {
-			event,
-		},
-		// Next.js will attempt to re-generate the page:
-		// - When a request comes in
-		// - At most once every 10 seconds
-		revalidate: 2, // In seconds
-	};
-}
-
-export async function getStaticPaths() {
-	return { paths: [], fallback: "blocking" };
-}
+// export async function getStaticProps(urlParams: eventPageParams) {}
 
 export default CheckinView;
