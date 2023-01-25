@@ -11,6 +11,21 @@ import OpenGraph from "@/components/common/OpenGraph";
 import Disclosure from "@/components/util/Disclosure";
 import Head from "next/head";
 import { cookies } from "@/utils/constants";
+import { GetServerSidePropsContext } from "next";
+import { validateMember } from "@/utils/server_helpers";
+
+export async function getServerSideProps<ServerSideProps>({ req, res }: GetServerSidePropsContext) {
+	const [valid, member] = await validateMember(req, res, true);
+
+	if (valid)
+		return {
+			redirect: {
+				destination: "/me",
+			},
+		};
+
+	return {};
+}
 
 const EventView: NextPage = () => {
 	const { register, handleSubmit } = useForm();
@@ -25,14 +40,6 @@ const EventView: NextPage = () => {
 		title: "Login",
 		url: "/login",
 	});
-
-	// Sub-par navigation guard
-	useEffect(() => {
-		// TODO: Improve navigation guards to not show login page at all before redirecting when logged in.
-		if (globalState.member) {
-			router.replace("/me");
-		}
-	}, [globalState]);
 
 	const closeErrorModal = () => setIsErrorOpen(false);
 
