@@ -36,7 +36,6 @@ model Checkin {
     member     Member   @relation(fields: [memberID], references: [id])
     isInPerson Boolean
     feedback   String?
-    semester   String      @default("Fall 2022")
     timestamp  DateTime @default(now())
 
     @@id([eventID, memberID])
