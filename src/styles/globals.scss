@@ -116,6 +116,18 @@ input[type="date"]::-moz-placeholder {
     }
   }
 
+  tbody > tr > td {
+    > &.name {
+      min-width: 180px;
+    }
+    > &.address > div {
+      max-width: 400px;
+      min-width: 230px;
+      overflow: hidden;
+      max-height: 65px;
+    }
+  }
+
   .p-datatable-table {
   }
 

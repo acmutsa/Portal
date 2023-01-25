@@ -70,7 +70,7 @@ FilterService.register("MATCH_IDENTITY", (a: Set<IdentityType>, b?: string) => {
 });
 
 interface MemberTableItem {
-	member: Member;
+	member: MemberWithData;
 	prettyMemberData: PrettyMemberData;
 }
 
@@ -239,7 +239,7 @@ const DataTableDemo = () => {
 			paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
 		>
 			<Column selectionMode="multiple" headerStyle={{ width: "3em" }}></Column>
-			<Column sortable filter field="member.name" header="Name"></Column>
+			<Column sortable filter field="member.name" header="Name" className="name"></Column>
 			<Column filter field="member.email" header="Email"></Column>
 			<Column filter field="member.id" header="ABC123"></Column>
 			<Column sortable filter field="member.data.major" header="Major"></Column>
@@ -271,7 +271,13 @@ const DataTableDemo = () => {
 				filterMatchModeOptions={[{ label: "Match", value: "MATCH_IDENTITY" }]}
 				filterMatchMode="custom"
 			/>
-			<Column filter field="member.data.address" header="Address" />
+			<Column
+				filter
+				field="member.data.address"
+				header="Address"
+				className="address"
+				body={({ member: { data } }: MemberTableItem) => <div>{data?.address}</div>}
+			/>
 		</DataTable>
 	);
 };
