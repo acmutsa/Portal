@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext, NextPage } from "next";
-import { classNames } from "@/utils/helpers";
+import { classNames, getPreciseSemester } from "@/utils/helpers";
 import { useState } from "react";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
@@ -31,6 +31,9 @@ export async function getServerSideProps<ServerSideProps>({ req, res }: GetServe
 		await prisma.checkin.findMany({
 			where: {
 				member: member!,
+				event: {
+					semester: getPreciseSemester(),
+				},
 			},
 			select: {
 				event: {
