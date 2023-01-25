@@ -7,6 +7,8 @@ interface ShortToggleProps {
 	children?: string | JSX.Element | JSX.Element[];
 	onChange?: (checked: boolean) => void;
 	checked?: boolean;
+	enabledClass?: string;
+	disabledClass?: string;
 }
 
 const ShortToggle: FunctionComponent<ShortToggleProps> = ({
@@ -14,6 +16,8 @@ const ShortToggle: FunctionComponent<ShortToggleProps> = ({
 	children,
 	onChange,
 	checked,
+	enabledClass,
+	disabledClass,
 }: ShortToggleProps) => {
 	return (
 		<div className="flex items-center">
@@ -31,7 +35,7 @@ const ShortToggle: FunctionComponent<ShortToggleProps> = ({
 					<span
 						aria-hidden="true"
 						className={classNames(
-							checked ? "bg-indigo-600" : "bg-gray-200",
+							checked ? enabledClass ?? "bg-indigo-600" : disabledClass ?? "bg-gray-200",
 							"pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200"
 						)}
 					/>
