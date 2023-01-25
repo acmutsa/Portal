@@ -115,6 +115,7 @@ const CheckinView: NextPage<{
 		formState: { errors },
 	} = useForm({
 		defaultValues: { feedback: form?.feedback ?? "" },
+		mode: "onChange",
 	});
 
 	const onSubmit: SubmitHandler<FormValues> = async (data) => {
@@ -177,24 +178,22 @@ const CheckinView: NextPage<{
 										rows={4}
 										placeholder={`Optional, ${maximumCharacters} characters max`}
 										{...register("feedback", {
-											validate: (v) => {
-												console.log(`Calling validate (${v.length})`);
-												return true;
-											},
 											maxLength: {
-												message: "Maximum character limit reached",
+												message: "Max character limit reached",
 												value: maximumCharacters,
 											},
 											pattern: {
-												message: "Letters, numbers & basic punctuation only",
-												value: /[A-z\-!@#$%^&*(),;':\[\]~]*/,
+												message: "Letters, numbers & punctuation only",
+												value: /^[A-z\-!@#$%^&*(),;':\[\]~]*$/,
 											},
 										})}
 									/>
 								</div>
 							</div>
 							<div className="flex justify-end items-center">
-								{errors.feedback != undefined ? <span>{errors.feedback.message}</span> : null}
+								{errors.feedback != undefined ? (
+									<div className="flex-grow text-sm text-red-500">{errors.feedback.message}</div>
+								) : null}
 								<span
 									className={classNames(
 										"px-2 text-sm flex items-center",
@@ -205,7 +204,7 @@ const CheckinView: NextPage<{
 								>
 									{remainingCharacters}
 								</span>
-								<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[12rem]">
+								<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[10rem]">
 									{form == null ? "Submit" : "Save"}
 								</button>
 							</div>
