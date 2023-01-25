@@ -13,18 +13,25 @@ import Head from "next/head";
 import { cookies } from "@/utils/constants";
 import { GetServerSidePropsContext } from "next";
 import { validateMember } from "@/utils/server_helpers";
+import { safeUrl } from "@/utils/helpers";
 
-export async function getServerSideProps<ServerSideProps>({ req, res }: GetServerSidePropsContext) {
+export async function getServerSideProps<ServerSideProps>({
+	req,
+	res,
+	query,
+}: GetServerSidePropsContext) {
 	const [valid, member] = await validateMember(req, res, true);
 
 	if (valid)
 		return {
 			redirect: {
-				destination: "/me",
+				destination: safeUrl(query.next, "/me"),
 			},
 		};
 
-	return {};
+	return {
+		props: {},
+	};
 }
 
 const EventView: NextPage = () => {
@@ -50,7 +57,7 @@ const EventView: NextPage = () => {
 			setCookie(cookies.member_email, data.email);
 			setCookie(cookies.member_id, data.id);
 			setGlobalState({ ...globalState, member: true });
-			await router.push("/me");
+			await router.push(safeUrl(router.query.next, "/me"));
 		} else {
 			setIsErrorOpen(true);
 		}

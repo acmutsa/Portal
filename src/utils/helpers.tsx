@@ -227,3 +227,17 @@ export function getSemesterRange(
 
 	return results;
 }
+
+/**
+ * Identify unsafe potential redirects so that users are not redirected off-site improperly.
+ * @param parameter The query parameter to be given. Supports string arrays for ease of use.
+ * @param alternative The alternative in-case {parameter} could not be validated.
+ */
+export function safeUrl(
+	parameter: string | string[] | undefined | null,
+	alternative: string
+): string {
+	if (parameter == null || typeof parameter !== "string") return alternative;
+	if (parameter.startsWith("/")) return parameter;
+	return alternative;
+}

@@ -23,7 +23,7 @@ export async function getServerSideProps<ServerSideProps>({ req, res }: GetServe
 	if (!valid)
 		return {
 			redirect: {
-				destination: "/login",
+				destination: "/login?next=/me",
 			},
 		};
 
