@@ -184,7 +184,7 @@ const CheckinView: NextPage<{
 											},
 											pattern: {
 												message: "Letters, numbers & punctuation only",
-												value: /^[A-z\-!@#$%^&*(),;':\[\]~]*$/,
+												value: /^[A-z\-!@#$%^&*(),;':\[\]~\s]*$/,
 											},
 										})}
 									/>
