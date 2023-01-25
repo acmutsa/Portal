@@ -8,14 +8,13 @@ import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { classNames } from "@/utils/helpers";
 import { validateMember } from "@/utils/server_helpers";
 import { useEffect } from "react";
+import useOpenGraph from "@/components/common/useOpenGraph";
+import OpenGraph from "@/components/common/OpenGraph";
+import Head from "next/head";
 
 interface CheckinPageParams {
-	[key: string]: any;
-
-	params: { id: string };
-	locales: string[];
-	locale: string;
-	defaultLocale: string;
+	[key: string]: string;
+	id: string;
 }
 
 interface FormValues {
@@ -84,6 +83,12 @@ const CheckinView: NextPage<{
 	const router = useRouter();
 	const [globalState] = useGlobalContext();
 
+	const ogp = useOpenGraph({
+		title: `Check-in to "${event.name}"`,
+		description: `Use this page to check-in to "${event.name}"`,
+		url: `/events/${event.id}/check-in`,
+	});
+
 	useEffect(() => {
 		return () => {
 			console.log(form);
@@ -125,69 +130,77 @@ const CheckinView: NextPage<{
 	const remainingCharacters = maximumCharacters - watch("feedback").length;
 
 	return (
-		<div className="page-view bg-darken">
-			<div className="flex mx-auto justify-center">
-				<div className="mt-10 w-full mx-3.5 max-w-[30rem] bg-white rounded-lg">
-					<div className="pl-3.5 py-3.5 pr-1">
-						<Breadcrumbs
-							value={[
-								{
-									label: event.name,
-									href: `/events/${event.pageID}/`,
-								},
-								{
-									label: "Check-in",
-									active: true,
-								},
-							]}
-						/>
-					</div>
-					<form onSubmit={handleSubmit(onSubmit)} className="px-5 my-1.5">
-						<div className="w-full">
-							<label htmlFor="comment" className="block text-sm font-medium text-gray-700">
-								Add your suggestions & comments
-							</label>
-							<div className="mt-1">
-								{/* TODO: Implement inperson/virtual form buttons */}
-								<textarea
-									className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-									rows={4}
-									placeholder={`Optional, ${maximumCharacters} characters max`}
-									{...register("feedback", {
-										validate: (v) => {
-											console.log(`Calling validate (${v.length})`);
-											return true;
-										},
-										maxLength: {
-											message: "Maximum character limit reached",
-											value: maximumCharacters,
-										},
-										pattern: {
-											message: "Letters, numbers & basic punctuation only",
-											value: /[A-z\-!@#$%^&*(),;':\[\]~]*/,
-										},
-									})}
-								/>
+		<>
+			<Head>
+				<title>{ogp.title}</title>
+				<OpenGraph properties={ogp} />
+			</Head>
+			<div className="page-view bg-darken">
+				<div className="flex mx-auto justify-center">
+					<div className="mt-10 w-full mx-3.5 max-w-[30rem] bg-white rounded-lg">
+						<div className="pl-3.5 py-3.5 pr-1">
+							<Breadcrumbs
+								value={[
+									{
+										label: event.name,
+										href: `/events/${event.pageID}/`,
+									},
+									{
+										label: "Check-in",
+										active: true,
+									},
+								]}
+							/>
+						</div>
+						<form onSubmit={handleSubmit(onSubmit)} className="px-5 my-1.5">
+							<div className="w-full">
+								<label htmlFor="comment" className="block text-sm font-medium text-gray-700">
+									Add your suggestions & comments
+								</label>
+								<div className="mt-1">
+									{/* TODO: Implement inperson/virtual form buttons */}
+									<textarea
+										className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+										rows={4}
+										placeholder={`Optional, ${maximumCharacters} characters max`}
+										{...register("feedback", {
+											validate: (v) => {
+												console.log(`Calling validate (${v.length})`);
+												return true;
+											},
+											maxLength: {
+												message: "Maximum character limit reached",
+												value: maximumCharacters,
+											},
+											pattern: {
+												message: "Letters, numbers & basic punctuation only",
+												value: /[A-z\-!@#$%^&*(),;':\[\]~]*/,
+											},
+										})}
+									/>
+								</div>
 							</div>
-						</div>
-						<div className="flex justify-end items-center">
-							{errors.feedback != undefined ? <span>{errors.feedback.message}</span> : null}
-							<span
-								className={classNames(
-									"px-2 text-sm flex items-center",
-									remainingCharacters / maximumCharacters < 0.15 ? "text-red-500" : "text-zinc-500"
-								)}
-							>
-								{remainingCharacters}
-							</span>
-							<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[12rem]">
-								{form == null ? "Submit" : "Save"}
-							</button>
-						</div>
-					</form>
+							<div className="flex justify-end items-center">
+								{errors.feedback != undefined ? <span>{errors.feedback.message}</span> : null}
+								<span
+									className={classNames(
+										"px-2 text-sm flex items-center",
+										remainingCharacters / maximumCharacters < 0.15
+											? "text-red-500"
+											: "text-zinc-500"
+									)}
+								>
+									{remainingCharacters}
+								</span>
+								<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[12rem]">
+									{form == null ? "Submit" : "Save"}
+								</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
