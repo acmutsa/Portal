@@ -32,8 +32,8 @@ model Event {
 model Checkin {
     eventID    String
     memberID   String
-    event      Event    @relation(fields: [eventID], references: [id])
-    member     Member   @relation(fields: [memberID], references: [id])
+    event      Event    @relation(fields: [eventID], references: [id], onDelete: Cascade)
+    member     Member   @relation(fields: [memberID], references: [id], onDelete: Cascade)
     isInPerson Boolean
     feedback   String?
     timestamp  DateTime @default(now())
