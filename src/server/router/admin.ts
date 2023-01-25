@@ -72,4 +72,46 @@ export const adminRouter = createRouter()
 				},
 			});
 		},
+	})
+	.mutation("updateEvent", {
+		input: z
+			.object({
+				name: z.string(),
+				description: z.string(),
+				headerImage: z.string(),
+				organization: z.string(),
+				semester: z.string().regex(/(?:Fall|Spring|Summer) 20\d{2}/),
+				location: z.string(),
+				eventStart: z.date(),
+				eventEnd: z.date(),
+				formOpen: z.date().nullish(),
+				formClose: z.date().nullish(),
+			})
+			.partial()
+			.and(
+				z.object({
+					id: z.string(),
+				})
+			),
+		async resolve({ input, ctx }) {
+			await validateAdmin(ctx);
+
+			// If the form close/open is unspecified, it automatically takes on the values of the event start/end.
+			let { formClose, formOpen } = input;
+			if (formClose == null || formOpen == null) {
+				formOpen = input.eventStart;
+				formClose = input.eventEnd;
+			}
+
+			return await ctx.prisma.event.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					...input,
+					formOpen,
+					formClose,
+				},
+			});
+		},
 	});

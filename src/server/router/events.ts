@@ -2,13 +2,35 @@ import { z } from "zod";
 import { createRouter } from "@/server/router/context";
 import { sum } from "@/utils/helpers";
 import { validateAdmin } from "@/server/router/admin";
-import { EventFilterSchema, getEvents } from "@/server/controllers/events";
+import { EventFilterSchema, getEvents, getUnique } from "@/server/controllers/events";
+import { TRPCError } from "@trpc/server";
 
 export const eventsRouter = createRouter()
 	.query("get", {
 		input: EventFilterSchema,
 		async resolve({ ctx, input }) {
 			return await getEvents(input);
+		},
+	})
+	.query("getUnique", {
+		input: z
+			.object({
+				id: z.string(),
+			})
+			.or(
+				z.object({
+					pageID: z.string(),
+				})
+			),
+		async resolve({ input }) {
+			const event = await getUnique(input);
+			if (event == null)
+				throw new TRPCError({
+					message: "The event you requested could not be found.",
+					code: "NOT_FOUND",
+				});
+
+			return event;
 		},
 	})
 	.query("getAll", {

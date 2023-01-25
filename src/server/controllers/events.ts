@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { prisma } from "@/server/db/client";
+import { prisma, Event } from "@/server/db/client";
 import { OrganizationType } from "@/utils/transform";
 import { removeEmptyItems } from "@/utils/helpers";
 
@@ -16,6 +16,12 @@ export const EventFilterSchema = z
 	.partial()
 	.nullish();
 export type EventFilter = z.infer<typeof EventFilterSchema>;
+
+export async function getUnique(input: { id: string } | { pageID: string }): Promise<Event | null> {
+	return await prisma.event.findUnique({
+		where: input,
+	});
+}
 
 export async function getEvents(filters?: EventFilter) {
 	if (filters != null) {
