@@ -1,6 +1,0 @@
-[phases.migrate]
-    dependsOn = ['install', 'build']
-    cmds = ['echo \"Migration phase executed.\"']
-
-[phases.start]
-    dependsOn = ['migrate']

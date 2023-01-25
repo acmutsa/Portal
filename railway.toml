@@ -1,0 +1,2 @@
+[deploy]
+startCommand = "yarn run start:prod"
