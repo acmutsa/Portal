@@ -36,6 +36,9 @@ export const nextConfig = {
 			},
 		],
 	},
+	sentry: {
+		hideSourceMaps: true
+	}
 };
 
 export default defineNextConfig(nextConfig);
