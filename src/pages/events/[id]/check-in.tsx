@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { NextPage } from "next";
+import Breadcrumbs from "@/components/common/Breadcrumbs";
+import { classNames } from "@/utils/helpers";
 
 interface eventPageParams {
 	params: { id: string };
@@ -21,7 +23,12 @@ const CheckinView: NextPage<{ event: Event }> = ({ event }) => {
 	const router = useRouter();
 	const [globalState] = useGlobalContext();
 
-	const { register, handleSubmit } = useForm({
+	const {
+		register,
+		handleSubmit,
+		watch,
+		formState: { errors },
+	} = useForm({
 		defaultValues: { feedback: "" },
 	});
 
@@ -45,26 +52,72 @@ const CheckinView: NextPage<{ event: Event }> = ({ event }) => {
 		return <div className="page-view bg-darken" />;
 	}
 
+	// console.log(errors);
+	// console.log({ isValid, feedback: watch("feedback") });
+	const maximumCharacters = 300;
+	const remainingCharacters = maximumCharacters - watch("feedback").length;
+
 	return (
 		<div className="page-view bg-darken">
-			<div className="mt-10 max-w-[30rem] mx-auto bg-white rounded-lg text-center flex flex-col items-center justify-center">
-				<h1 className="text-2xl p-1.5 font-inter font-bold text-primary">
-					Thanks for attending <span className="text-secondary">{event.name}</span>?
-				</h1>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<div className="px-4 mb-4 w-full max-w-[30rem] m-1">
-						<textarea
-							className="w-full font-roboto h-full min-h-[5rem] rounded ring-1 ring-zinc-300 resize-y placeholder:mx-2"
-							placeholder="  Leave your feedback here..."
-							{...register("feedback", { pattern: /^[\w.+\-!@#$%^&*(),;':\[\]~]*$/ })}
+			<div className="flex mx-auto justify-center">
+				<div className="mt-10 w-full mx-3.5 max-w-[30rem] bg-white rounded-lg">
+					<div className="pl-3.5 py-3.5 pr-1">
+						<Breadcrumbs
+							value={[
+								{
+									label: event.name,
+									href: `/events/${event.pageID}/`,
+								},
+								{
+									label: "Check-in",
+									active: true,
+								},
+							]}
 						/>
 					</div>
-
-					<h1 className="text-5xl font-extrabold font-inter"></h1>
-					<button className="h-[40px] mb-3 w-full bg-primary font-inter text-white rounded font-semibold max-w-[15rem]">
-						Submit
-					</button>
-				</form>{" "}
+					<form onSubmit={handleSubmit(onSubmit)} className="px-5 my-1.5">
+						<div className="w-full">
+							<label htmlFor="comment" className="block text-sm font-medium text-gray-700">
+								Add your suggestions & comments
+							</label>
+							<div className="mt-1">
+								<textarea
+									className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+									rows={4}
+									placeholder={`Optional, ${maximumCharacters} characters max`}
+									{...register("feedback", {
+										validate: (v) => {
+											console.log(`Calling validate (${v.length})`);
+											return true;
+										},
+										maxLength: {
+											message: "Maximum character limit reached",
+											value: maximumCharacters,
+										},
+										pattern: {
+											message: "Letters, numbers & basic punctuation only",
+											value: /[A-z\-!@#$%^&*(),;':\[\]~]*/,
+										},
+									})}
+								/>
+							</div>
+						</div>
+						<div className="flex justify-end items-center">
+							{errors.feedback != undefined ? <span>{errors.feedback.message}</span> : null}
+							<span
+								className={classNames(
+									"px-2 text-sm flex items-center",
+									remainingCharacters / maximumCharacters < 0.15 ? "text-red-500" : "text-zinc-500"
+								)}
+							>
+								{remainingCharacters}
+							</span>
+							<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[12rem]">
+								Submit
+							</button>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	);
