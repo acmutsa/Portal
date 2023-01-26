@@ -51,11 +51,14 @@ const EventView: NextPage = () => {
 	const closeErrorModal = () => setIsErrorOpen(false);
 
 	const didSubmit = async (data: any) => {
-		let isLoggedIn = await memberLoggedIn.mutateAsync({ email: data.email, id: data.id });
+		let isLoggedIn = await memberLoggedIn.mutateAsync({
+			email: data.email.toLowerCase(),
+			id: data.id.toLowerCase(),
+		});
 		if (isLoggedIn) {
 			// Setup cookies, open success modal
-			setCookie(cookies.member_email, data.email);
-			setCookie(cookies.member_id, data.id);
+			setCookie(cookies.member_email, data.email.toLowerCase());
+			setCookie(cookies.member_id, data.id.toLowerCase());
 			setGlobalState({ ...globalState, member: true });
 			// await router.push(safeUrl(router.query.next, "/me"));
 			await router.push("/events");

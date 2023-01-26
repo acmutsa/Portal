@@ -21,8 +21,8 @@ export async function validateMember(
 	extended: boolean = false
 ): Promise<[boolean, Member | (Member & { data: MemberData }) | null]> {
 	// Acquire the basic data to look for the member
-	const id = request.cookies[cookies.member_id];
-	const email = request.cookies[cookies.member_email];
+	const id = request.cookies[cookies.member_id]?.toLowerCase();
+	const email = request.cookies[cookies.member_email]?.toLowerCase();
 	if (id == null || email == null) return [false, null];
 
 	// Data available, try and find a matching user.
