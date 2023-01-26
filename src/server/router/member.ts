@@ -62,7 +62,7 @@ export const memberRouter = createRouter()
 
 			let member = await getMember(id.toLowerCase());
 
-			return member != null && member.email == email.toLowerCase();
+			return member != null && member.email.toLowerCase() == email.toLowerCase();
 		},
 	})
 	/**
