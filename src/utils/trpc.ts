@@ -5,7 +5,7 @@ import { httpBatchLink } from "@trpc/client";
 import superjson from "superjson";
 import { loggerLink } from "@trpc/client/links/loggerLink";
 
-function getBaseUrl() {
+export function getBaseUrl() {
 	if (typeof window !== "undefined")
 		// browser should use relative path
 		return "";
