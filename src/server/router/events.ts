@@ -1,28 +1,27 @@
 import { z } from "zod";
-import { createRouter } from "@/server/router/context";
 import { sum } from "@/utils/helpers";
 import { validateAdmin } from "@/server/router/admin";
 import { EventFilterSchema, getEvents, getUnique } from "@/server/controllers/events";
 import { TRPCError } from "@trpc/server";
+import { router, publicProcedure } from "@/server/trpc";
 
-export const eventsRouter = createRouter()
-	.query("get", {
-		input: EventFilterSchema,
-		async resolve({ ctx, input }) {
-			return await getEvents(input);
-		},
-	})
-	.query("getUnique", {
-		input: z
-			.object({
-				id: z.string(),
-			})
-			.or(
-				z.object({
-					pageID: z.string(),
+export const eventsRouter = router({
+	get: publicProcedure.input(EventFilterSchema).query(async function ({ ctx, input }) {
+		return await getEvents(input);
+	}),
+	getUnique: publicProcedure
+		.input(
+			z
+				.object({
+					id: z.string(),
 				})
-			),
-		async resolve({ input }) {
+				.or(
+					z.object({
+						pageID: z.string(),
+					})
+				)
+		)
+		.query(async function ({ input }) {
 			const event = await getUnique(input);
 			if (event == null)
 				throw new TRPCError({
@@ -31,22 +30,21 @@ export const eventsRouter = createRouter()
 				});
 
 			return event;
-		},
-	})
-	.query("getAll", {
-		async resolve({ ctx }) {
-			return await ctx.prisma.event.findMany({
-				orderBy: {
-					eventStart: "asc",
-				},
-			});
-		},
-	})
-	.query("getGroupedCheckins", {
-		input: z.object({
-			startDate: z.date(),
 		}),
-		async resolve({ input, ctx }) {
+	getAll: publicProcedure.query(async function ({ ctx }) {
+		return await ctx.prisma.event.findMany({
+			orderBy: {
+				eventStart: "asc",
+			},
+		});
+	}),
+	getGroupedCheckins: publicProcedure
+		.input(
+			z.object({
+				startDate: z.date(),
+			})
+		)
+		.query(async function ({ input, ctx }) {
 			await validateAdmin(ctx);
 
 			const events = (
@@ -100,11 +98,15 @@ export const eventsRouter = createRouter()
 					label: week,
 					count: (grouped[week] || []).map((week: any) => week.count).reduce(sum, 0),
 				}));
-		},
-	})
-	.query("canCheckin", {
-		input: z.object({
-			eventId: z.string(),
 		}),
-		async resolve({ input, ctx }) {},
-	});
+	canCheckin: publicProcedure
+		.input(
+			z.object({
+				eventId: z.string(),
+			})
+		)
+		.query(async function () {
+			// TODO: Implement canCheckin query
+			return null;
+		}),
+});

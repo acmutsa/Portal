@@ -1,7 +1,6 @@
-import { Context, createRouter } from "@/server/router/context";
+import { Context } from "@/server/context";
 
 import { z } from "zod";
-import * as trpc from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { validateAdmin } from "@/server/router/admin";
 import {
@@ -16,11 +15,12 @@ import { getCheckin, isCheckinOpen } from "@/server/controllers/checkin";
 import { getPreciseSemester, isValuesNull } from "@/utils/helpers";
 import { PrettyMemberDataWithoutIdSchema } from "@/utils/transform";
 import { Member } from "@prisma/client";
+import { publicProcedure, router } from "@/server/trpc";
 
 // Calling this method while passing your request context will ensure member credentials were provided.
 export const validateMember = async (ctx: Context, extendedData: boolean = false) => {
 	if (ctx.email == null || ctx.id == null)
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "UNAUTHORIZED",
 			message:
 				"Member-level credentials are required for this resource, whereas nothing was provided.",
@@ -29,7 +29,7 @@ export const validateMember = async (ctx: Context, extendedData: boolean = false
 	const member = await getMember(ctx.id.toLowerCase(), extendedData);
 
 	if (member == null || member.email != ctx.email.toLowerCase())
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "UNAUTHORIZED",
 			message:
 				"Valid member-level credentials are required for this resource; what was provided was invalid.",
@@ -38,16 +38,18 @@ export const validateMember = async (ctx: Context, extendedData: boolean = false
 	return member;
 };
 
-export const memberRouter = createRouter()
-	.mutation("loggedIn", {
-		input: z
-			.object({
-				email: z.string(),
-				id: z.string(),
-			})
-			.nullish(),
-		output: z.boolean(),
-		async resolve({ input, ctx }) {
+export const memberRouter = router({
+	loggedIn: publicProcedure
+		.input(
+			z
+				.object({
+					email: z.string(),
+					id: z.string(),
+				})
+				.nullish()
+		)
+		.output(z.boolean())
+		.mutation(async function ({ input, ctx }) {
 			let email = ctx.email;
 			let id = ctx.id;
 
@@ -63,25 +65,26 @@ export const memberRouter = createRouter()
 			let member = await getMember(id.toLowerCase());
 
 			return member != null && member.email.toLowerCase() == email.toLowerCase();
-		},
-	})
+		}),
 	/**
 	 * Checks if the given form is available to check in to.
 	 * Requires member login.
 	 * Provide either the event pageID or full ID.
 	 */
-	.query("checkinOpen", {
-		input: z
-			.object({
-				pageID: z.string().min(1),
-				id: z.string().min(1),
-			})
-			.partial()
-			.refine(
-				(data) => data.pageID != undefined || data.id != undefined,
-				"Either pageID or id should be specified"
-			),
-		async resolve({ ctx, input }) {
+	checkinOpen: publicProcedure
+		.input(
+			z
+				.object({
+					pageID: z.string().min(1),
+					id: z.string().min(1),
+				})
+				.partial()
+				.refine(
+					(data) => data.pageID != undefined || data.id != undefined,
+					"Either pageID or id should be specified"
+				)
+		)
+		.query(async function ({ ctx, input }) {
 			if (input.pageID === undefined && input.id === undefined) await validateMember(ctx);
 			const event = await ctx.prisma.event.findUnique({
 				where: input.pageID != undefined ? { pageID: input.pageID } : { id: input.id },
@@ -94,17 +97,18 @@ export const memberRouter = createRouter()
 				});
 
 			return isCheckinOpen(event);
-		},
-	})
-	.mutation("updateProfile", {
-		input: z
-			.object({
-				name: z.string(),
-				email: z.string().email(),
-				data: PrettyMemberDataWithoutIdSchema,
-			})
-			.partial(), // Everything is optional, it is valid to send an empty object.
-		async resolve({ ctx, input }) {
+		}),
+	updateProfile: publicProcedure
+		.input(
+			z
+				.object({
+					name: z.string(),
+					email: z.string().email(),
+					data: PrettyMemberDataWithoutIdSchema,
+				})
+				.partial() // Everything is optional, it is valid to send an empty object.
+		)
+		.mutation(async function ({ ctx, input }) {
 			// Check authentication first. Yes, this is intentionally before the empty input short-circuit to avoid potential confusion.
 			const self = await validateMember(ctx, input.data != null);
 
@@ -129,22 +133,23 @@ export const memberRouter = createRouter()
 			}
 
 			return latestMember;
-		},
-	})
-	.mutation("checkin", {
-		input: z
-			.object({
-				pageID: z.string(),
-				id: z.string(),
-				feedback: z.string().nullish(),
-				inPerson: z.boolean(),
-			})
-			.partial({ pageID: true, id: true })
-			.refine(
-				(data) => data.pageID !== undefined || data.id !== undefined,
-				"Either pageID or id should be specified"
-			),
-		async resolve({ ctx, input }) {
+		}),
+	checkin: publicProcedure
+		.input(
+			z
+				.object({
+					pageID: z.string(),
+					id: z.string(),
+					feedback: z.string().nullish(),
+					inPerson: z.boolean(),
+				})
+				.partial({ pageID: true, id: true })
+				.refine(
+					(data) => data.pageID !== undefined || data.id !== undefined,
+					"Either pageID or id should be specified"
+				)
+		)
+		.mutation(async function ({ ctx, input }) {
 			const self = await validateMember(ctx);
 			const event = await ctx.prisma.event.findUnique({
 				where: input.pageID != undefined ? { pageID: input.pageID } : { id: input.id },
@@ -191,46 +196,40 @@ export const memberRouter = createRouter()
 					timestamp: new Date(),
 				},
 			});
-		},
-	})
-	.query("me", {
-		async resolve({ ctx }) {
-			return await validateMember(ctx);
-		},
-	})
-	.query("getAll", {
-		async resolve({ ctx }) {
-			await validateAdmin(ctx);
-			return getAllMembers(true);
-		},
-	})
-	.query("countActive", {
-		async resolve({ ctx }) {
-			await validateAdmin(ctx);
+		}),
+	me: publicProcedure.query(async function ({ ctx }) {
+		return await validateMember(ctx);
+	}),
+	getAll: publicProcedure.query(async function ({ ctx }) {
+		await validateAdmin(ctx);
+		return getAllMembers(true);
+	}),
+	countActive: publicProcedure.query(async function ({ ctx }) {
+		await validateAdmin(ctx);
 
-			// Count the total number of members that have checked in at least once
-			const activeMembersPromise = ctx.prisma.member.count({
-				where: {
-					checkins: {
-						some: {
-							event: {
-								semester: getPreciseSemester(),
-							},
+		// Count the total number of members that have checked in at least once
+		const activeMembersPromise = ctx.prisma.member.count({
+			where: {
+				checkins: {
+					some: {
+						event: {
+							semester: getPreciseSemester(),
 						},
 					},
 				},
-			});
+			},
+		});
 
-			const allMembersPromise = ctx.prisma.member.count();
+		const allMembersPromise = ctx.prisma.member.count();
 
-			const [activeMembers, allMembers] = await Promise.all([
-				activeMembersPromise,
-				allMembersPromise,
-			]);
+		const [activeMembers, allMembers] = await Promise.all([
+			activeMembersPromise,
+			allMembersPromise,
+		]);
 
-			return {
-				active: activeMembers,
-				inactive: allMembers - activeMembers,
-			};
-		},
-	});
+		return {
+			active: activeMembers,
+			inactive: allMembers - activeMembers,
+		};
+	}),
+});
