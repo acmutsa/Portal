@@ -16,7 +16,7 @@ function defineNextConfig(config) {
 		enabled: process.env.ANALYZE === "true",
 	});
 
-    if (process.env !== "development")
+    if (process.env.NODE_ENV !== "development")
         return withSentryConfig(bundleAnalyzer(config), {silent: true});
 
     return bundleAnalyzer(config);
@@ -50,6 +50,9 @@ export const nextConfig = {
 	},
 	sentry: {
 		hideSourceMaps: true
+	},
+	experimental: {
+		appDir: true
 	}
 };
 

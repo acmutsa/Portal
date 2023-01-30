@@ -9,7 +9,7 @@ export const serverSchema = z.object({
 	ADMIN_UNAME: z.string(),
 	ADMIN_PASS: z.string(),
 	DATABASE_URL: z.string().url(),
-	NODE_ENV: z.enum(["development", "test", "production"]),
+	NODE_ENV: z.enum(["development", "production"]),
 	EVENT_PAGE_REVALIDATION_TIME: z.preprocess((n) => parseInt(z.string().parse(n), 10), z.number().positive().min(0)),
 });
 
