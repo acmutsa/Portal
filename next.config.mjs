@@ -1,6 +1,7 @@
 import { env } from "./src/env/server.mjs";
 import withBundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
+import {withSuperjson} from "next-superjson";
 
 /**
  * Don't be scared of the generics here.
@@ -19,7 +20,9 @@ function defineNextConfig(config) {
     if (process.env.NODE_ENV !== "development")
         return withSentryConfig(bundleAnalyzer(config), {silent: true});
 
-    return bundleAnalyzer(config);
+    return bundleAnalyzer(
+		withSuperjson()(config)
+	);
 }
 
 export const nextConfig = {

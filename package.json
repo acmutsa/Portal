@@ -35,6 +35,7 @@
     "flowbite-datepicker": "^1.2.2",
     "nanoid": "^4.0.0",
     "next": "^13.1.6",
+    "next-superjson": "^0.0.4",
     "node": "~16.15.0",
     "nprogress": "^0.2.0",
     "primeicons": "^6.0.1",
