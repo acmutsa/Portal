@@ -1,5 +1,5 @@
 import { FunctionComponent } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { useRouter } from "next/router";
@@ -32,8 +32,8 @@ const NavbarItem: FunctionComponent<HighlightProps> = ({
 	}
 
 	return (
-		<Link href={href ?? route}>
-			<a className={classNames(highlight ? "force" : null, "under-hover")}>{children}</a>
+		<Link href={href ?? route} className={classNames(highlight ? "force" : null, "under-hover")}>
+			{children}
 		</Link>
 	);
 };
@@ -50,8 +50,8 @@ const Navbar: FunctionComponent = () => {
 				<NavbarItem key={"status"} router={router} route={"/me"}>
 					Status
 				</NavbarItem>,
-				<Link key={"logout"} href={"/logout"}>
-					<a className="under-hover">Logout</a>
+				<Link className="under-hover" key={"logout"} href={"/logout"}>
+					Logout
 				</Link>,
 			];
 		else
@@ -81,7 +81,7 @@ const Navbar: FunctionComponent = () => {
 			<div className="flex justify-between h-full w-full max-w-[100vw] px-0.5 xs:px-1 sm:px-6 md:px-16 lg:pr-32 mx-auto">
 				<Link href="/">
 					<div className="h-full mx-1 sm:mx-2 flex items-center cursor-pointer">
-						<Image src="/img/logo.png" className="aspect-square" width={40} height={40} />
+						<Image alt="ACM-UTSA Logo" src="/img/logo.png" className="aspect-square" width={40} height={40} />
 						<h1 className="ml-1 font-bold">Portal</h1>
 					</div>
 				</Link>

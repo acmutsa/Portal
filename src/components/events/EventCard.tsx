@@ -12,7 +12,7 @@ import {
 	isToday,
 } from "date-fns";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Badge from "@/components/common/Badge";
 import { Event } from "@prisma/client";
 import { classNames, isCheckinOpen } from "@/utils/helpers";
@@ -95,17 +95,16 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 						"relative cursor-pointer overflow-hidden h-[10rem] rounded-t-xl bg-slate-400"
 					)}
 				>
-					<Image src={event.headerImage} layout="fill" objectFit="cover" />
+					{/* TODO: Proper image alt */}
+					<Image alt="" src={event.headerImage} layout="fill" objectFit="cover" />
 				</div>
 			</Link>
 			<div className="bg-white rounded-b-xl">
 				<div className="flex flex-col align-middle p-2 pb-0 justify-between">
 					<span className="inline-flex text-xl text-slate-800 font-extrabold font-raleway mb-0.5">
-						<Link href={eventURL}>
-							<a className="inline-flex cursor-pointer">
+						<Link href={eventURL} className="inline-flex cursor-pointer">
 								{event.name}
 								{isOngoing ? ping : null}
-							</a>
 						</Link>
 						<div className="space-x-2 mx-2">
 							<Badge colorClass="bg-sky-100 text-sky-800 my-0.5 font-inter">
@@ -141,11 +140,11 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 					</time>
 					<div className="card-buttongroup divide-x-2 divide-slate-200 flex [&>*]:flex-grow text-center mt-2 text-slate-900 font-medium font-inter">
 						<Link href={eventURL}>
-							<a>Details</a>
+							Details
 						</Link>
 						{isOpen ? (
 							<Link href={checkinURL}>
-								<a>Check-in</a>
+								Check-in
 							</Link>
 						) : (
 							<span className="text-slate-300 hover:text-slate-300 cursor-not-allowed">

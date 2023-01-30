@@ -26,15 +26,6 @@ const Breadcrumbs: FunctionComponent<BreadcrumbProps> = ({ value }) => {
 					</div>
 				</li>
 				{value.map((crumb) => {
-					const innerLink = (
-						<a
-							className="text-sm font-medium text-gray-500 hover:text-gray-700 overflow-ellipsis whitespace-nowrap"
-							aria-current={crumb.active ? "page" : undefined}
-						>
-							{crumb.label}
-						</a>
-					);
-
 					return (
 						<li key={crumb.label}>
 							<div className="flex items-center max-w-full">
@@ -42,7 +33,13 @@ const Breadcrumbs: FunctionComponent<BreadcrumbProps> = ({ value }) => {
 									className="mr-3 mt-0.5 flex-shrink-0 h-5 w-5 text-gray-400"
 									aria-hidden="true"
 								/>
-								{crumb.href != undefined ? <Link href={crumb.href}>{innerLink}</Link> : innerLink}
+								{<Link
+									href={crumb.href ?? "#"} // TODO: Proper undefined href handling
+									className="text-sm font-medium text-gray-500 hover:text-gray-700 overflow-ellipsis whitespace-nowrap"
+									aria-current={crumb.active ? "page" : undefined}
+								>
+									{crumb.label}
+								</Link>}
 							</div>
 						</li>
 					);
