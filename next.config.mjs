@@ -21,7 +21,7 @@ function defineNextConfig(config) {
 
 export const nextConfig = {
 	reactStrictMode: true,
-	swcMinify: false,
+	swcMinify: true,
 	// Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
 	i18n: {
 		locales: ["en"],
