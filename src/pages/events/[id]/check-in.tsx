@@ -92,7 +92,7 @@ const CheckinView: NextPage<{
 	event: Event;
 	form: { feedback: string; inPerson: boolean } | null;
 }> = ({ event, form }) => {
-	const checkin = trpc.useMutation(["member.checkin"]);
+	const checkin = trpc.member.checkin.useMutation();
 	const router = useRouter();
 	const [globalState] = useGlobalContext();
 

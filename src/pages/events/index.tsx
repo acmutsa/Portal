@@ -43,13 +43,10 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 		setLoading(false);
 	}, [debouncedFilters]);
 
-	const { data: results, isFetching } = trpc.useQuery(
-		[
-			"events.get",
-			useMemo(() => {
-				return removeEmpty({ ...debouncedFilters });
-			}, [debouncedFilters]),
-		],
+	const { data: results, isFetching } = trpc.events.get.useQuery(
+		useMemo(() => {
+			return removeEmpty({ ...debouncedFilters });
+		}, [debouncedFilters]),
 		{
 			initialData: staticResults,
 			enabled:

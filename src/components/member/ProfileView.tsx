@@ -57,7 +57,7 @@ const ProfileView: FunctionComponent<ProfileViewProps> = ({
 	}, [status]);
 
 	const formattedJoinDate = lightFormat(member.joinDate, "MM/dd/yyyy");
-	const updateProfile = trpc.useMutation(["member.updateProfile"], {
+	const updateProfile = trpc.member.updateProfile.useMutation({
 		onSuccess: (data) => {
 			// Populate ProfileView with the latest data.
 			setMember((prevState) => ({ ...prevState, ...data }));

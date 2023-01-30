@@ -8,7 +8,7 @@ const NewEventView: FunctionComponent = () => {
 	const now = new Date();
 	now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
 
-	let createEvent = trpc.useMutation(["admin.createEvent"]);
+	let createEvent = trpc.admin.createEvent.useMutation();
 
 	return (
 		<div className="w-full h-full p-[5px]">

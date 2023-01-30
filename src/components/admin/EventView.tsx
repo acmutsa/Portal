@@ -54,7 +54,7 @@ const columns = [
 ];
 
 const EventView: FunctionComponent = () => {
-	const events = trpc.useQuery(["events.getAll"], { refetchOnWindowFocus: false });
+	const events = trpc.events.getAll.useQuery();
 	const router = useRouter();
 
 	const [upcomingEvents, pastEvents] = useMemo(() => {

@@ -15,17 +15,20 @@ const EditEventView: FunctionComponent = () => {
 	const slug = router?.query?.slug;
 	if (slug == undefined || slug[1] == undefined) return <>Bad event ID.</>;
 
-	const updateEvent = trpc.useMutation(["admin.updateEvent"]);
-	const deleteEvent = trpc.useMutation(["admin.deleteEvent"]);
+	const updateEvent = trpc.admin.updateEvent.useMutation();
+	const deleteEvent = trpc.admin.deleteEvent.useMutation();
 
 	// Pull in the event's current data, parsing it in the process.
 	const [initialData, setInitialData] = useState<InitialEventFormValues | null>(null);
-	const { data: event, isSuccess } = trpc.useQuery(["events.getUnique", { pageID: slug[1] }], {
-		onSuccess: (newData) => {
-			const parsedData = InitialEventFormSchema.safeParse(newData);
-			if (parsedData.success) setInitialData(parsedData.data);
-		},
-	});
+	const { data: event, isSuccess } = trpc.events.getUnique.useQuery(
+		{ pageID: slug[1] },
+		{
+			onSuccess: (newData) => {
+				const parsedData = InitialEventFormSchema.safeParse(newData);
+				if (parsedData.success) setInitialData(parsedData.data);
+			},
+		}
+	);
 
 	// TODO: Implement ?action= query parameter handling for deletes
 	const [deleteDialog, setDeleteDialog] = useState(false);

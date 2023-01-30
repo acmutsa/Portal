@@ -194,7 +194,7 @@ const DataTableDemo = () => {
 		},
 	});
 
-	const { data: members } = trpc.useQuery(["member.getAll"]);
+	const { data: members } = trpc.member.getAll.useQuery();
 
 	const memberTableItems = useMemo<MemberTableItem[]>(() => {
 		const items: MemberTableItem[] = [];
