@@ -5,38 +5,17 @@ import { GlobalContext, initialState } from "@/components/common/GlobalContext";
 import { useEffect, useMemo, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
-import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { useRouter } from "next/router";
 import { classNames } from "@/utils/helpers";
 import { Toaster } from "react-hot-toast";
+import useNProgress from "@/utils/useNProgress";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
 	const memberLoggedIn = trpc.member.loggedIn.useMutation();
 	const adminLoggedIn = trpc.admin.loggedIn.useMutation();
 
-	// Setup progress bar router-based listeners
-	const router = useRouter();
-	useEffect(() => {
-		const handleStart = () => {
-			NProgress.start();
-		};
-
-		const handleStop = () => {
-			NProgress.done();
-		};
-
-		router.events.on("routeChangeStart", handleStart);
-		router.events.on("routeChangeComplete", handleStop);
-		router.events.on("routeChangeError", handleStop);
-
-		return () => {
-			router.events.off("routeChangeStart", handleStart);
-			router.events.off("routeChangeComplete", handleStop);
-			router.events.off("routeChangeError", handleStop);
-		};
-	}, [router]);
+	useNProgress();
 
 	const checkAdminAuthentication = useMemo(() => {
 		return () => {
