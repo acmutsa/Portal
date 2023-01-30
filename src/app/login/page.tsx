@@ -1,20 +1,22 @@
-import type { NextPage } from "next";
-import { Fragment, useEffect, useState } from "react";
+"use client";
+
 import { useForm } from "react-hook-form";
-import { setCookie } from "cookies-next";
-import { trpc } from "@/utils/trpc";
-import { Dialog, Transition } from "@headlessui/react";
-import { useRouter } from "next/router";
+import { Fragment, useState } from "react";
 import { useGlobalContext } from "@/components/common/GlobalContext";
+import { trpc } from "@/utils/trpc";
+import { useRouter } from "next/navigation";
 import useOpenGraph from "@/components/common/useOpenGraph";
+import { setCookie } from "cookies-next";
+import { cookies } from "@/utils/constants";
+import Head from "next/head";
 import OpenGraph from "@/components/common/OpenGraph";
 import Disclosure from "@/components/util/Disclosure";
-import Head from "next/head";
-import { cookies } from "@/utils/constants";
-import { GetServerSidePropsContext } from "next";
-import { validateMember } from "@/utils/server_helpers";
-import { safeUrl } from "@/utils/helpers";
+import { Dialog, Transition } from "@headlessui/react";
+// import { GetServerSidePropsContext } from "next";
+// import { validateMember } from "@/utils/server_helpers";
+// import { safeUrl } from "@/utils/helpers";
 
+/*
 export async function getServerSideProps<ServerSideProps>({
 	req,
 	res,
@@ -33,12 +35,13 @@ export async function getServerSideProps<ServerSideProps>({
 		props: {},
 	};
 }
+*/
 
-const EventView: NextPage = () => {
+export default function LoginPage() {
 	const { register, handleSubmit } = useForm();
 	const [isErrorOpen, setIsErrorOpen] = useState(false);
 	const [globalState, setGlobalState] = useGlobalContext();
-	const memberLoggedIn = trpc.useMutation(["member.loggedIn"]);
+	const memberLoggedIn = trpc.member.loggedIn.useMutation();
 	const router = useRouter();
 
 	const ogp = useOpenGraph({
@@ -205,6 +208,4 @@ const EventView: NextPage = () => {
 			</Transition>
 		</>
 	);
-};
-
-export default EventView;
+}
