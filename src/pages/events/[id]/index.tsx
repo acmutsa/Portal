@@ -156,7 +156,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 								</dl>
 							</div>
 							<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
-								<Link href={`/events/${id}/check-in`}>
+								<Link legacyBehavior href={`/events/${id}/check-in`}>
 									<button
 										type="button"
 										className="w-full bg-primary-500 hover:bg-primary-800 border border-transparent rounded-md py-3 px-8 flex items-center justify-center  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
@@ -165,7 +165,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 										Check-in
 									</button>
 								</Link>
-								<Link href={calendarLink} target="_blank">
+								<Link legacyBehavior href={calendarLink} target="_blank">
 									<button
 										type="button"
 										className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
@@ -174,7 +174,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 										Add to Google Calendar
 									</button>
 								</Link>
-								<Link href={"https://twitch.tv/acmutsa"} target="_blank">
+								<Link legacyBehavior href={"https://twitch.tv/acmutsa"} target="_blank">
 									<button
 										type="button"
 										className="w-full bg-twitch-light hover:bg-twitch-dark border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
@@ -185,7 +185,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 								</Link>
 								{globalState.admin ? (
 									<span className="w-full flex relative z-0 inline-flex shadow-sm rounded-md text-base font-medium text-white">
-										<Link href={`/admin/events/${id}`}>
+										<Link legacyBehavior href={`/admin/events/${id}`}>
 											<button
 												type="button"
 												className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
@@ -194,7 +194,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string }> = ({ event, qrco
 												Edit
 											</button>
 										</Link>
-										<Link href={`/admin/events/${id}?action=delete`}>
+										<Link legacyBehavior href={`/admin/events/${id}?action=delete`}>
 											<button className="bg-rose-500 hover:bg-rose-600 relative inline-flex items-center px-2 py-3 rounded-r-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
 												<span className="sr-only">Open options</span>
 												<BsTrashFill className="h-5 w-5" aria-hidden="true" />
