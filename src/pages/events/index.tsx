@@ -51,7 +51,6 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 			}, [debouncedFilters]),
 		],
 		{
-			refetchOnWindowFocus: false,
 			initialData: staticResults,
 			enabled:
 				// Prevent queries from firing for 2 seconds

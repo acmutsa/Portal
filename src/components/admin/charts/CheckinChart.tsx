@@ -45,7 +45,6 @@ export const options = {
 
 const CheckinChart: FunctionComponent = () => {
 	const weeks = trpc.useQuery(["events.getGroupedCheckins", { startDate }], {
-		refetchOnWindowFocus: false,
 		retry: false,
 	});
 

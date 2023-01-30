@@ -8,13 +8,9 @@ import { FunctionComponent } from "react";
 import { BsPlus } from "react-icons/bs";
 
 const EventView: FunctionComponent = () => {
-	const { isSuccess, data: members } = trpc.useQuery(["member.getAll"], {
-		refetchOnWindowFocus: false,
-	});
+	const { isSuccess, data: members } = trpc.useQuery(["member.getAll"]);
 
-	const { isSuccess: activityLoaded, data: memberCount } = trpc.useQuery(["member.countActive"], {
-		refetchOnWindowFocus: false,
-	});
+	const { isSuccess: activityLoaded, data: memberCount } = trpc.useQuery(["member.countActive"]);
 
 	return (
 		<div className="w-full h-full">
