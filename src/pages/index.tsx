@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import OpenGraph from "@/components/common/OpenGraph";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import Disclosure from "@/components/util/Disclosure";
@@ -26,6 +26,7 @@ const Home: NextPage = () => {
 				<div className="w-full !mt-4 md:!mt-6 lg:!mt-10 max-w-[1024px] h-full flex flex-col items-center mx-auto px-4">
 					<div className="relative z-20 md:text-base -bottom-16 h-[144px] w-[144px] rounded-full overflow-visible border-2 border-secondary bg-white">
 						<Image
+							alt="ACM-UTSA Logo"
 							className="absolute overflow-visible drop-shadow-sm"
 							src={"/img/logo.png"}
 							layout="fill"
