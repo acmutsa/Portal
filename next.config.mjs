@@ -16,7 +16,10 @@ function defineNextConfig(config) {
 		enabled: process.env.ANALYZE === "true",
 	});
 
-	return withSentryConfig(bundleAnalyzer(config), { silent: true });
+    if (process.env !== "development")
+        return withSentryConfig(bundleAnalyzer(config), {silent: true});
+
+    return bundleAnalyzer(config);
 }
 
 export const nextConfig = {
