@@ -1,10 +1,5 @@
 import "@/styles/globals.scss";
-import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
-import { loggerLink } from "@trpc/client/links/loggerLink";
-import { withTRPC } from "@trpc/next";
 import type { AppType } from "next/dist/shared/lib/utils";
-import superjson from "superjson";
-import type { AppRouter } from "@/server/router";
 import Navbar from "@/components/Navbar";
 import { GlobalContext, initialState } from "@/components/common/GlobalContext";
 import { useEffect, useMemo, useState } from "react";
@@ -18,8 +13,8 @@ import { Toaster } from "react-hot-toast";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);
-	const memberLoggedIn = trpc.useMutation(["member.loggedIn"]);
-	const adminLoggedIn = trpc.useMutation(["admin.loggedIn"]);
+	const memberLoggedIn = trpc.member.loggedIn.useMutation();
+	const adminLoggedIn = trpc.admin.loggedIn.useMutation();
 
 	// Setup progress bar router-based listeners
 	const router = useRouter();
@@ -97,62 +92,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 					/>
 					<Component {...pageProps} />
 				</div>
-			</GlobalContext.Provider>
+			</GlobalContext.Provider>{" "}
 		</>
 	);
 };
 
-const getBaseUrl = () => {
-	if (typeof window !== "undefined") return ""; // browser should use relative url
-	if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
-	return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
-};
-
-export default withTRPC<AppRouter>({
-	config({ ctx }) {
-		/**
-		 * If you want to use SSR, you need to use the server's full URL
-		 * @link https://trpc.io/docs/ssr
-		 */
-		const url = `${getBaseUrl()}/api/trpc`;
-
-		return {
-			links: [
-				loggerLink({
-					enabled: (opts) =>
-						process.env.NODE_ENV === "development" ||
-						(opts.direction === "down" && opts.result instanceof Error),
-				}),
-				httpBatchLink({ url }),
-			],
-			url,
-			transformer: superjson,
-			/**
-			 * @link https://react-query.tanstack.com/reference/QueryClient
-			 */
-			queryClientConfig: {
-				defaultOptions: {
-					queries: {
-						refetchOnWindowFocus: false,
-					},
-				},
-			},
-			// To use SSR properly you need to forward the client's headers to the server
-			// headers: () => {
-			//   if (ctx?.req) {
-			//     const headers = ctx?.req?.headers;
-			//     delete headers?.connection;
-			//     return {
-			//       ...headers,
-			//       "x-ssr": "1",
-			//     };
-			//   }
-			//   return {};
-			// }
-		};
-	},
-	/**
-	 * @link https://trpc.io/docs/ssr
-	 */
-	ssr: false,
-})(MyApp);
+export default trpc.withTRPC(MyApp);
