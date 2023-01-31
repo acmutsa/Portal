@@ -17,7 +17,29 @@ import { PrettyMemberDataWithoutIdSchema } from "@/utils/transform";
 import { Member } from "@prisma/client";
 import { publicProcedure, router } from "@/server/trpc";
 
-// Calling this method while passing your request context will ensure member credentials were provided.
+/**
+ * Acquires a member using the context. Returns null, if it could not be found.
+ * @param ctx The request context provided by tRPC.
+ * @param extendedData If true, extended member data will be fetched. Defaults to false.
+ */
+export async function acquireMember(
+	ctx: Context,
+	extendedData: boolean = false
+): Promise<Member | null> {
+	if (ctx.email == null || ctx.id == null) return null;
+
+	const member = await getMember(ctx.id.toLowerCase(), extendedData);
+	if (member == null || member.email != ctx.email.toLowerCase()) return null;
+
+	return member;
+}
+
+/**
+ * Acquires a member using the context & validates authentication in the process.
+ * If the member could not be found, or if credentials are invalid, a tRPC error will be raised. Returns the member.
+ * @param ctx The request context provided by tRPC.
+ * @param extendedData If true, extended member data will be fetched. Defaults to false.
+ */
 export const validateMember = async (ctx: Context, extendedData: boolean = false) => {
 	if (ctx.email == null || ctx.id == null)
 		throw new TRPCError({

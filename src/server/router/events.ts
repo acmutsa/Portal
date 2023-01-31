@@ -3,9 +3,9 @@ import { sum } from "@/utils/helpers";
 import { validateAdmin } from "@/server/router/admin";
 import { EventFilterSchema, getEvents, getUnique } from "@/server/controllers/events";
 import { TRPCError } from "@trpc/server";
-import { router, publicProcedure } from "@/server/trpc";
+import { publicProcedure, router } from "@/server/trpc";
 import { getCheckin } from "@/server/controllers/checkin";
-import { validateMember } from "@/server/router/member";
+import { acquireMember } from "@/server/router/member";
 
 export const eventsRouter = router({
 	get: publicProcedure.input(EventFilterSchema).query(async function ({ ctx, input }) {
@@ -118,8 +118,8 @@ export const eventsRouter = router({
 			})
 		)
 		.query(async function ({ ctx, input }) {
-			//
-			const self = await validateMember(ctx);
+			const self = await acquireMember(ctx);
+			if (self == null) return false;
 			return (await getCheckin(self.id, input.eventId)) != null;
 		}),
 });
