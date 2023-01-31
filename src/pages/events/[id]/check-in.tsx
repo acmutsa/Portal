@@ -126,8 +126,7 @@ const CheckinView: NextPage<{
 			{ pageID: event!.pageID, feedback, inPerson: true },
 			{
 				onSuccess: async () => {
-					// TODO: Add special interaction here, maybe? Set off a serotonin boosting animation?
-					await router.push(`/events/${event!.pageID}`);
+					await router.push(`/events/${event!.pageID}?notify=checkinSuccess`);
 				},
 			}
 		);
