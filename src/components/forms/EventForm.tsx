@@ -12,6 +12,14 @@ import {
 } from "@/utils/helpers";
 import { FunctionComponent, useState } from "react";
 import { z } from "zod";
+import { isAfter, lightFormat } from "date-fns";
+
+// A Zod preprocessor for converting a date into the format required for datetime-local inputs.
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local#value
+const datetimePreprocess = z.preprocess((d) => {
+	// Date.toISOString does not work because it formats the date in UTC. This is a datetime-local input, timezone cannot be inferred. It must be formatted locally.
+	return lightFormat(z.date().parse(d), "yyyy-MM-dd'T'HH:mm:ss.SSS");
+}, z.string());
 
 export const InitialEventFormSchema = z
 	.object({
@@ -19,8 +27,8 @@ export const InitialEventFormSchema = z
 		description: z.string(),
 		location: z.string(),
 		headerImage: z.string(),
-		eventStart: z.date(),
-		eventEnd: z.date(),
+		eventStart: datetimePreprocess,
+		eventEnd: datetimePreprocess,
 		formOpen: z.date().nullable(),
 		formClose: z.date().nullable(),
 		organization: z.string().transform(getCustomChoiceParser(organizations)),
@@ -70,6 +78,13 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 		id: s,
 		name: s,
 	}));
+
+	const defaultValues = {
+		eventStart: now,
+		eventEnd: now,
+		formOpen: null,
+		formClose: null,
+	};
 
 	const {
 		register,
