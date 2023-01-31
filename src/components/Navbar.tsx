@@ -1,9 +1,15 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import Image from "next/legacy/image";
 import Link from "next/link";
-import { useGlobalContext } from "@/components/common/GlobalContext";
+import {
+	GlobalContextProps,
+	initialState,
+	useGlobalContext,
+} from "@/components/common/GlobalContext";
 import { useRouter } from "next/router";
 import { classNames } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
+import useNProgress from "@/utils/useNProgress";
 
 interface HighlightProps {
 	router: any;
@@ -38,9 +44,64 @@ const NavbarItem: FunctionComponent<HighlightProps> = ({
 	);
 };
 
-const Navbar: FunctionComponent = () => {
-	const [globalState] = useGlobalContext();
+export type StaticAuthenticationProps = {
+	// If provided, authentication will be injected statically and not queried on load.
+	authentication?: {
+		// Whether to show admin-only content
+		admin: boolean;
+		// Whether to show member-only content
+		member: boolean;
+	};
+};
+
+type NavbarProps = {} & StaticAuthenticationProps;
+
+const Navbar: FunctionComponent<NavbarProps> = ({ authentication }) => {
+	const [globalState, setGlobalState] = useGlobalContext();
 	const router = useRouter();
+
+	const memberLoggedIn = trpc.member.loggedIn.useMutation();
+	const adminLoggedIn = trpc.admin.loggedIn.useMutation();
+
+	const checkAdminAuthentication = useMemo(() => {
+		return () => {
+			adminLoggedIn.mutate(null, {
+				onSuccess: (response) => {
+					setGlobalState((previousGlobalState) => {
+						return { ...previousGlobalState, admin: response ?? false };
+					});
+				},
+			});
+		};
+	}, [adminLoggedIn]);
+
+	const checkMemberAuthentication = useMemo(() => {
+		return () => {
+			memberLoggedIn.mutate(null, {
+				onSuccess: (response) => {
+					setGlobalState((previousGlobalState) => {
+						return { ...previousGlobalState, member: response ?? false, ready: true };
+					});
+				},
+			});
+		};
+	}, [memberLoggedIn]);
+
+	// Check whether the user is logged in or not.
+	useEffect(() => {
+		// If authentication is statically provided, put it into global state.
+		if (authentication != undefined) {
+			return setGlobalState((prevState) => ({
+				...prevState,
+				...authentication,
+				ready: true,
+			}));
+		}
+
+		// Otherwise, initiate the login mutations
+		checkAdminAuthentication();
+		checkMemberAuthentication();
+	}, []);
 
 	let dynamicNavbarElements: JSX.Element[];
 
@@ -81,7 +142,13 @@ const Navbar: FunctionComponent = () => {
 			<div className="flex justify-between h-full w-full max-w-[100vw] px-0.5 xs:px-1 sm:px-6 md:px-16 lg:pr-32 mx-auto">
 				<Link href="/">
 					<div className="h-full mx-1 sm:mx-2 flex items-center cursor-pointer">
-						<Image alt="ACM-UTSA Logo" src="/img/logo.png" className="aspect-square" width={40} height={40} />
+						<Image
+							alt="ACM-UTSA Logo"
+							src="/img/logo.png"
+							className="aspect-square"
+							width={40}
+							height={40}
+						/>
 						<h1 className="ml-1 font-bold">Portal</h1>
 					</div>
 				</Link>
