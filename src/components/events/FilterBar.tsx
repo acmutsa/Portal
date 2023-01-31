@@ -1,4 +1,4 @@
-import { Dispatch, FunctionComponent, useEffect, useRef, useState } from "react";
+import { Dispatch, FunctionComponent, useState } from "react";
 import organizations from "@/config/organizations.json";
 import ShortToggle from "@/components/common/ShortToggle";
 import Filter from "@/components/events/Filter";
@@ -6,6 +6,7 @@ import { Menu, Popover } from "@headlessui/react";
 import Sort from "@/components/events/Sort";
 import { SortOption } from "@/server/controllers/events";
 import { pluralize } from "@/utils/helpers";
+import { useEffectAfterMount } from "@/utils/hooks";
 
 const sortOptions: Record<SortOption, string> = {
 	recent: "Most Recent",
@@ -37,26 +38,31 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 	const [organizationFilter, setOrganizationFilter] = useState<Record<string, boolean>>({});
 	const [semesterFilter, setSemesterFilter] = useState<Record<string, boolean>>({});
 	const [sort, setSort] = useState<SortOption>("recent");
-	const didMount = useRef(false);
 
-	useEffect(() => {
-		if (didMount.current) {
-			if (onChange != null)
-				onChange({
-					sort,
-					past: showPastEvents,
-					organizations: Object.entries(organizationFilter).filter(getValue).map(getKey),
-					semesters: Object.entries(semesterFilter).filter(getValue).map(getKey),
-				});
-		} else didMount.current = true;
-	}, [onChange, sort, showPastEvents, organizationFilter, semesterFilter]);
+	useEffectAfterMount(() => {
+		if (onChange != null) {
+			onChange({
+				sort,
+				past: showPastEvents,
+				organizations: Object.entries(organizationFilter).filter(getValue).map(getKey),
+				semesters: Object.entries(semesterFilter).filter(getValue).map(getKey),
+			});
+		}
+	}, [sort, showPastEvents, organizationFilter, semesterFilter]);
 
 	return (
 		<div className="h-12 px-5 font-inter bg-zinc-50 shadow rounded-lg flex divide-x-1 flex items-center justify-between">
 			<div className="mr-3">
 				<Menu as="div" className="relative z-10 inline-block text-left">
 					<div>
-						<Sort options={sortOptions} label={sortOptions[sort] ?? "Sort"} onChange={setSort} />
+						<Sort
+							options={sortOptions}
+							label={sortOptions[sort] ?? "Sort"}
+							onChange={() => {
+								setSort(sort);
+								console.log("Sort emitted an event.");
+							}}
+						/>
 					</div>
 				</Menu>
 				{resultCount != undefined ? (
@@ -71,6 +77,7 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 						screenReaderLabel="Show Past Events"
 						checked={showPastEvents}
 						onChange={(checked) => {
+							console.log("Short toggle emitted an event.");
 							setShowPastEvents(checked);
 						}}
 					>
@@ -79,13 +86,19 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 				</div>
 				<Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-4 lg:space-x-8">
 					<Filter
-						onChange={setOrganizationFilter}
+						onChange={(state) => {
+							setOrganizationFilter(state);
+							console.log("Organization filter emitted an event.");
+						}}
 						options={organizations}
 						id="organization"
 						name="Organizations"
 					/>
 					<Filter
-						onChange={setSemesterFilter}
+						onChange={(state) => {
+							setSemesterFilter(state);
+							console.log("Semester filter emitted an event.");
+						}}
 						options={semesters.map((s) => ({ id: s, name: s }))}
 						id="semester"
 						name="Semesters"

@@ -6,11 +6,9 @@ import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
 import FilterBar, { Filters } from "@/components/events/FilterBar";
 import { getEvents, getSemesters } from "@/server/controllers/events";
-import { useEffect, useMemo, useState } from "react";
-import { useDebounce } from "usehooks-ts";
+import { useState } from "react";
 import { trpc } from "@/utils/trpc";
 import { removeEmpty } from "@/utils/helpers";
-import { differenceInMilliseconds } from "date-fns";
 import RootLayout from "@/components/layout/RootLayout";
 
 export async function getStaticProps() {
@@ -31,34 +29,13 @@ interface EventsProps {
 
 const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: EventsProps) => {
 	const [filters, setFilters] = useState<Filters | null>(null);
-	const [loading, setLoading] = useState<boolean>(false);
-	const debouncedFilters = useDebounce(filters, 400);
-	const [mountTime] = useState(new Date()); // Store the time so we can enable the tRPC query later.
 
-	// TODO: Simplify logic fighting against the tRPC query from firing on first load (use the static props as long as possible).
-	useEffect(() => {
-		if (differenceInMilliseconds(new Date(), mountTime) > 1000) setLoading(true);
-	}, [filters]);
-
-	useEffect(() => {
-		setLoading(false);
-	}, [debouncedFilters]);
-
-	const { data: results, isFetching } = trpc.events.get.useQuery(
-		useMemo(() => {
-			return removeEmpty({ ...debouncedFilters });
-		}, [debouncedFilters]),
-		{
-			initialData: staticResults,
-			enabled: true,
-			// Prevent queries from firing for 2 seconds
-			// differenceInMilliseconds(new Date(), mountTime) > 500 ? debouncedFilters != null : false,
-			onSettled: () => {
-				setLoading(false);
-			},
-			staleTime: 1000,
-		}
-	);
+	const { data: results, isFetching } = trpc.events.get.useQuery(removeEmpty({ ...filters }), {
+		initialData: staticResults,
+		enabled: filters != null,
+		onSettled: () => {},
+		staleTime: 1,
+	});
 
 	const ogp = useOpenGraph({
 		description: "Find all the latest events hosted by ACM-UTSA!",
@@ -78,12 +55,14 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 						<div className="mt-6">
 							<FilterBar
 								semesters={semesters}
-								onChange={setFilters}
+								onChange={(value) => {
+									setFilters(() => value);
+								}}
 								resultCount={results?.length}
 							/>
 						</div>
 						<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
-							{loading || isFetching
+							{isFetching
 								? results!.map((_, index) => (
 										<div
 											key={index}
