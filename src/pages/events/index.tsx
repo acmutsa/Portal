@@ -31,7 +31,7 @@ interface EventsProps {
 const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: EventsProps) => {
 	const [filters, setFilters] = useState<Filters | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
-	const debouncedFilters = useDebounce(filters, 800);
+	const debouncedFilters = useDebounce(filters, 400);
 	const [mountTime] = useState(new Date()); // Store the time so we can enable the tRPC query later.
 
 	// TODO: Simplify logic fighting against the tRPC query from firing on first load (use the static props as long as possible).
@@ -49,12 +49,13 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 		}, [debouncedFilters]),
 		{
 			initialData: staticResults,
-			enabled:
-				// Prevent queries from firing for 2 seconds
-				differenceInMilliseconds(new Date(), mountTime) > 2000 ? debouncedFilters != null : false,
+			enabled: true,
+			// Prevent queries from firing for 2 seconds
+			// differenceInMilliseconds(new Date(), mountTime) > 500 ? debouncedFilters != null : false,
 			onSettled: () => {
 				setLoading(false);
 			},
+			staleTime: 1000,
 		}
 	);
 
