@@ -133,13 +133,6 @@ const CheckinView: NextPage<{
 		);
 	};
 
-	if (globalState.ready && !globalState.member) {
-		router.push("/login");
-		return <div className="page-view bg-darken" />;
-	}
-
-	// console.log(errors);
-	// console.log({ isValid, feedback: watch("feedback") });
 	const maximumCharacters = 300;
 	const remainingCharacters = maximumCharacters - watch("feedback").length;
 
