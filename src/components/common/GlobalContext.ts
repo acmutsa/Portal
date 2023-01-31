@@ -1,4 +1,4 @@
-import { createContext, Dispatch, useContext, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext } from "react";
 
 export interface GlobalContextProps {
 	ready: boolean;
@@ -13,10 +13,9 @@ export const initialState: GlobalContextProps = {
 	admin: false,
 	background: true,
 };
-export const GlobalContext = createContext<[GlobalContextProps, Dispatch<GlobalContextProps>]>([
-	initialState,
-	() => {},
-]);
+export const GlobalContext = createContext<
+	[GlobalContextProps, Dispatch<SetStateAction<GlobalContextProps>>]
+>([initialState, () => {}]);
 
 export const useGlobalContext = () => {
 	return useContext(GlobalContext);
