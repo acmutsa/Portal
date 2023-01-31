@@ -4,6 +4,8 @@ import { validateAdmin } from "@/server/router/admin";
 import { EventFilterSchema, getEvents, getUnique } from "@/server/controllers/events";
 import { TRPCError } from "@trpc/server";
 import { router, publicProcedure } from "@/server/trpc";
+import { getCheckin } from "@/server/controllers/checkin";
+import { validateMember } from "@/server/router/member";
 
 export const eventsRouter = router({
 	get: publicProcedure.input(EventFilterSchema).query(async function ({ ctx, input }) {
@@ -108,5 +110,16 @@ export const eventsRouter = router({
 		.query(async function () {
 			// TODO: Implement canCheckin query
 			return null;
+		}),
+	checkedIn: publicProcedure
+		.input(
+			z.object({
+				eventId: z.string(),
+			})
+		)
+		.query(async function ({ ctx, input }) {
+			//
+			const self = await validateMember(ctx);
+			return (await getCheckin(self.id, input.eventId)) != null;
 		}),
 });
