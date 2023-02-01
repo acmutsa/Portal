@@ -8,6 +8,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .bg-acm {
+    background: linear-gradient(#00000066, #00000066), url('/img/bg.png') center / cover no-repeat;
+  }
+}
+
 body,
 html {
   background-color: #0c2340;
@@ -120,6 +126,7 @@ input[type="date"]::-moz-placeholder {
     > &.name {
       min-width: 180px;
     }
+
     > &.address > div {
       max-width: 400px;
       min-width: 230px;
