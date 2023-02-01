@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticPropsResult, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { prisma } from "@/server/db/client";
@@ -27,6 +27,7 @@ import Toast from "@/components/common/Toast";
 import { useEffect } from "react";
 import { trpc } from "@/utils/trpc";
 import RootLayout from "@/components/layout/RootLayout";
+import superjson from "superjson";
 
 interface eventPageParams {
 	params: { id: string };
@@ -35,10 +36,15 @@ interface eventPageParams {
 	defaultLocale: string;
 }
 
-const EventView: NextPage<{ event: Event; qrcodeData: string; existingCheckin: boolean }> = ({
-	event,
-	qrcodeData,
-}) => {
+type EventStaticProps = {
+	event: Event;
+	qrcodeData: string;
+	existingCheckin: boolean;
+};
+
+const EventView: NextPage<{ json: string }> = ({ json }) => {
+	const { event, qrcodeData } = superjson.parse<EventStaticProps>(json);
+
 	const router = useRouter();
 	const { id, notify } = router.query;
 	const [{ member: isMember }] = useGlobalContext();
@@ -301,7 +307,9 @@ const EventView: NextPage<{ event: Event; qrcodeData: string; existingCheckin: b
 
 const revalidationTime = Math.max(env.EVENT_PAGE_REVALIDATION_TIME, 20);
 
-export async function getStaticProps({ params }: eventPageParams) {
+export async function getStaticProps({
+	params,
+}: eventPageParams): Promise<GetStaticPropsResult<{ json: string }>> {
 	const event = await prisma.event.findUnique({
 		where: {
 			pageID: params.id.toLowerCase(),
@@ -317,8 +325,10 @@ export async function getStaticProps({ params }: eventPageParams) {
 
 	return {
 		props: {
-			event: event,
-			qrcodeData: absUrl(`/events/${params.id}/check-in`),
+			json: superjson.stringify({
+				event: event,
+				qrcodeData: absUrl(`/events/${params.id}/check-in`),
+			}),
 		},
 		revalidate: revalidationTime,
 	};

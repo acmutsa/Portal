@@ -10,24 +10,27 @@ import { useRef, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import { removeEmpty } from "@/utils/helpers";
 import RootLayout from "@/components/layout/RootLayout";
-
-export async function getStaticProps() {
-	const results = getEvents();
-	const semesters = getSemesters(); // Since semester filtering options are only queried here, it's possible for them to not show up in the UI until the page is reloaded.
-	await Promise.all([results, semesters]);
-
-	return {
-		props: { events: await results, semesters: await semesters },
-		revalidate: 60,
-	};
-}
+import type { GetStaticPropsResult } from "next";
+import superjson from "superjson";
 
 interface EventsProps {
 	events: Event[];
 	semesters: string[];
 }
 
-const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: EventsProps) => {
+export async function getStaticProps(): Promise<GetStaticPropsResult<{ json: string }>> {
+	const results = getEvents();
+	const semesters = getSemesters(); // Since semester filtering options are only queried here, it's possible for them to not show up in the UI until the page is reloaded.
+	await Promise.all([results, semesters]);
+
+	return {
+		props: { json: superjson.stringify({ events: await results, semesters: await semesters }) },
+		revalidate: 60,
+	};
+}
+
+const Events: NextPage<{ json: string }> = ({ json }) => {
+	const { events: staticResults, semesters } = superjson.parse<EventsProps>(json);
 	const [filters, setFilters] = useState<Filters | null>(null);
 	const allowChangeRef = useRef(true);
 
