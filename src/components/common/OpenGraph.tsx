@@ -1,7 +1,7 @@
 import { ltrim } from "@/utils/helpers";
 
 export type OGProperties = {
-	locale?: "en_US" | "fr_FR";
+	locale?: "en_US";
 	url: string;
 	title: string;
 	type: "article" | "website";
@@ -52,15 +52,15 @@ const OpenGraph = ({
 			<meta property="og:description" content={description} />
 			<meta property="og:url" content={url} />
 			<meta property="og:site_name" content={site_name} />
-			{type === "article" && (
+			{type === "article" ? (
 				<>
 					<meta property="article:author" content={author} />
 					<meta property="article:section" content={section} />
 					<meta property="article:modified_time" content={modified_time} />
 					<meta property="article:published_time" content={published_time} />
 				</>
-			)}
-			{image && (
+			) : null}
+			{image != null ? (
 				<>
 					<meta property="og:image" content={image.url} />
 					<meta property="og:image:secure_url" content={image.url.replace("http://", "https://")} />
@@ -70,7 +70,7 @@ const OpenGraph = ({
 					<meta property="og:image:type" content={image.type} />
 					<meta name="twitter:image" content={image.url} />
 				</>
-			)}
+			) : null}
 			<meta name="theme-color" content={`#${ltrim(theme_color ?? "179BD5", "#")}`} />
 			<meta name="twitter:card" content={card} />
 			<meta name="twitter:url" content={url} />

@@ -44,7 +44,7 @@ const AdvancedInput = ({
 		id,
 		placeholder,
 		"aria-invalid": enabled && invalid,
-		"aria-describedBy": ariaErrorIdentifier,
+		"aria-describedby": ariaErrorIdentifier,
 		className: classNames(
 			invalid
 				? "border-red-300 focus:border-red-300 focus:ring-red-400"
