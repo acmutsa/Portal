@@ -11,6 +11,7 @@ import AttendanceView from "@/components/member/AttendanceView";
 import StatusView, { SimpleCheckin } from "@/components/member/StatusView";
 import { Member, MemberData } from "@prisma/client";
 import { getMembershipStatus } from "@/server/controllers/checkin";
+import RootLayout from "@/components/layout/RootLayout";
 
 interface ServerSideProps {
 	member: Member & { data: MemberData };
@@ -94,7 +95,7 @@ const MeView: NextPage<ServerSideProps> = ({ member, checkins, status }: ServerS
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-zinc-100 flex justify-center py-8 md:py-20">
+			<RootLayout background="bg-zinc-100" innerClassName="justify-center py-8 md:py-20">
 				<div className="w-[90%] max-w-[40rem]">
 					<div className="overflow-hidden bg-white shadow sm:rounded-lg my-4">
 						<div className="px-4 pt-4 border-b border-gray-200 shadow z-10 relative">
@@ -126,7 +127,7 @@ const MeView: NextPage<ServerSideProps> = ({ member, checkins, status }: ServerS
 						</div>
 					</div>
 				</div>
-			</div>
+			</RootLayout>
 		</>
 	);
 };
