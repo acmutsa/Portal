@@ -78,12 +78,13 @@ const organizationCell = ({ prettyMemberData: { organizations } }: MemberTableIt
 	if (organizations == null || organizations.size == 0) return null;
 	return (
 		<div {...scrollHandlers} className="badges">
-			{Array.from(organizations).map((organization) => {
+			{Array.from(organizations).map((organization, index) => {
 				const badgeClass = OrganizationBadgeClasses[organization];
 
 				const isCIC = organization == "CODING_IN_COLOR";
 				return (
 					<Badge
+						key={index}
 						parentClass={isCIC ? "bg-primary-700 !font-semibold m-0.5 rounded" : undefined}
 						colorClass={classNames(isCIC ? null : "m-0.5", badgeClass)}
 					>
@@ -99,9 +100,10 @@ const ethnicityCell = ({ prettyMemberData: { ethnicity: ethnicities } }: MemberT
 	if (ethnicities == null || ethnicities.size == 0) return null;
 	return (
 		<div {...scrollHandlers} className="badges">
-			{Array.from(ethnicities).map((ethnicity) => {
+			{Array.from(ethnicities).map((ethnicity, index) => {
 				return (
 					<Badge
+						key={index}
 						colorClass={classNames(
 							"m-0.5 overflow-hidden overflow-ellipsis whitespace-nowrap",
 							EthnicityBadgeClasses[ethnicity]
@@ -119,10 +121,11 @@ const identityCell = ({ prettyMemberData: { identity: identities } }: MemberTabl
 	if (identities == null || identities.size == 0) return null;
 	return (
 		<div {...scrollHandlers} className="badges">
-			{Array.from(identities).map((identity) => {
+			{Array.from(identities).map((identity, index) => {
 				if (IdentityType.safeParse(identity).success)
 					return (
 						<Badge
+							key={index}
 							colorClass={classNames(
 								"text-white m-0.5 whitespace-nowrap",
 								IdentityBadgeClasses[identity as IdentityType]
