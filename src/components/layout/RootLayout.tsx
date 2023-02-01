@@ -6,7 +6,8 @@ import Footer from "@/components/util/Footer";
 
 type RootLayoutProps = {
 	className?: string;
-	children: JSX.Element;
+	innerClassName?: string;
+	children: JSX.Element | JSX.Element[];
 	// If true, show the background. If false, show white. If a string is provided, it will act as a class. Defaults to 'true'.
 	background?: boolean | string;
 	// If false, hide the navbar. Defaults to 'true'.
@@ -18,6 +19,7 @@ type RootLayoutProps = {
 
 const RootLayout: FunctionComponent<RootLayoutProps> = ({
 	className,
+	innerClassName,
 	background,
 	children,
 	authentication,
@@ -37,10 +39,11 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 		<>
 			{navbar ? <Navbar authentication={authentication} /> : null}
 			<div
+				id="layout"
 				className={classNames(
 					className,
 					backgroundClass,
-					"min-h-screen pt-[72px] w-full bg-fixed bg-center bg-cover bg-no-repeat overflow-y-auto"
+					"flex flex-col min-h-screen pt-[72px] w-full bg-fixed bg-center bg-cover bg-no-repeat overflow-y-auto"
 				)}
 			>
 				<Toaster
@@ -52,8 +55,8 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 						top: "calc(72px + 1rem)",
 					}}
 				/>
-				{children}
-				{footer ? <Footer className={footerClass} /> : null}
+				<div className={classNames(innerClassName, "flex flex-grow")}>{children}</div>
+				{footer ? <Footer className={classNames(footerClass, "")} /> : null}
 			</div>
 		</>
 	);

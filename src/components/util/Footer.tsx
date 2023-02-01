@@ -7,7 +7,7 @@ interface DisclosureProps {
 
 const Footer: FunctionComponent<DisclosureProps> = ({ className }: DisclosureProps) => {
 	return (
-		<p
+		<footer
 			className={classNames(
 				className,
 				"pt-10 footer w-full font-inter opacity-[60%] z-10 text-center text-[12px] mx-auto text-white py-1"
@@ -19,7 +19,7 @@ const Footer: FunctionComponent<DisclosureProps> = ({ className }: DisclosurePro
 			</a>
 			<br />© The Association for Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
 			Reserved.
-		</p>
+		</footer>
 	);
 };
 

@@ -17,6 +17,7 @@ import Sidebar from "@/components/admin/Sidebar";
 import { deleteCookie } from "cookies-next";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { cookies } from "@/utils/constants";
+import RootLayout from "@/components/layout/RootLayout";
 
 enum AdminView {
 	dashboard,
@@ -107,12 +108,12 @@ const Admin: NextPage = () => {
 			<Head>
 				<title>Administrative Panel</title>
 			</Head>
-			<div className="page-view bg-white flex w-[100vw]">
+			<RootLayout background={false} className="flex" footer={false}>
 				<Sidebar options={navigationOptions} onChange={(id) => swapPage(id as AdminView)} />
 				<div className="flex-grow p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-scroll relative bg-zinc-100">
 					<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
 				</div>
-			</div>
+			</RootLayout>
 		</>
 	);
 };

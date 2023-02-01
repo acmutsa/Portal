@@ -137,6 +137,7 @@ const EventView: NextPage<{ event: Event; qrcodeData: string; existingCheckin: b
 			<RootLayout
 				background={"bg-white md:bg-acm"}
 				footerClass={"text-gray-800 max-w-[22rem] md:max-w-full md:text-white"}
+				innerClassName="justify-center"
 			>
 				<div className="sm:pt-12">
 					<div className="flex justify-center w-full">
