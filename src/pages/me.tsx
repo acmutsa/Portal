@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext, NextPage } from "next";
+import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next";
 import { classNames, getPreciseSemester } from "@/utils/helpers";
 import { useState } from "react";
 import OpenGraph from "@/components/common/OpenGraph";
@@ -12,19 +12,24 @@ import StatusView, { SimpleCheckin } from "@/components/member/StatusView";
 import { Member, MemberData } from "@prisma/client";
 import { getMembershipStatus } from "@/server/controllers/checkin";
 import RootLayout from "@/components/layout/RootLayout";
+import superjson from "superjson";
 
-interface ServerSideProps {
+type MemberProps = {
 	member: Member & { data: MemberData };
 	checkins: SimpleCheckin[];
 	status: boolean;
-}
+};
 
-export async function getServerSideProps<ServerSideProps>({ req, res }: GetServerSidePropsContext) {
+export async function getServerSideProps({
+	req,
+	res,
+}: GetServerSidePropsContext): Promise<GetServerSidePropsResult<{ json: string }>> {
 	const [valid, member] = await validateMember(req, res, true);
 	if (!valid)
 		return {
 			redirect: {
 				destination: "/login?next=/me",
+				permanent: false,
 			},
 		};
 
@@ -54,14 +59,17 @@ export async function getServerSideProps<ServerSideProps>({ req, res }: GetServe
 
 	return {
 		props: {
-			status: getMembershipStatus(checkins),
-			member,
-			checkins,
+			json: superjson.stringify({
+				status: getMembershipStatus(checkins),
+				member,
+				checkins,
+			}),
 		},
 	};
 }
 
-const MeView: NextPage<ServerSideProps> = ({ member, checkins, status }: ServerSideProps) => {
+const MeView: NextPage<{ json: string }> = ({ json }) => {
+	const { member, checkins, status } = superjson.parse<MemberProps>(json);
 	const [currentTabId, setCurrentTabId] = useState("profile");
 
 	const tabs: { [k: string]: { label: string; content: any; props: any } } = {

@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";
 import { useGlobalContext } from "@/components/common/GlobalContext";
-import { GetServerSidePropsContext, NextPage } from "next";
+import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { classNames, isCheckinOpen } from "@/utils/helpers";
 import { validateMember } from "@/utils/server_helpers";
@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
+import superjson from "superjson";
 
 interface CheckinPageParams {
 	[key: string]: string;
@@ -22,16 +23,26 @@ interface FormValues {
 	feedback: string;
 }
 
-export async function getServerSideProps<ServerSideProps>({
+type CheckinServerProps = {
+	form: { feedback: string | null; inPerson: boolean } | null;
+	event: Pick<
+		Event,
+		"id" | "name" | "pageID" | "formClose" | "formOpen" | "eventStart" | "eventEnd" | "forcedIsOpen"
+	>;
+};
+
+export async function getServerSideProps({
 	req,
 	res,
 	params,
-}: GetServerSidePropsContext<CheckinPageParams>) {
+}: GetServerSidePropsContext<CheckinPageParams>): Promise<
+	GetServerSidePropsResult<{ json: string }>
+> {
 	const [valid, member] = await validateMember(req, res, true);
 
 	if (!valid)
 		return {
-			redirect: { destination: `/login?next=${req.url}` },
+			redirect: { destination: `/login?next=${req.url}`, permanent: false },
 		};
 
 	const idParam = params!.id;
@@ -71,27 +82,28 @@ export async function getServerSideProps<ServerSideProps>({
 		return {
 			redirect: {
 				destination: `/events/${event.pageID}?notify=formClosed`,
+				permanent: false,
 			},
 		};
 
 	return {
 		props: {
-			form:
-				checkin != null
-					? {
-							feedback: checkin.feedback,
-							inPerson: checkin.isInPerson,
-					  }
-					: null,
-			event,
+			json: superjson.stringify({
+				form:
+					checkin != null
+						? {
+								feedback: checkin.feedback,
+								inPerson: checkin.isInPerson,
+						  }
+						: null,
+				event,
+			}),
 		},
 	};
 }
 
-const CheckinView: NextPage<{
-	event: Event;
-	form: { feedback: string; inPerson: boolean } | null;
-}> = ({ event, form }) => {
+const CheckinView: NextPage<{ json: string }> = ({ json }) => {
+	const { event, form } = superjson.parse<CheckinServerProps>(json);
 	const checkin = trpc.member.checkin.useMutation();
 	const router = useRouter();
 	const [globalState] = useGlobalContext();
