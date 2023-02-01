@@ -1,5 +1,3 @@
-"use client";
-
 import { useForm } from "react-hook-form";
 import { Fragment, useState } from "react";
 import { useGlobalContext } from "@/components/common/GlobalContext";
@@ -10,13 +8,12 @@ import { setCookie } from "cookies-next";
 import { cookies } from "@/utils/constants";
 import Head from "next/head";
 import OpenGraph from "@/components/common/OpenGraph";
-import Footer from "@/components/util/Footer";
 import { Dialog, Transition } from "@headlessui/react";
-// import { GetServerSidePropsContext } from "next";
-// import { validateMember } from "@/utils/server_helpers";
-// import { safeUrl } from "@/utils/helpers";
+import { GetServerSidePropsContext } from "next";
+import { validateMember } from "@/utils/server_helpers";
+import { safeUrl } from "@/utils/helpers";
+import RootLayout from "@/components/layout/RootLayout";
 
-/*
 export async function getServerSideProps<ServerSideProps>({
 	req,
 	res,
@@ -35,7 +32,6 @@ export async function getServerSideProps<ServerSideProps>({
 		props: {},
 	};
 }
-*/
 
 export default function LoginPage() {
 	const { register, handleSubmit } = useForm();
@@ -76,7 +72,7 @@ export default function LoginPage() {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-darken flex justify-center">
+			<RootLayout innerClassName="justify-center">
 				<div className="my-auto px-3">
 					<div className="bg-white max-w-[25rem] self-center p-3 rounded-xl text-center flex flex-col items-center justify-center">
 						<p className="text-lg md:text-[22px] tracking-wide md:tracking-normal font-semibold text-slate-700 font-raleway mb-2">
@@ -146,8 +142,7 @@ export default function LoginPage() {
 						</p>
 					</div>
 				</div>
-				<Footer />
-			</div>
+			</RootLayout>
 			<Transition appear show={isErrorOpen} as={Fragment}>
 				<Dialog as="div" className="relative z-10" onClose={() => closeErrorModal()}>
 					<Transition.Child

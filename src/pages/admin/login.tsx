@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import LoginForm from "@/components/admin/LoginForm";
 import { setCookie } from "cookies-next";
 import { cookies } from "@/utils/constants";
+import RootLayout from "@/components/layout/RootLayout";
 
 const Login: NextPage = () => {
 	const onSubmit = (username: string, password: string) => {
@@ -15,9 +16,9 @@ const Login: NextPage = () => {
 	};
 
 	return (
-		<div className="flex items-center justify-center page-view">
+		<RootLayout innerClassName="justify-center items-center">
 			<LoginForm callback={(username, password) => onSubmit(username, password)} />
-		</div>
+		</RootLayout>
 	);
 };
 
