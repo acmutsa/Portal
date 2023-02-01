@@ -2,24 +2,20 @@ import AdvancedInput from "@/components/forms/AdvancedInput";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import CustomSelect, { Choice } from "@/components/forms/CustomSelect";
 import organizations from "@/config/organizations.json";
-import { BsImage } from "react-icons/bs";
+import { BsExclamationCircle, BsImage } from "react-icons/bs";
 import { Switch } from "@headlessui/react";
 import {
 	classNames,
 	getCustomChoiceParser,
 	getPreciseSemester,
 	getSemesterRange,
+	pluralize,
 } from "@/utils/helpers";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, ReactNode, useMemo, useState } from "react";
 import { z } from "zod";
-import { isAfter, lightFormat } from "date-fns";
-
-// A Zod preprocessor for converting a date into the format required for datetime-local inputs.
-// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local#value
-const datetimePreprocess = z.preprocess((d) => {
-	// Date.toISOString does not work because it formats the date in UTC. This is a datetime-local input, timezone cannot be inferred. It must be formatted locally.
-	return lightFormat(z.date().parse(d), "yyyy-MM-dd'T'HH:mm:ss.SSS");
-}, z.string());
+import { differenceInMinutes, isAfter } from "date-fns";
+import { Calendar } from "primereact/calendar";
+import { HiExclamation } from "react-icons/hi";
 
 export const InitialEventFormSchema = z
 	.object({
@@ -27,8 +23,8 @@ export const InitialEventFormSchema = z
 		description: z.string(),
 		location: z.string(),
 		headerImage: z.string(),
-		eventStart: datetimePreprocess,
-		eventEnd: datetimePreprocess,
+		eventStart: z.date(),
+		eventEnd: z.date(),
 		formOpen: z.date().nullable(),
 		formClose: z.date().nullable(),
 		organization: z.string().transform(getCustomChoiceParser(organizations)),
@@ -62,6 +58,26 @@ type EventFormProps = {
 	context: "create" | "modify";
 };
 
+function FormWarning(props: { className?: string; title?: string; children: string | string[] }) {
+	return (
+		<div className={classNames(props.className, "col-span-12 flex justify-center")}>
+			<div className="rounded-md bg-yellow-50 p-4">
+				<div className="flex">
+					<div className="flex-shrink-0">
+						<HiExclamation className="h-5 w-5 text-yellow-400" aria-hidden="true" />
+					</div>
+					<div className="ml-3">
+						<h3 className="text-sm font-medium text-yellow-800">{props.title ?? "Warning"}</h3>
+						<div className="mt-2 text-sm text-yellow-700">
+							<p>{props.children}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
 const EventForm: FunctionComponent<EventFormProps> = ({
 	context,
 	onSubmit,
@@ -79,28 +95,54 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 		name: s,
 	}));
 
-	const defaultValues = {
-		eventStart: now,
-		eventEnd: now,
-		formOpen: null,
-		formClose: null,
-	};
-
 	const {
 		register,
+		watch,
 		control,
 		handleSubmit,
+		trigger,
 		formState: { errors },
 	} = useForm<EventFormValues>({
-		defaultValues: Object.assign(initialValues ?? {}, {
+		mode: "onChange",
+		defaultValues: {
 			eventStart: now,
 			eventEnd: now,
 			formOpen: null,
 			formClose: null,
-		}),
+			...initialValues,
+		},
 	});
 
-	const [formTimesEnabled, setFormTimesEnabled] = useState(false);
+	const [formTimesEnabled, setFormTimesEnabled] = useState(initialValues?.formClose != null);
+
+	const watchedEventTiming = watch(["eventStart", "eventEnd", "formOpen", "formClose"]);
+
+	const eventDurationWarning: ReactNode | null = useMemo(() => {
+		const [start, end] = watchedEventTiming.slice(0, 2) as [Date, Date];
+		const minuteDifference = differenceInMinutes(end, start);
+		if (minuteDifference >= 0 && minuteDifference < 20)
+			return (
+				<FormWarning className="mt-0">
+					The event is set to only last {minuteDifference.toString()} minute
+					{pluralize(minuteDifference)}. Are you sure this is correct?
+				</FormWarning>
+			);
+		return null;
+	}, [watchedEventTiming]);
+
+	const formDurationWarning: ReactNode | null = useMemo(() => {
+		const [start, end] = watchedEventTiming.slice(-2);
+		if (start == null || end == null) return null;
+		const minuteDifference = differenceInMinutes(end, start);
+		if (minuteDifference >= 0 && minuteDifference < 30)
+			return (
+				<FormWarning>
+					The form is set to only be open for {minuteDifference.toString()} minute
+					{pluralize(minuteDifference)}. Are you sure this is correct?
+				</FormWarning>
+			);
+		return null;
+	}, [watchedEventTiming]);
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -204,33 +246,100 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 						</div>
 						<div className="col-span-12 grid gap-6 grid-cols-6 sm:grid-cols-12 mt-3">
 							<div className="col-span-12 sm:col-span-6 sm:place-self-end">
-								<AdvancedInput
-									label="Event Start"
-									type="datetime-local"
-									register={register("eventStart", {
-										required: { value: true, message: "Required." },
-										valueAsDate: true,
-										validate: {
-											invalid: (date) => !isNaN(date.getTime()) || "Invalid Date.",
-										},
-									})}
-									errors={errors}
+								<label
+									htmlFor="eventStart"
+									className="mb-1 block text-sm font-medium text-gray-700"
+								>
+									Event Start
+								</label>
+								<Controller
+									name="eventStart"
+									control={control}
+									rules={{ required: "Date is required." }}
+									render={({ field, fieldState }) => (
+										<>
+											<Calendar
+												inputClassName="!py-2 !px-3"
+												inputId={field.name}
+												placeholder="Event Start Time"
+												value={field.value}
+												onChange={(e) => {
+													trigger("eventEnd");
+													return field.onChange(e);
+												}}
+												dateFormat="dd/mm/yy"
+												showTime
+												hourFormat="12"
+												className={classNames(fieldState.error ? "p-invalid" : null)}
+											/>
+										</>
+									)}
 								/>
+								{errors.eventStart != undefined ? (
+									<p
+										className="absolute inline-flex mt-1 text-sm text-red-600"
+										// id={ariaErrorIdentifier}
+										role="alert"
+									>
+										<BsExclamationCircle className="mx-1 mt-1" />
+										{(errors.eventStart.message as string) ?? "Invalid."}
+									</p>
+								) : null}
 							</div>
 							<div className="col-span-12 sm:col-span-6 sm:place-self-start">
-								<AdvancedInput
-									label="Event End"
-									type="datetime-local"
-									register={register("eventEnd", {
-										required: { value: true, message: "Required." },
-										valueAsDate: true,
+								<label
+									htmlFor="eventStart"
+									className="mb-1 block text-sm font-medium text-gray-700"
+								>
+									Event End
+								</label>
+								<Controller
+									name="eventEnd"
+									control={control}
+									rules={{
+										required: "Date is required.",
 										validate: {
 											invalid: (date) => !isNaN(date.getTime()) || "Invalid Date.",
+											onlyAfter: (date) => {
+												return (
+													isAfter(date, watch("eventStart")) ||
+													"The event must end after it starts."
+												);
+											},
 										},
-									})}
-									errors={errors}
+									}}
+									render={({ field, fieldState }) => (
+										<div>
+											<Calendar
+												inputClassName="!py-2 !px-3"
+												inputId={field.name}
+												placeholder="Event End Time"
+												value={field.value}
+												onChange={field.onChange}
+												dateFormat="dd/mm/yy"
+												showTime
+												hourFormat="12"
+												className={classNames(fieldState.error ? "p-invalid" : null)}
+											/>
+										</div>
+									)}
 								/>
+								{errors.eventEnd != undefined ? (
+									<p
+										className="absolute inline-flex mt-1 text-sm text-red-600"
+										// id={ariaErrorIdentifier}
+										role="alert"
+									>
+										<BsExclamationCircle className="mx-1 mt-1" />
+										{(errors.eventEnd.message as string) ?? "Invalid."}
+									</p>
+								) : null}
 							</div>
+
+							{eventDurationWarning != null &&
+							!(errors.eventEnd != undefined || errors.eventStart != undefined)
+								? eventDurationWarning
+								: null}
 						</div>
 
 						<div className="col-span-12">
@@ -266,37 +375,84 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 						</div>
 						<div className="col-span-12 grid gap-6 grid-cols-6 sm:grid-cols-12">
 							<div className="col-span-12 sm:col-span-6 sm:place-self-end">
-								<AdvancedInput
-									label="Form Open"
-									type="datetime-local"
-									register={register("formOpen", {
-										required: { value: formTimesEnabled, message: "Required." },
-										valueAsDate: true,
-										disabled: !formTimesEnabled,
-										validate: {
-											invalid: (date) =>
-												(date != null && !isNaN(date.getTime())) || "Invalid Date.",
-										},
-									})}
-									errors={errors}
+								<label htmlFor="formOpen" className="mb-1 block text-sm font-medium text-gray-700">
+									Form Open
+								</label>
+								<Controller
+									name="formOpen"
+									control={control}
+									render={({ field, fieldState }) => (
+										<>
+											<Calendar
+												inputClassName="!py-2 !px-3"
+												inputId={field.name}
+												placeholder="Form Open Time"
+												value={field.value ?? undefined}
+												onChange={(e) => {
+													trigger("formClose");
+													return field.onChange(e);
+												}}
+												dateFormat="dd/mm/yy"
+												showTime
+												hourFormat="12"
+												className={classNames(fieldState.error ? "p-invalid" : null)}
+											/>
+											<small className="p-error">{errors.formOpen?.message}</small>
+										</>
+									)}
 								/>
 							</div>
 							<div className="col-span-12 sm:col-span-6 sm:place-self-start">
-								<AdvancedInput
-									label="Form Close"
-									type="datetime-local"
-									register={register("formClose", {
-										required: { value: formTimesEnabled, message: "Required." },
-										valueAsDate: true,
-										disabled: !formTimesEnabled,
+								<label htmlFor="formClose" className="mb-1 block text-sm font-medium text-gray-700">
+									Form Close
+								</label>
+								<Controller
+									name="formClose"
+									control={control}
+									rules={{
 										validate: {
-											invalid: (date) =>
-												(date != null && !isNaN(date.getTime())) || "Invalid Date.",
+											invalid: (date) => date == null || !isNaN(date.getTime()) || "Invalid Date.",
+											onlyAfter: (date) => {
+												return (
+													date == null ||
+													isAfter(date, watch("eventStart")) ||
+													"The event must end after it starts."
+												);
+											},
 										},
-									})}
-									errors={errors}
+									}}
+									render={({ field, fieldState }) => (
+										<div>
+											<Calendar
+												inputClassName="!py-2 !px-3"
+												inputId={field.name}
+												placeholder="Form Close Time"
+												value={field.value ?? undefined}
+												onChange={field.onChange}
+												dateFormat="dd/mm/yy"
+												showTime
+												hourFormat="12"
+												className={classNames(fieldState.error ? "p-invalid" : null)}
+											/>
+										</div>
+									)}
 								/>
+								{errors.formClose != undefined ? (
+									<p
+										className="absolute inline-flex mt-1 text-sm text-red-600"
+										// id={ariaErrorIdentifier}
+										role="alert"
+									>
+										<BsExclamationCircle className="mx-1 mt-1" />
+										{(errors.formClose.message as string) ?? "Invalid."}
+									</p>
+								) : null}
 							</div>
+							{formDurationWarning != null &&
+							formTimesEnabled &&
+							!(errors.formOpen != undefined || errors.formClose != undefined)
+								? formDurationWarning
+								: null}
 						</div>
 					</div>
 				</div>
