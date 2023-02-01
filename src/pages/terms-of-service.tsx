@@ -6,6 +6,8 @@ import path from "path";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
 import useOpenGraph from "@/components/common/useOpenGraph";
+import RootLayout from "@/components/layout/RootLayout";
+import Footer from "@/components/util/Footer";
 
 interface TosProps {
 	text: string;
@@ -32,8 +34,9 @@ const TermsOfService: NextPage<TosProps> = ({ text }: TosProps) => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-darken !py-0 font-inter">
-				<div className="min-h-[100vh] max-w-[40rem] w-[70%] px-10 py-20 bg-gray-100 mx-auto">
+			{/*<div className="page-view bg-darken !py-0 font-inter">*/}
+			<RootLayout footer={false}>
+				<div className="min-h-[100vh] max-w-[40rem] w-[70%] px-10 pt-20 pb-2 bg-gray-100 mx-auto">
 					<div className="px-4 sm:px-6 lg:px-8">
 						<div className="relative mx-auto max-w-[37.5rem] pt-20 text-center pb-24">
 							<h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
@@ -52,8 +55,9 @@ const TermsOfService: NextPage<TosProps> = ({ text }: TosProps) => {
 							</div>
 						</div>
 					</div>
+					<Footer className="text-gray-800" />
 				</div>
-			</div>
+			</RootLayout>
 		</>
 	);
 };

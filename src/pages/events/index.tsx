@@ -49,32 +49,31 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<RootLayout authentication={{ admin: true, member: false }}>
-				<div className="page-view bg-darken">
-					<div className="w-full w-[90%] mx-auto p-1">
-						<div className="mt-6">
-							<FilterBar
-								semesters={semesters}
-								onChange={(value) => {
-									setFilters(() => value);
-								}}
-								resultCount={results?.length}
-							/>
-						</div>
-						<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
-							{isFetching
-								? results!.map((_, index) => (
-										<div
-											key={index}
-											className="shadow-lg rounded-xl bg-white w-full h-60 block col-span-3"
-										>
-											<div className="rounded-t-xl bg-zinc-300 animate-pulse w-full h-36"></div>
-										</div>
-								  ))
+			<RootLayout>
+				<div className="w-full w-[90%] mx-auto p-1">
+					<div className="mt-6">
+						<FilterBar
+							semesters={semesters}
+							onChange={(value) => {
+								setFilters(() => value);
+							}}
+							allowChangeRef={allowChangeRef}
+							resultCount={results?.length}
+						/>
+					</div>
+					<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
+						{isFetching
+							? sortedResults.map((_, index) => (
+									<div
+										key={index}
+										className="shadow-lg rounded-xl bg-white w-full h-60 block col-span-3"
+									>
+										<div className="rounded-t-xl bg-zinc-300 animate-pulse w-full h-36"></div>
+									</div>
+							  ))
 								: results!.map((event) => {
-										return <EventCard key={event.id} event={event} />;
-								  })}
-						</div>
+									return <EventCard key={event.id} event={event} />;
+							  })}
 					</div>
 				</div>
 			</RootLayout>

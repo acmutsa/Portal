@@ -10,7 +10,7 @@
 
 @layer utilities {
   .bg-acm {
-    background: linear-gradient(#00000066, #00000066), url('/img/bg.png') center / cover no-repeat;
+    background: linear-gradient(#00000066, #00000066), url('/img/bg.png') fixed center / cover no-repeat;
   }
 }
 
