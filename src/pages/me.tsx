@@ -53,7 +53,7 @@ export async function getServerSideProps({
 		})
 	).map((checkin) => ({
 		eventName: checkin.event.name,
-		eventDate: checkin.event.eventStart.toLocaleDateString(),
+		eventDate: checkin.event.eventStart.toDateString(),
 		points: 1,
 	}));
 

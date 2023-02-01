@@ -12,6 +12,7 @@ import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
 import superjson from "superjson";
+import RootLayout from "@/components/layout/RootLayout";
 
 interface CheckinPageParams {
 	[key: string]: string;
@@ -153,69 +154,65 @@ const CheckinView: NextPage<{ json: string }> = ({ json }) => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<div className="page-view bg-darken">
-				<div className="flex mx-auto justify-center">
-					<div className="mt-10 w-full mx-3.5 max-w-[30rem] bg-white rounded-lg">
-						<div className="pl-3.5 py-3.5 pr-1">
-							<Breadcrumbs
-								value={[
-									{
-										label: event.name,
-										href: `/events/${event.pageID}/`,
-									},
-									{
-										label: "Check-in",
-										active: true,
-									},
-								]}
-							/>
-						</div>
-						<form onSubmit={handleSubmit(onSubmit)} className="px-5 my-1.5">
-							<div className="w-full">
-								<label htmlFor="comment" className="block text-sm font-medium text-gray-700">
-									Add your suggestions & comments
-								</label>
-								<div className="mt-1">
-									{/* TODO: Implement inperson/virtual form buttons */}
-									<textarea
-										className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-										rows={4}
-										placeholder={`Optional, ${maximumCharacters} characters max`}
-										{...register("feedback", {
-											maxLength: {
-												message: "Max character limit reached",
-												value: maximumCharacters,
-											},
-											pattern: {
-												message: "Letters, numbers & punctuation only",
-												value: /^[A-z\-!@#$%^&*(),;':\[\]~\s]*$/,
-											},
-										})}
-									/>
-								</div>
-							</div>
-							<div className="flex justify-end items-center">
-								{errors.feedback != undefined ? (
-									<div className="flex-grow text-sm text-red-500">{errors.feedback.message}</div>
-								) : null}
-								<span
-									className={classNames(
-										"px-2 text-sm flex items-center",
-										remainingCharacters / maximumCharacters < 0.15
-											? "text-red-500"
-											: "text-zinc-500"
-									)}
-								>
-									{remainingCharacters}
-								</span>
-								<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[10rem]">
-									{form == null ? "Submit" : "Save"}
-								</button>
-							</div>
-						</form>
+			<RootLayout innerClassName="justify-center items-center">
+				<div className="mt-10 w-full mx-3.5 max-w-[30rem] bg-white rounded-lg">
+					<div className="pl-3.5 py-3.5 pr-1">
+						<Breadcrumbs
+							value={[
+								{
+									label: event.name,
+									href: `/events/${event.pageID}/`,
+								},
+								{
+									label: "Check-in",
+									active: true,
+								},
+							]}
+						/>
 					</div>
+					<form onSubmit={handleSubmit(onSubmit)} className="px-5 my-1.5">
+						<div className="w-full">
+							<label htmlFor="comment" className="block text-sm font-medium text-gray-700">
+								Add your suggestions & comments
+							</label>
+							<div className="mt-1">
+								{/* TODO: Implement inperson/virtual form buttons */}
+								<textarea
+									className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+									rows={4}
+									placeholder={`Optional, ${maximumCharacters} characters max`}
+									{...register("feedback", {
+										maxLength: {
+											message: "Max character limit reached",
+											value: maximumCharacters,
+										},
+										pattern: {
+											message: "Letters, numbers & punctuation only",
+											value: /^[A-z\-!@#$%^&*(),;':\[\]~\s]*$/,
+										},
+									})}
+								/>
+							</div>
+						</div>
+						<div className="flex justify-end items-center">
+							{errors.feedback != undefined ? (
+								<div className="flex-grow text-sm text-red-500">{errors.feedback.message}</div>
+							) : null}
+							<span
+								className={classNames(
+									"px-2 text-sm flex items-center",
+									remainingCharacters / maximumCharacters < 0.15 ? "text-red-500" : "text-zinc-500"
+								)}
+							>
+								{remainingCharacters}
+							</span>
+							<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[10rem]">
+								{form == null ? "Submit" : "Save"}
+							</button>
+						</div>
+					</form>
 				</div>
-			</div>
+			</RootLayout>
 		</>
 	);
 };
