@@ -153,7 +153,7 @@ const CheckinView: NextPage<{ json: string }> = ({ json }) => {
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<RootLayout innerClassName="justify-center items-center">
+			<RootLayout innerClassName="justify-center items-start">
 				<div className="mt-10 w-full mx-3.5 max-w-[30rem] bg-white rounded-lg">
 					<div className="pl-3.5 py-3.5 pr-1">
 						<Breadcrumbs
