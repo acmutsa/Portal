@@ -40,13 +40,12 @@ export async function getServerSideProps({
 	GetServerSidePropsResult<{ json: string }>
 > {
 	const [valid, member] = await validateMember(req, res, true);
+	const idParam = params!.id;
 
 	if (!valid)
 		return {
-			redirect: { destination: `/login?next=${req.url}`, permanent: false },
+			redirect: { destination: `/login?next=/events/${idParam}/check-in`, permanent: false },
 		};
-
-	const idParam = params!.id;
 
 	// Limit selection of properties for SSR
 	const event = await prisma.event.findUnique({
