@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Fragment, useState } from "react";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { trpc } from "@/utils/trpc";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import { setCookie } from "cookies-next";
 import { cookies } from "@/utils/constants";
@@ -13,6 +13,7 @@ import { GetServerSidePropsContext } from "next";
 import { validateMember } from "@/utils/server_helpers";
 import { safeUrl } from "@/utils/helpers";
 import RootLayout from "@/components/layout/RootLayout";
+import { OptionsType } from "cookies-next/lib/types";
 
 export async function getServerSideProps<ServerSideProps>({
 	req,
@@ -56,11 +57,14 @@ export default function LoginPage() {
 		});
 		if (isLoggedIn) {
 			// Setup cookies, open success modal
-			setCookie(cookies.member_email, data.email.toLowerCase());
-			setCookie(cookies.member_id, data.id.toLowerCase());
+			const TWO_WEEKS_IN_SECONDS = 14 * 24 * 60 * 60;
+			const cookieOptions: OptionsType = { sameSite: "strict", maxAge: TWO_WEEKS_IN_SECONDS };
+			setCookie(cookies.member_email, data.email.toLowerCase(), cookieOptions);
+			setCookie(cookies.member_id, data.id.toLowerCase(), cookieOptions);
 			setGlobalState({ ...globalState, member: true });
-			// await router.push(safeUrl(router.query.next, "/me"));
-			await router.push("/events");
+
+			const { next } = router.query;
+			await router.push(safeUrl(next, "/me"));
 		} else {
 			setIsErrorOpen(true);
 		}
