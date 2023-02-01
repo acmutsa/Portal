@@ -94,10 +94,6 @@ const Admin: NextPage = () => {
 				router.push("/admin/members/new/", undefined, { shallow: true });
 				break;
 			case AdminView.logout:
-				deleteCookie(cookies.admin_username);
-				deleteCookie(cookies.admin_password);
-				router.replace("/admin/login");
-				setGlobalState({ ...globalState, admin: false });
 		}
 	};
 
@@ -108,12 +104,6 @@ const Admin: NextPage = () => {
 			<Head>
 				<title>Administrative Panel</title>
 			</Head>
-			<RootLayout background={false} className="flex" footer={false}>
-				<Sidebar options={navigationOptions} onChange={(id) => swapPage(id as AdminView)} />
-				<div className="flex-grow p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-scroll relative bg-zinc-100">
-					<div className="col-span-4">{ElementToShow ? <ElementToShow /> : null}</div>
-				</div>
-			</RootLayout>
 		</>
 	);
 };

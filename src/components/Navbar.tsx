@@ -46,12 +46,12 @@ const NavbarItem: FunctionComponent<HighlightProps> = ({
 
 export type StaticAuthenticationProps = {
 	// If provided, authentication will be injected statically and not queried on load.
-	authentication?: {
+	authentication?: Partial<{
 		// Whether to show admin-only content
 		admin: boolean;
 		// Whether to show member-only content
 		member: boolean;
-	};
+	}>;
 };
 
 type NavbarProps = {} & StaticAuthenticationProps;
@@ -91,11 +91,13 @@ const Navbar: FunctionComponent<NavbarProps> = ({ authentication }) => {
 	useEffect(() => {
 		// If authentication is statically provided, put it into global state.
 		if (authentication != undefined) {
-			return setGlobalState((prevState) => ({
+			setGlobalState((prevState) => ({
 				...prevState,
 				...authentication,
 				ready: true,
 			}));
+
+			return;
 		}
 
 		// Otherwise, initiate the login mutations

@@ -4,6 +4,8 @@ import { setCookie } from "cookies-next";
 import { cookies } from "@/utils/constants";
 import RootLayout from "@/components/layout/RootLayout";
 
+// TODO: Add SSR auto-redirect check
+
 const Login: NextPage = () => {
 	const onSubmit = (username: string, password: string) => {
 		const expDate = new Date();
@@ -12,11 +14,12 @@ const Login: NextPage = () => {
 		setCookie(cookies.admin_username, username, { expires: expDate });
 		setCookie(cookies.admin_password, password, { expires: expDate });
 
+		// TODO: Switch to smooth transition
 		window.location.reload();
 	};
 
 	return (
-		<RootLayout innerClassName="justify-center items-center">
+		<RootLayout innerClassName="justify-center items-center" authentication={{ admin: false }}>
 			<LoginForm callback={(username, password) => onSubmit(username, password)} />
 		</RootLayout>
 	);
