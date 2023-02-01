@@ -6,7 +6,7 @@ import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
 import FilterBar, { Filters } from "@/components/events/FilterBar";
 import { getEvents, getSemesters } from "@/server/controllers/events";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import { removeEmpty } from "@/utils/helpers";
 import RootLayout from "@/components/layout/RootLayout";
@@ -29,6 +29,7 @@ interface EventsProps {
 
 const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: EventsProps) => {
 	const [filters, setFilters] = useState<Filters | null>(null);
+	const allowChangeRef = useRef(true);
 
 	const { data: results, isFetching } = trpc.events.get.useQuery(removeEmpty({ ...filters }), {
 		initialData: staticResults,
@@ -63,7 +64,7 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 					</div>
 					<div className="grid pt-4 grid-cols-3 sm:grid-cols-6 lg:grid-cols-9 gap-6">
 						{isFetching
-							? sortedResults.map((_, index) => (
+							? results.map((_, index) => (
 									<div
 										key={index}
 										className="shadow-lg rounded-xl bg-white w-full h-60 block col-span-3"
@@ -71,7 +72,7 @@ const Events: NextPage<EventsProps> = ({ events: staticResults, semesters }: Eve
 										<div className="rounded-t-xl bg-zinc-300 animate-pulse w-full h-36"></div>
 									</div>
 							  ))
-								: results!.map((event) => {
+							: results.map((event) => {
 									return <EventCard key={event.id} event={event} />;
 							  })}
 					</div>

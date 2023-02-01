@@ -1,4 +1,4 @@
-import { Dispatch, FunctionComponent, useState } from "react";
+import { Dispatch, FunctionComponent, MutableRefObject, useState } from "react";
 import organizations from "@/config/organizations.json";
 import ShortToggle from "@/components/common/ShortToggle";
 import Filter from "@/components/events/Filter";
@@ -24,6 +24,7 @@ interface FilterBarProps {
 	onChange?: Dispatch<Filters>;
 	resultCount?: number;
 	semesters: string[];
+	allowChangeRef: MutableRefObject<Boolean>;
 }
 
 const getValue = ([, v]: [string, boolean]): boolean => v;
@@ -33,6 +34,7 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 	onChange,
 	resultCount,
 	semesters,
+	allowChangeRef,
 }: FilterBarProps) => {
 	const [showPastEvents, setShowPastEvents] = useState(false);
 	const [organizationFilter, setOrganizationFilter] = useState<Record<string, boolean>>({});
@@ -55,14 +57,7 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 			<div className="mr-3">
 				<Menu as="div" className="relative z-10 inline-block text-left">
 					<div>
-						<Sort
-							options={sortOptions}
-							label={sortOptions[sort] ?? "Sort"}
-							onChange={() => {
-								setSort(sort);
-								console.log("Sort emitted an event.");
-							}}
-						/>
+						<Sort options={sortOptions} label={sortOptions[sort] ?? "Sort"} onChange={setSort} />
 					</div>
 				</Menu>
 				{resultCount != undefined ? (
@@ -76,29 +71,20 @@ const FilterBar: FunctionComponent<FilterBarProps> = ({
 					<ShortToggle
 						screenReaderLabel="Show Past Events"
 						checked={showPastEvents}
-						onChange={(checked) => {
-							console.log("Short toggle emitted an event.");
-							setShowPastEvents(checked);
-						}}
+						onChange={setShowPastEvents}
 					>
 						<span className="text-gray-700">Show Past Events</span>
 					</ShortToggle>
 				</div>
 				<Popover.Group className="hidden sm:flex sm:items-baseline sm:space-x-4 lg:space-x-8">
 					<Filter
-						onChange={(state) => {
-							setOrganizationFilter(state);
-							console.log("Organization filter emitted an event.");
-						}}
+						onChange={setOrganizationFilter}
 						options={organizations}
 						id="organization"
 						name="Organizations"
 					/>
 					<Filter
-						onChange={(state) => {
-							setSemesterFilter(state);
-							console.log("Semester filter emitted an event.");
-						}}
+						onChange={setSemesterFilter}
 						options={semesters.map((s) => ({ id: s, name: s }))}
 						id="semester"
 						name="Semesters"
