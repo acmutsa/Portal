@@ -385,6 +385,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 										<>
 											<Calendar
 												inputClassName="!py-2 !px-3"
+												disabled={!formTimesEnabled}
 												inputId={field.name}
 												placeholder="Form Open Time"
 												value={field.value ?? undefined}
@@ -426,6 +427,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 											<Calendar
 												inputClassName="!py-2 !px-3"
 												inputId={field.name}
+												disabled={!formTimesEnabled}
 												placeholder="Form Close Time"
 												value={field.value ?? undefined}
 												onChange={field.onChange}
