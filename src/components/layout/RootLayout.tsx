@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import Navbar, { StaticAuthenticationProps } from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import { classNames } from "@/utils/helpers";
-import Disclosure from "@/components/util/Disclosure";
+import Footer from "@/components/util/Footer";
 
 type RootLayoutProps = {
 	className?: string;
@@ -13,6 +13,7 @@ type RootLayoutProps = {
 	navbar?: boolean;
 	// If false, hide the footer. Defaults to 'true'.
 	footer?: boolean;
+	footerClass?: string;
 } & StaticAuthenticationProps;
 
 const RootLayout: FunctionComponent<RootLayoutProps> = ({
@@ -22,6 +23,7 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 	authentication,
 	navbar,
 	footer,
+	footerClass,
 }) => {
 	// Decide what the background prop means.
 	background = background ?? true; // Defaults to 'true'
@@ -51,7 +53,7 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 					}}
 				/>
 				{children}
-				{footer ? <Disclosure /> : null}
+				{footer ? <Footer className={footerClass} /> : null}
 			</div>
 		</>
 	);

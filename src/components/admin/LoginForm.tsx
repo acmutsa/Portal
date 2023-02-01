@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { FunctionComponent, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useGlobalContext } from "@/components/common/GlobalContext";
-import Disclosure from "@/components/util/Disclosure";
+import Footer from "@/components/util/Footer";
 
 interface LoginFormProps {
 	callback: (username: string, password: string) => void;
@@ -76,7 +76,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ callback }: LoginFormPro
 					</form>
 				</div>
 			</div>
-			<Disclosure />
+			<Footer />
 		</div>
 	);
 };

@@ -5,12 +5,12 @@ interface DisclosureProps {
 	className?: string;
 }
 
-const Disclosure: FunctionComponent<DisclosureProps> = ({ className }: DisclosureProps) => {
+const Footer: FunctionComponent<DisclosureProps> = ({ className }: DisclosureProps) => {
 	return (
 		<p
 			className={classNames(
 				className,
-				"pt-10 footer w-full font-inter opacity-[60%] z-10 text-center text-[12px] mx-auto text-white absolute bottom-0 py-1"
+				"pt-10 footer w-full font-inter opacity-[60%] z-10 text-center text-[12px] mx-auto text-white py-1"
 			)}
 		>
 			Made with <span className="disclosure-symbol">&lt;/&gt;</span> & ♥ @ ACM UTSA |{" "}
@@ -23,4 +23,4 @@ const Disclosure: FunctionComponent<DisclosureProps> = ({ className }: Disclosur
 	);
 };
 
-export default Disclosure;
+export default Footer;

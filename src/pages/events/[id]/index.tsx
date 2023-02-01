@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Disclosure from "@/components/util/Disclosure";
 import { prisma } from "@/server/db/client";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
@@ -135,8 +134,11 @@ const EventView: NextPage<{ event: Event; qrcodeData: string; existingCheckin: b
 				<title>{ogp.title}</title>
 				<OpenGraph properties={ogp} />
 			</Head>
-			<RootLayout>
-				<div className="page-view bg-white sm:bg-darken sm:!pt-[100px]">
+			<RootLayout
+				background={"bg-white md:bg-acm"}
+				footerClass={"text-gray-800 max-w-[22rem] md:max-w-full md:text-white"}
+			>
+				<div className="sm:pt-12">
 					<div className="flex justify-center w-full">
 						<div className="bg-white z-30 max-w-[1200px] sm:mx-3 md:mx-6 p-5 md:p-2 md:p-3 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 sm:rounded-lg">
 							<div className="flex items-center justify-center overflow-hidden md:ml-3">
@@ -163,34 +165,36 @@ const EventView: NextPage<{ event: Event; qrcodeData: string; existingCheckin: b
 											No description was provided for this event.
 										</p>
 									)}
-									<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-2 lg:gap-y-4 md:grid-cols-2">
-										<div className="sm:col-span-1">
-											<dt className="text-sm text-gray-500">Start Time</dt>
-											<dd className="md:mt-0.5">
-												{event.eventStart.toLocaleString("en", {
-													dateStyle: "medium",
-													timeStyle: "short",
-												})}
-											</dd>
-										</div>
-										<div className="sm:col-span-1">
-											<dt className="text-sm text-gray-500">End Time</dt>
-											<dd className="md:mt-0.5">
-												{event.eventEnd.toLocaleString("en", {
-													dateStyle: "medium",
-													timeStyle: "short",
-												})}
-											</dd>
-										</div>
-										<div className="sm:col-span-1">
-											<dt className="text-sm text-gray-500">Location</dt>
-											<dd className="md:mt-0.5">{event.location}</dd>
-										</div>
-										<div className="sm:col-span-1">
-											<dt className="text-sm text-gray-500">Semester</dt>
-											<dd className="md:mt-0.5">{event.semester}</dd>
-										</div>
-									</dl>
+									<NoSSR>
+										<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-2 lg:gap-y-4 md:grid-cols-2">
+											<div className="sm:col-span-1">
+												<dt className="text-sm text-gray-500">Start Time</dt>
+												<dd className="md:mt-0.5">
+													{event.eventStart.toLocaleString("en", {
+														dateStyle: "medium",
+														timeStyle: "short",
+													})}
+												</dd>
+											</div>
+											<div className="sm:col-span-1">
+												<dt className="text-sm text-gray-500">End Time</dt>
+												<dd className="md:mt-0.5">
+													{event.eventEnd.toLocaleString("en", {
+														dateStyle: "medium",
+														timeStyle: "short",
+													})}
+												</dd>
+											</div>
+											<div className="sm:col-span-1">
+												<dt className="text-sm text-gray-500">Location</dt>
+												<dd className="md:mt-0.5">{event.location}</dd>
+											</div>
+											<div className="sm:col-span-1">
+												<dt className="text-sm text-gray-500">Semester</dt>
+												<dd className="md:mt-0.5">{event.semester}</dd>
+											</div>
+										</dl>
+									</NoSSR>
 								</div>
 								<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
 									<Link legacyBehavior href={`/events/${id}/check-in`}>
@@ -288,7 +292,6 @@ const EventView: NextPage<{ event: Event; qrcodeData: string; existingCheckin: b
 							</div>
 						</div>
 					</div>
-					<Disclosure className="!pt-0 text-gray-700" />
 				</div>
 			</RootLayout>
 		</>

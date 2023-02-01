@@ -10,7 +10,7 @@ import { setCookie } from "cookies-next";
 import { cookies } from "@/utils/constants";
 import Head from "next/head";
 import OpenGraph from "@/components/common/OpenGraph";
-import Disclosure from "@/components/util/Disclosure";
+import Footer from "@/components/util/Footer";
 import { Dialog, Transition } from "@headlessui/react";
 // import { GetServerSidePropsContext } from "next";
 // import { validateMember } from "@/utils/server_helpers";
@@ -146,7 +146,7 @@ export default function LoginPage() {
 						</p>
 					</div>
 				</div>
-				<Disclosure />
+				<Footer />
 			</div>
 			<Transition appear show={isErrorOpen} as={Fragment}>
 				<Dialog as="div" className="relative z-10" onClose={() => closeErrorModal()}>

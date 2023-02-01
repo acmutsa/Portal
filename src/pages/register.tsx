@@ -3,7 +3,7 @@ import { Widget } from "@typeform/embed-react";
 import { useRouter } from "next/router";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
-import Disclosure from "@/components/util/Disclosure";
+import Footer from "@/components/util/Footer";
 import Head from "next/head";
 
 const Join: NextPage = () => {
