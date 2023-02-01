@@ -127,6 +127,15 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 					{pluralize(minuteDifference)}. Are you sure this is correct?
 				</FormWarning>
 			);
+		if (minuteDifference >= 0 && minuteDifference >= 60 * 4) {
+			const hours = minuteDifference / 60;
+			return (
+				<FormWarning className="mt-0">
+					The event is set to last {hours.toFixed(1)} hours. Are you sure this is correct?
+				</FormWarning>
+			);
+		}
+
 		return null;
 	}, [watchedEventTiming]);
 
@@ -141,6 +150,14 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 					{pluralize(minuteDifference)}. Are you sure this is correct?
 				</FormWarning>
 			);
+		if (minuteDifference >= 0 && minuteDifference >= 60 * 5) {
+			const hours = minuteDifference / 60;
+			return (
+				<FormWarning className="mt-0">
+					The form is set to be open for {hours.toFixed(1)} hours. Are you sure this is correct?
+				</FormWarning>
+			);
+		}
 		return null;
 	}, [watchedEventTiming]);
 
