@@ -38,7 +38,14 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 	return (
 		<>
 			{navbar ? <Navbar authentication={authentication} /> : null}
-			<div id="layout" className={classNames(className, backgroundClass, "min-h-screen pt-[72px]")}>
+			<div
+				id="layout"
+				className={classNames(
+					className,
+					backgroundClass,
+					"flex flex-col flex-grow min-h-screen pt-[72px]"
+				)}
+			>
 				<Toaster
 					toastOptions={{
 						duration: 3000,
