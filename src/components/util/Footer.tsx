@@ -1,5 +1,11 @@
 import type { FunctionComponent } from "react";
 import { classNames } from "@/utils/helpers";
+import getConfig from "next/config";
+import Link from "next/link";
+
+const {
+	publicRuntimeConfig: { version },
+} = getConfig();
 
 interface DisclosureProps {
 	className?: string;
@@ -16,7 +22,15 @@ const Footer: FunctionComponent<DisclosureProps> = ({ className }: DisclosurePro
 			Made with <span className="disclosure-symbol">&lt;/&gt;</span> & ♥ @ ACM UTSA |{" "}
 			<a href="https://forms.gle/eqj1gMRRhZKitAn47" target={"_blank"} className="underline">
 				Report a Bug
-			</a>
+			</a>{" "}
+			{version != undefined ? (
+				<>
+					|{" "}
+					<Link className="underline" href="https://github.com/UTSA-ACM/Portal">
+						v{version}
+					</Link>
+				</>
+			) : null}
 			<br />© The Association for Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
 			Reserved.
 		</footer>

@@ -1,6 +1,7 @@
 import { env } from "./src/env/server.mjs";
 import withBundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
+import * as pack from './package.json' assert { type: "json" };
 
 /**
  * Don't be scared of the generics here.
@@ -53,6 +54,9 @@ export const nextConfig = {
 	},
 	experimental: {
 		appDir: false
+	},
+	publicRuntimeConfig: {
+		version: pack.default.version
 	}
 };
 
