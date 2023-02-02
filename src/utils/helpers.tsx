@@ -71,8 +71,15 @@ export const getDates = (
 	];
 };
 
+/**
+ * A reducer function for summing two numbers.
+ */
 export const sum = (a: number, b: number) => a + b;
 
+/**
+ * Removes null value'd items from an object with type safety.
+ * @param object
+ */
 export const removeEmpty = (object: Record<string, {} | null | undefined>): { [k: string]: {} } => {
 	const filteredEntries: [string, {}][] = Object.entries(object).filter(
 		(kv): kv is [string, {}] => kv[1] != null
@@ -80,10 +87,22 @@ export const removeEmpty = (object: Record<string, {} | null | undefined>): { [k
 	return Object.fromEntries(filteredEntries);
 };
 
+/**
+ * Removes all null items in an array.
+ * @param array An array of anything, with potentially null items.
+ */
 export const removeEmptyItems = (array: any[]): {}[] => {
 	return array.filter((v): v is {} => v != null);
 };
 
+/**
+ * Generates a Google Calendar link while maintaining all attributes, formatting the date & more.
+ * @param start The start date.
+ * @param end The end date.
+ * @param title The title of the event. Optional.
+ * @param description The description for the event. Optional.
+ * @param location The location for the event. Optional.
+ */
 export const generateGoogleCalendarLink = (
 	start: Date,
 	end: Date,
@@ -106,6 +125,11 @@ export const generateGoogleCalendarLink = (
 	return `https://calendar.google.com/calendar/render?${params.toString()}`;
 };
 
+/**
+ * Trims the given characters from the left of the string.
+ * @param input The string to be trimmed.
+ * @param characters The characters to be removed.
+ */
 export function ltrim(input: string, characters: string) {
 	let start = 0;
 	while (input[start] !== undefined && characters.indexOf(input[start]!) >= 0) {
@@ -114,6 +138,10 @@ export function ltrim(input: string, characters: string) {
 	return input.substring(start);
 }
 
+/**
+ * Produces a formatted date cell with a hoverable title.
+ * @param value
+ */
 export const formatDateCell = (value: Date) => {
 	const hoverText = format(value, "EEEE, LLL do, yyyy 'at' h:mm:ss aaaa");
 	const shortText = format(value, "y/MM/dd h:mma z");
@@ -124,6 +152,10 @@ export const formatDateCell = (value: Date) => {
 	);
 };
 
+/**
+ * Combines classes into a single string. Supports null or undefined classes while adding spaces between valid classes.
+ * @param classes
+ */
 export function classNames(...classes: (string | null | undefined)[]) {
 	return classes.filter(Boolean).join(" ");
 }
@@ -170,13 +202,14 @@ export function getOrganization(organizationIdentifier: string): Choice | null {
  * @param array {any[]} The array of items. Nothing will happen if less than 2 items exist.
  * @param func {(a: any, b: any) => boolean} The callback function. Takes two inputs, returns a boolean.
  */
-export function pairwiseMatch(array: any[], func: (a: any, b: any) => boolean) {
+export function pairwiseMatch<T = any>(array: T[], func: (a: T, b: T) => boolean) {
 	for (let i = 0; i < array.length - 1; i++) {
-		if (func(array[i], array[i + 1])) return true;
+		if (func(array[i] as T, array[i + 1] as T)) return true;
 	}
 	return false;
 }
 
+// Get the general semester given a date. Year is irrelevant to this function.
 export function getSemester(time: Date | null = null): "Spring" | "Summer" | "Fall" {
 	if (time == null) time = new Date();
 	const month = time.getUTCMonth();
@@ -205,6 +238,15 @@ const seasonMapping: Record<number | string, number | string> = {
 	3: "Fall",
 };
 
+/**
+ * Returns a list of strings representing the specific seasons of a year, like "Spring 2024".
+ * Only the first year can be partial, and will always contain the final semester of the year (Fall).
+ * The final year (if not equal to the first year), will always contain every semester available.
+ *
+ * @param start The season & year to start the range.
+ * @param endYear The final year to end on.
+ * @param includeSummer Whether or not the range should include Summer semesters in it's output.
+ */
 export function getSemesterRange(
 	start: [season: 1 | 2 | 3, year: number],
 	endYear: number,
