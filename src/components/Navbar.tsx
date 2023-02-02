@@ -80,7 +80,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({ authentication }) => {
 			memberLoggedIn.mutate(null, {
 				onSuccess: (response) => {
 					setGlobalState((previousGlobalState) => {
-						return { ...previousGlobalState, member: response ?? false, ready: true };
+						return { ...previousGlobalState, member: response ?? false };
 					});
 				},
 			});
@@ -94,7 +94,6 @@ const Navbar: FunctionComponent<NavbarProps> = ({ authentication }) => {
 			setGlobalState((prevState) => ({
 				...prevState,
 				...authentication,
-				ready: true,
 			}));
 
 			return;
@@ -107,7 +106,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({ authentication }) => {
 
 	let dynamicNavbarElements: JSX.Element[];
 
-	if (globalState.ready) {
+	if (globalState.member != null) {
 		if (globalState.member)
 			dynamicNavbarElements = [
 				<NavbarItem key={"status"} router={router} route={"/me"}>
