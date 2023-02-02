@@ -28,7 +28,9 @@ const Home: NextPage = () => {
 							alt="ACM-UTSA Logo"
 							className="absolute overflow-visible drop-shadow-sm"
 							src={"/img/logo.png"}
-							layout="fill"
+							width={400}
+							height={400}
+							quality={90}
 							objectFit="cover"
 							priority={true}
 						/>
