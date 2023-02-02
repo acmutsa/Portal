@@ -6,8 +6,6 @@ export async function getServerSideProps({
 	req,
 	res,
 }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<{}>> {
-	// TODO: Server-side logout logic
-
 	// Manual method: res.setHeader("Set-Cookie", serialize(cookies.admin_password, "", { maxAge: 0, path: "/" }));
 	deleteCookie(cookies.admin_username, { req, res });
 	deleteCookie(cookies.admin_password, { req, res });
