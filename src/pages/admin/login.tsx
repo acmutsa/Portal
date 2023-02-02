@@ -5,6 +5,8 @@ import { cookies } from "@/utils/constants";
 import RootLayout from "@/components/layout/RootLayout";
 import { safeUrl } from "@/utils/helpers";
 import { validateAdmin } from "@/utils/server_helpers";
+import { useEffect } from "react";
+import { useGlobalContext } from "@/components/common/GlobalContext";
 
 export async function getServerSideProps({
 	req,
@@ -25,6 +27,13 @@ export async function getServerSideProps({
 }
 
 const Login: NextPage = () => {
+	const [, setGlobalState] = useGlobalContext();
+
+	// You can't reach this if you're logged in as an admin. Declare this information.
+	useEffect(() => {
+		setGlobalState((prev) => ({ ...prev, admin: false }));
+	}, []);
+
 	const onSubmit = (username: string, password: string) => {
 		const expDate = new Date();
 		expDate.setMonth(expDate.getMonth() + 3);

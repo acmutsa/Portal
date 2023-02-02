@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { trpc } from "@/utils/trpc";
 import { useRouter } from "next/router";
@@ -20,7 +20,7 @@ export async function getServerSideProps<ServerSideProps>({
 	res,
 	query,
 }: GetServerSidePropsContext) {
-	const [valid, member] = await validateMember(req, res, true);
+	const [valid] = await validateMember(req, res, true);
 
 	if (valid)
 		return {
@@ -40,6 +40,11 @@ export default function LoginPage() {
 	const [globalState, setGlobalState] = useGlobalContext();
 	const memberLoggedIn = trpc.member.loggedIn.useMutation();
 	const router = useRouter();
+
+	// You can't reach this page if you're logged in as a member. Declare this information.
+	useEffect(() => {
+		setGlobalState((prev) => ({ ...prev, member: false }));
+	}, []);
 
 	const ogp = useOpenGraph({
 		description:

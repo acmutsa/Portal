@@ -16,7 +16,6 @@ const EventView: FunctionComponent = () => {
 		<div className="w-full h-full">
 			<div className="flex w-full">
 				<div className="flex gap-10 justify-start my-2 p-4 bg-white border-zinc-200 border-[1px] rounded-lg">
-					{/* TODO: Create truly useful statistics or implement the logic behind these ones. */}
 					<Stat label="Total Members" loading={!isSuccess} value={members?.length} />
 					<Stat label="Active Members" loading={!activityLoaded} value={memberCount?.active} />
 					<Stat label="Inactive Members" loading={!activityLoaded} value={memberCount?.inactive} />
@@ -38,7 +37,6 @@ const EventView: FunctionComponent = () => {
 										New Member
 									</button>
 								</Link>
-								{/* TODO: Use the labels & default value options & use the human format (not id) */}
 							</div>
 						</div>
 					) : (
