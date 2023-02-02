@@ -45,8 +45,8 @@ export async function validateAdmin(
 	response: ServerResponse
 ): Promise<boolean> {
 	// Acquire admin credentials
-	const username = request.cookies[cookies.admin_username]?.toLowerCase();
-	const password = request.cookies[cookies.admin_password]?.toLowerCase();
+	const username = request.cookies[cookies.admin_username];
+	const password = request.cookies[cookies.admin_password];
 
 	if (username == null || password == null) {
 		if (username != null) deleteCookie(cookies.admin_username, { req: request, res: response });
