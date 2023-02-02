@@ -128,10 +128,9 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 	);
 
 	const now = new Date();
-	const relativeText = `${isPast(event.eventStart) ? "ends " : ""}${formatRelative(
-		!isPast(event.eventStart) ? event.eventStart : event.eventEnd,
-		now
-	)}`;
+	const relativeText = `${
+		isPast(event.eventStart) ? (isPast(event.eventEnd) ? "ended " : "ends ") : ""
+	}${formatRelative(!isPast(event.eventStart) ? event.eventStart : event.eventEnd, now)}`;
 
 	const checkinOpen = isCheckinOpen(event);
 	return (
@@ -335,7 +334,7 @@ export async function getStaticProps({
 }
 
 export async function getStaticPaths() {
-	return { paths: [], fallback: "blocking" };
+	return {paths: [], fallback: "blocking"};
 }
 
 export default EventView;
