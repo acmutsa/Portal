@@ -4,14 +4,16 @@ import { env } from "@/env/server.mjs";
 import { cookies } from "@/utils/constants";
 
 export function middleware(req: NextRequest) {
-	if (req.nextUrl.pathname.startsWith("/admin")) {
+	const requestPath = req.nextUrl.pathname;
+
+	if (requestPath.startsWith("/admin") && !requestPath.endsWith("/login")) {
 		let username = req.cookies.get(cookies.admin_username)?.value;
 		let password = req.cookies.get(cookies.admin_password)?.value;
 		if (password != env.ADMIN_PASS || username != env.ADMIN_UNAME) {
 			if (password == undefined && username == undefined) {
-				return NextResponse.rewrite(new URL("/admin/login", req.url));
+				return NextResponse.redirect(new URL(`/admin/login?next=${requestPath}`, req.url));
 			} else {
-				return NextResponse.rewrite(new URL("/admin/login?invalid", req.url));
+				return NextResponse.redirect(new URL(`/admin/login?invalid&next=${requestPath}`, req.url));
 			}
 		}
 	}
