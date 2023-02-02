@@ -51,7 +51,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 	const { data: existingCheckin } = trpc.events.checkedIn.useQuery(
 		{ eventId: event.id },
 		{
-			enabled: isMember,
+			enabled: isMember ?? false,
 		}
 	);
 

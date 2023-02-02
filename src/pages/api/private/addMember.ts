@@ -5,7 +5,7 @@ import { z } from "zod";
 import { env } from "@/env/server.mjs";
 
 // This is pretty much a "Made for purpose" version of this for the migration since python does not support prisma.
-// TODO: In the future it should be made more secure / predicatable / optimized.
+// TODO: In the future it should be made more secure / predictable / optimized.
 // Also should probably make some docs for this at some point on Notion
 
 const addMember = async (req: NextApiRequest, res: NextApiResponse) => {
