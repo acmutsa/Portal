@@ -179,14 +179,14 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 							}
 						</h3>
 						<p className="mt-1 text-sm text-gray-500">
-							Take care to double check all information before submitting.
+							Take care to double check all information before submitting :&#41;
 						</p>
 					</div>
 					<div className="grid grid-cols-12 gap-6">
 						<div className="col-span-12 sm:col-span-8 lg:col-span-6">
 							<AdvancedInput
 								label="Name"
-								placeholder="Group Mock Interviews"
+								placeholder="A Wicked Awesome Event"
 								type="text"
 								register={register("name", {
 									required: { value: true, message: "Required." },
@@ -223,7 +223,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 										fieldState={fieldState}
 										label="Organization"
 										choices={organizations}
-										unselectedText="RowdyHacks"
+										unselectedText="ACM & Co."
 									/>
 								)}
 							/>
@@ -254,7 +254,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 						</div>
 						<div className="col-span-12 sm:col-span-4">
 							<AdvancedInput
-								placeholder="NPB 3.1.40"
+								placeholder="EMCS's Garage"
 								label="Location"
 								type="text"
 								register={register("location", {
