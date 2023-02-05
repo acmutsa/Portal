@@ -105,19 +105,23 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 		control,
 		handleSubmit,
 		trigger,
+		setValue,
+		getValues,
 		formState: { errors },
 	} = useForm<EventFormValues>({
 		mode: "onChange",
 		defaultValues: {
 			eventStart: now,
 			eventEnd: now,
-			formOpen: null,
-			formClose: null,
+			formOpen: now,
+			formClose: now,
 			...initialValues,
 		},
 	});
 
-	const [formTimesEnabled, setFormTimesEnabled] = useState(initialValues?.formClose != null);
+	const [formTimesEnabled, setFormTimesEnabled] = useState<boolean>(
+		context == "create" ? true : initialValues?.formClose != null
+	);
 
 	const watchedEventTiming = watch(["eventStart", "eventEnd", "formOpen", "formClose"]);
 
@@ -286,6 +290,9 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 												value={field.value}
 												onChange={(e) => {
 													trigger("eventEnd");
+													if (formTimesEnabled && context == "create") {
+														setValue("formOpen", getValues("eventStart"));
+													}
 													return field.onChange(e);
 												}}
 												dateFormat="dd/mm/yy"
@@ -336,7 +343,15 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 												inputId={field.name}
 												placeholder="Event End Time"
 												value={field.value}
-												onChange={field.onChange}
+												onChange={(e) => {
+													if (formTimesEnabled && context == "create") {
+														setValue(
+															"formClose",
+															new Date(getValues("eventEnd").getTime() + 30 * 60 * 1000)
+														);
+													}
+													return field.onChange(e);
+												}}
 												dateFormat="dd/mm/yy"
 												showTime
 												hourFormat="12"
@@ -370,15 +385,19 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 							>
 								<span className="flex flex-col pr-2">
 									<Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
-										Use separate form times
+										Use separate check-in form times
 									</Switch.Label>
 									<Switch.Description as="span" className="text-sm text-gray-500">
-										Should the forms open at a different time than the event?
+										Should the check-in open at a different time than the event?
 									</Switch.Description>
 								</span>
 								<Switch
 									checked={formTimesEnabled}
-									onChange={setFormTimesEnabled}
+									onChange={() => {
+										setValue("formOpen", null);
+										setValue("formClose", null);
+										setFormTimesEnabled(!formTimesEnabled);
+									}}
 									className={classNames(
 										formTimesEnabled ? "bg-indigo-600" : "bg-gray-200",
 										"relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
