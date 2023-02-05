@@ -30,7 +30,11 @@ const Footer: FunctionComponent<DisclosureProps> = ({ className }: DisclosurePro
 						v{version}
 					</Link>
 				</>
-			) : null}
+			) : null}{" "}
+			|{" "}
+			<Link href="/terms-of-service" className="underline">
+				TOS
+			</Link>
 			<br />© The Association for Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
 			Reserved.
 		</footer>
