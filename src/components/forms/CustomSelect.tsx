@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { BsCheck, BsExclamationCircle } from "react-icons/bs";
 import { HiOutlineSelector } from "react-icons/hi";
-import { ControllerFieldState } from "react-hook-form";
+import { ControllerFieldState, type FieldValues } from "react-hook-form";
 import { ControllerRenderProps } from "react-hook-form/dist/types/controller";
 import { classNames } from "@/utils/helpers";
 
@@ -11,7 +11,7 @@ export interface Choice<IDType = string, NameType = string> {
 	name: NameType;
 }
 
-interface CustomSelectProps<TFormValues> {
+interface CustomSelectProps<TFormValues extends FieldValues> {
 	field: ControllerRenderProps<TFormValues, any>;
 	fieldState: ControllerFieldState;
 	label?: string | null | undefined;
@@ -22,7 +22,7 @@ interface CustomSelectProps<TFormValues> {
 	flattenedValues?: boolean;
 }
 
-export default function CustomSelect<TFormValues>({
+export default function CustomSelect<TFormValues extends FieldValues>({
 	choices,
 	unselectedText,
 	buttonClass,
