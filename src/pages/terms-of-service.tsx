@@ -13,7 +13,7 @@ interface TosProps {
 	text: string;
 }
 
-const lastUpdated = new Date(2022, 11, 20);
+const lastUpdated = new Date(2023, 2, 5);
 
 export function getStaticProps() {
 	const text = readFileSync(path.resolve(process.cwd(), "./src/utils/tos.md"), "utf-8");
@@ -40,7 +40,7 @@ const TermsOfService: NextPage<TosProps> = ({ text }: TosProps) => {
 					<div className="px-4 sm:px-6 lg:px-8">
 						<div className="relative mx-auto max-w-[37.5rem] pt-20 text-center pb-24">
 							<h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-								Privacy policy
+								TOS & Privacy policy
 							</h1>
 							<p className="mt-4 text-base leading-7 text-slate-600">
 								Last updated{" "}
