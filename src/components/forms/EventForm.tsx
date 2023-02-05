@@ -370,10 +370,10 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 							>
 								<span className="flex flex-col pr-2">
 									<Switch.Label as="span" className="text-sm font-medium text-gray-900" passive>
-										Use separate form times
+										Use separate check-in form times
 									</Switch.Label>
 									<Switch.Description as="span" className="text-sm text-gray-500">
-										Should the forms open at a different time than the event?
+										Should the check-in open at a different time than the event?
 									</Switch.Description>
 								</span>
 								<Switch
