@@ -17,6 +17,10 @@ import { differenceInMinutes, isAfter } from "date-fns";
 import { Calendar } from "primereact/calendar";
 import { HiExclamation } from "react-icons/hi";
 
+import "primeicons/primeicons.css";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.css";
+
 export const InitialEventFormSchema = z
 	.object({
 		name: z.string(),
