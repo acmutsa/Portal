@@ -35,14 +35,16 @@ const TermsOfService: NextPage<TosProps> = ({ text }: TosProps) => {
 				<OpenGraph properties={ogp} />
 			</Head>
 			{/*<div className="page-view bg-darken !py-0 font-inter">*/}
-			<RootLayout footer={false}>
-				<div className="min-h-[100vh] max-w-[40rem] w-[70%] px-10 pt-20 pb-2 bg-gray-100 mx-auto">
-					<div className="px-4 sm:px-6 lg:px-8">
-						<div className="relative mx-auto max-w-[37.5rem] pt-20 text-center pb-24">
-							<h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-								TOS & Privacy Policy
-							</h1>
-							<p className="mt-4 text-base leading-7 text-slate-600">
+			<RootLayout footer={false} innerClassName="justify-center">
+				<div className="min-h-[100vh] max-w-[30rem] sm:max-w-[40rem] sm:px-10 pt-20 pb-2 bg-gray-100 w-full">
+					<div className="px-4 sm:px-6 lg:px-8 pb-5">
+						<div className="flex flex-col items-center relative mx-auto max-w-[37.5rem] text-center pb-16">
+							<div className="w-full max-w-[25rem] sm:max-w-[30rem]">
+								<h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+									Terms of Service and Privacy Policy
+								</h1>
+							</div>
+							<p className="mt-4 text-base md:text-lg leading-7 text-slate-600">
 								Last updated{" "}
 								<time dateTime={lastUpdated.toISOString()}>
 									{format(lastUpdated, "MMMM d, yyyy")}
@@ -50,7 +52,7 @@ const TermsOfService: NextPage<TosProps> = ({ text }: TosProps) => {
 							</p>
 						</div>
 						<div className="relative px-4 sm:px-6 lg:px-8">
-							<div className="mx-auto max-w-[40rem] prose-sm prose prose-slate prose-a:font-semibold prose-a:text-sky-500 hover:prose-a:text-sky-600">
+							<div className="mx-auto max-w-[24rem] sm:max-w-[40rem] prose-sm prose prose-slate prose-a:font-semibold prose-a:text-sky-500 hover:prose-a:text-sky-600">
 								<ReactMarkdown>{text}</ReactMarkdown>
 							</div>
 						</div>
