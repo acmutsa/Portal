@@ -52,7 +52,7 @@ model Member {
 }
 
 model MemberData {
-    member             Member?  @relation(fields: [memberID], references: [id])
+    member             Member?  @relation(fields: [memberID], references: [id], onDelete: Cascade)
     memberID           String   @id
     major              String?
     classification     String?
