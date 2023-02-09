@@ -127,3 +127,20 @@ export async function updateMemberData(
 			data: memberData,
 		});
 }
+
+/**
+ * A simple method for marking
+ * @param id
+ */
+export async function setMemberSeen(id: string, time: Date | null = null): Promise<Date | null> {
+	time = time != null ? time : new Date();
+
+	await prisma.member.update({
+		where: { id },
+		data: {
+			lastSeen: time,
+		},
+	});
+
+	return time;
+}

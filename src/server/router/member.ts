@@ -8,6 +8,7 @@ import {
 	getMember,
 	MemberWithData,
 	PrettyMemberSchema,
+	setMemberSeen,
 	updateMember,
 	updateMemberData,
 } from "@/server/controllers/member";
@@ -72,8 +73,8 @@ export const memberRouter = router({
 		)
 		.output(z.boolean())
 		.mutation(async function ({ input, ctx }) {
-			let email = ctx.email;
-			let id = ctx.id;
+			let email = ctx.email?.toLowerCase();
+			let id = ctx.id?.toLowerCase();
 
 			// If input is specified, use those automatically. Both won't be null/undefined by schema.
 			if (input) {
@@ -84,9 +85,11 @@ export const memberRouter = router({
 				if (!email || !id) return false;
 			}
 
-			let member = await getMember(id.toLowerCase());
+			let member = await getMember(id);
+			const valid = member != null && member.email.toLowerCase() == email;
 
-			return member != null && member.email.toLowerCase() == email.toLowerCase();
+			if (valid) await setMemberSeen(id);
+			return valid;
 		}),
 	/**
 	 * Checks if the given form is available to check in to.

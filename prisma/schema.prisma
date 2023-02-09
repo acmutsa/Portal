@@ -49,6 +49,7 @@ model Member {
     checkins           Checkin[]
     data               MemberData?
     extendedMemberData String
+    lastSeen           DateTime?
 }
 
 model MemberData {

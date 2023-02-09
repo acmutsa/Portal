@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { Member } from "@/server/db/client";
 import { deleteCookie } from "cookies-next";
 import { NextApiRequestCookies } from "next/dist/server/api-utils";
-import { getMember } from "@/server/controllers/member";
+import { getMember, setMemberSeen } from "@/server/controllers/member";
 import { MemberData } from "@prisma/client";
 import { cookies } from "@/utils/constants";
 import { env } from "@/env/server.mjs";
@@ -35,6 +35,8 @@ export async function validateMember(
 		deleteCookie(cookies.member_id, { req: request, res: response });
 		return [false, null];
 	}
+
+	await setMemberSeen(id);
 
 	// Otherwise, it's valid, return the member.
 	return [true, member];
