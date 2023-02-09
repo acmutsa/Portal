@@ -54,21 +54,25 @@ const OpenGraph = ({
 			<meta property="og:site_name" content={site_name} />
 			{type === "article" ? (
 				<>
-					<meta property="article:author" content={author} />
-					<meta property="article:section" content={section} />
-					<meta property="article:modified_time" content={modified_time} />
-					<meta property="article:published_time" content={published_time} />
+					<meta key={1} property="article:author" content={author} />
+					<meta key={2} property="article:section" content={section} />
+					<meta key={3} property="article:modified_time" content={modified_time} />
+					<meta key={4} property="article:published_time" content={published_time} />
 				</>
 			) : null}
 			{image != null ? (
 				<>
-					<meta property="og:image" content={image.url} />
-					<meta property="og:image:secure_url" content={image.url.replace("http://", "https://")} />
-					<meta property="og:image:width" content={image.width.toString()} />
-					<meta property="og:image:height" content={image.height.toString()} />
-					<meta property="og:image:alt" content={image.alt} />
-					<meta property="og:image:type" content={image.type} />
-					<meta name="twitter:image" content={image.url} />
+					<meta key={1} property="og:image" content={image.url} />
+					<meta
+						key={2}
+						property="og:image:secure_url"
+						content={image.url.replace("http://", "https://")}
+					/>
+					<meta key={3} property="og:image:width" content={image.width.toString()} />
+					<meta key={4} property="og:image:height" content={image.height.toString()} />
+					<meta key={5} property="og:image:alt" content={image.alt} />
+					<meta key={6} property="og:image:type" content={image.type} />
+					<meta key={7} name="twitter:image" content={image.url} />
 				</>
 			) : null}
 			<meta name="theme-color" content={`#${ltrim(theme_color ?? "179BD5", "#")}`} />
