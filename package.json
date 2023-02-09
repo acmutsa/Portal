@@ -26,6 +26,7 @@
     "@trpc/server": "^10.9.0",
     "@typeform/embed-react": "^1.21.0",
     "@types/nprogress": "^0.2.0",
+    "@vercel/analytics": "^0.1.8",
     "acorn": "^8.8.1",
     "chart.js": "^3.9.1",
     "cookies-next": "^2.1.1",
