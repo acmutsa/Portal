@@ -9,6 +9,9 @@ import { env } from "@/env/server.mjs";
 
 export type NextServerRequest = IncomingMessage & { cookies: NextApiRequestCookies };
 
+type ValidateInvalid = [false, null];
+type ValidateValid = [true, Member | (Member & { data: MemberData })];
+
 /**
  * A utility function for middleware & SSR/SSG functions. Acquires cookies and attempts to
  * authenticate the request. If authorization matches, the member will be returned.
@@ -20,7 +23,7 @@ export async function validateMember(
 	request: NextServerRequest,
 	response: ServerResponse,
 	extended: boolean = false
-): Promise<[boolean, Member | (Member & { data: MemberData }) | null]> {
+): Promise<ValidateInvalid | ValidateValid> {
 	// Acquire the basic data to look for the member
 	const id = request.cookies[cookies.member_id]?.toLowerCase();
 	const email = request.cookies[cookies.member_email]?.toLowerCase();

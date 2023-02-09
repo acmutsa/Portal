@@ -32,11 +32,10 @@ export async function getServerSideProps({
 				permanent: false,
 			},
 		};
-
 	const checkins = (
 		await prisma.checkin.findMany({
 			where: {
-				member: member!,
+				memberID: member.id,
 				event: {
 					semester: getPreciseSemester(),
 				},
