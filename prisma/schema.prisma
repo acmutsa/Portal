@@ -37,6 +37,7 @@ model Checkin {
     isInPerson Boolean
     feedback   String?
     timestamp  DateTime @default(now())
+    source String?
 
     @@id([eventID, memberID])
 }
