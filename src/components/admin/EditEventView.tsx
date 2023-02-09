@@ -8,20 +8,15 @@ import EventForm, {
 import { AiFillWarning } from "react-icons/ai";
 import WarningDialog from "@/components/member/WarningDialog";
 
-const EditEventView: FunctionComponent = () => {
-	const router = useRouter();
-
-	// Slug property of query contains the pageID we want
-	const slug = router?.query?.slug;
-	if (slug == undefined || slug[1] == undefined) return <>Bad event ID.</>;
-
+const EditEventView: FunctionComponent<{ id: string }> = ({ id }) => {
 	const updateEvent = trpc.admin.updateEvent.useMutation();
 	const deleteEvent = trpc.admin.deleteEvent.useMutation();
+	const router = useRouter();
 
 	// Pull in the event's current data, parsing it in the process.
 	const [initialData, setInitialData] = useState<InitialEventFormValues | null>(null);
 	const { data: event, isSuccess } = trpc.events.getUnique.useQuery(
-		{ pageID: slug[1] },
+		{ pageID: id },
 		{
 			onSuccess: (newData) => {
 				const parsedData = InitialEventFormSchema.safeParse(newData);

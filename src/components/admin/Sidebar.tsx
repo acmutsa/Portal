@@ -44,7 +44,7 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 type SidebarProps = {
-	current: AdminPageIdentifier;
+	current?: AdminPageIdentifier;
 };
 
 const Sidebar: FunctionComponent<SidebarProps> = ({ current }: SidebarProps) => {

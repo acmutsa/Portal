@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import AdminRootLayout from "@/components/admin/AdminRootLayout";
 import EventView from "@/components/admin/EventView";
 
-const Events: NextPage = () => {
+const EventViewPage: NextPage = () => {
 	return (
 		<AdminRootLayout current="events">
 			<EventView />
@@ -10,4 +10,4 @@ const Events: NextPage = () => {
 	);
 };
 
-export default Events;
+export default EventViewPage;

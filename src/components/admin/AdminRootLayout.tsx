@@ -11,7 +11,7 @@ export type AdminPageIdentifier =
 	| "logout";
 
 type AdminRootLayoutProps = {
-	current: AdminPageIdentifier;
+	current?: AdminPageIdentifier;
 	children: string | ReactNode | ReactNode[];
 };
 
