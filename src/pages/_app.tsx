@@ -4,6 +4,7 @@ import { useState } from "react";
 import { trpc } from "@/utils/trpc";
 import Head from "next/head";
 import useNProgress from "@/utils/useNProgress";
+import { Analytics } from "@vercel/analytics/react";
 import "@/styles/globals.scss";
 import "nprogress/nprogress.css";
 
@@ -18,6 +19,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 			</Head>
 			<GlobalContext.Provider value={[globalState, setGlobalState]}>
 				<Component {...pageProps} />
+				<Analytics />
 			</GlobalContext.Provider>{" "}
 		</>
 	);
