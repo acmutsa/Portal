@@ -1,61 +1,14 @@
 import React, { FunctionComponent, useMemo } from "react";
-import {
-	createColumnHelper,
-	flexRender,
-	getCoreRowModel,
-	useReactTable,
-} from "@tanstack/react-table";
 import { trpc } from "@/utils/trpc";
-import type { Event } from "@prisma/client";
-import { formatDateCell, pluralize } from "@/utils/helpers";
+import { pluralize } from "@/utils/helpers";
 import Stat from "@/components/common/Stat";
-import VisibilityDropdown from "@/components/table/VisibilityDropdown";
-import { useRouter } from "next/router";
-import { RowActions } from "@/components/table/RowActions";
 import { BsPlus } from "react-icons/bs";
 import Link from "next/link";
 import { isAfter } from "date-fns";
-
-const columnHelper = createColumnHelper<Event>();
-const columns = [
-	columnHelper.accessor("name", {
-		header: "Name",
-		size: 200,
-	}),
-	columnHelper.accessor("description", {
-		header: "Description",
-		minSize: 200,
-		maxSize: 500,
-		cell: (info) => (
-			<div className="text-ellipsis overflow-hidden max-h-[5rem]">{info.getValue()}</div>
-		),
-	}),
-	columnHelper.accessor("organization", {
-		header: "Org.",
-		minSize: 30,
-		size: 30,
-	}),
-	columnHelper.accessor("eventStart", {
-		header: "Event Start",
-		cell: (info) => formatDateCell(info.getValue()),
-	}),
-	columnHelper.accessor("eventEnd", {
-		header: "Event End",
-		cell: (info) => formatDateCell(info.getValue()),
-	}),
-	columnHelper.accessor("formOpen", {
-		header: "Form Open",
-		cell: (info) => formatDateCell(info.getValue()),
-	}),
-	columnHelper.accessor("formClose", {
-		header: "Form Close",
-		cell: (info) => formatDateCell(info.getValue()),
-	}),
-];
+import EventDataTable from "./EventDataTable";
 
 const EventView: FunctionComponent = () => {
 	const events = trpc.events.getAll.useQuery();
-	const router = useRouter();
 
 	const [upcomingEvents, pastEvents] = useMemo(() => {
 		const now = new Date();
@@ -69,82 +22,6 @@ const EventView: FunctionComponent = () => {
 	const triggerDelete = (id: string) => {
 		console.log(`Deleting Event ${id}`);
 	};
-
-	const table = useReactTable({
-		data: events.isSuccess ? events.data : [],
-		columns: [
-			...columns,
-			columnHelper.display({
-				id: "actions",
-				header: "Actions",
-				minSize: 200,
-				cell: (ctx) => (
-					<RowActions
-						onDelete={() => {
-							triggerDelete(ctx.row.original.id);
-						}}
-						onEdit={() => {
-							return router.push(`/admin/events/${ctx.row.original.pageID}`);
-						}}
-					/>
-				),
-			}),
-		],
-		getCoreRowModel: getCoreRowModel(),
-		columnResizeMode: "onChange",
-		enableColumnResizing: true,
-	});
-
-	const eventsTable = (
-		<table className="text-sm max-h-[150rem]">
-			<thead>
-				{table.getHeaderGroups().map((headerGroup) => (
-					<tr key={headerGroup.id}>
-						{headerGroup.headers.map((header) => (
-							<th
-								{...{
-									key: header.id,
-									colSpan: header.colSpan,
-									style: {
-										width: header.getSize(),
-									},
-								}}
-							>
-								{header.isPlaceholder
-									? null
-									: flexRender(header.column.columnDef.header, header.getContext())}
-								<div
-									{...{
-										onMouseDown: header.getResizeHandler(),
-										onTouchStart: header.getResizeHandler(),
-										className: `resizer ${header.column.getIsResizing() ? "isResizing" : ""}`,
-									}}
-								/>
-							</th>
-						))}
-					</tr>
-				))}
-			</thead>
-			<tbody>
-				{table.getRowModel().rows.map((row) => (
-					<tr key={row.id}>
-						{row.getVisibleCells().map((cell) => (
-							<td
-								{...{
-									key: cell.id,
-									style: {
-										width: cell.column.getSize(),
-									},
-								}}
-							>
-								{flexRender(cell.column.columnDef.cell, cell.getContext())}
-							</td>
-						))}
-					</tr>
-				))}
-			</tbody>
-		</table>
-	);
 
 	return (
 		<div className="w-full h-full">
@@ -166,19 +43,14 @@ const EventView: FunctionComponent = () => {
 							</span>
 							<div className="grow" />
 							<div className="justify-self-end">
-								<Link href="/admin/events/NewEventPage">
-									<button className="inline-flex h-8 md:h-9 text-sm whitespace-nowrap md:text-base justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 shadow-inner hover:shadow-inner-md-2 rounded-lg text-white font-inter font-medium">
-										<BsPlus className="h-6 w-6" />
-										New Event
-									</button>
+								<Link
+									href="/admin/events/new"
+									className="inline-flex h-8 md:h-9 text-sm whitespace-nowrap md:text-base justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 shadow-inner hover:shadow-inner-md-2 rounded-lg text-white font-inter font-medium"
+								>
+									<BsPlus className="h-6 w-6" />
+									New Event
 								</Link>
 								{/* TODO: Use the labels & default value options to disable form open/close & use the human format (not id) */}
-								<VisibilityDropdown
-									onColumnChange={(visibilityState) => {
-										table.setState((prev) => ({ ...prev, columnVisibility: visibilityState }));
-									}}
-									columns={table.getAllLeafColumns().map((column) => ({ id: column.id }))}
-								/>
 							</div>
 						</div>
 					) : (
@@ -186,7 +58,9 @@ const EventView: FunctionComponent = () => {
 					)}
 				</div>
 				<div className="overflow-scroll overflow-x-auto border-box">
-					<div className="inline-block pb-1 w-full">{eventsTable}</div>
+					<div className="inline-block pb-1 w-full">
+						<EventDataTable />
+					</div>
 				</div>
 			</div>
 		</div>

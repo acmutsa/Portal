@@ -3,7 +3,6 @@ import Stat from "@/components/common/Stat";
 import { pluralize } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { FunctionComponent } from "react";
 import { BsPlus } from "react-icons/bs";
 
