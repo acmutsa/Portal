@@ -5,6 +5,20 @@ import Image from "next/legacy/image";
 import OpenGraph from "@/components/common/OpenGraph";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import RootLayout from "@/components/layout/RootLayout";
+import { FunctionComponent, ReactNode } from "react";
+
+const IndexButton: FunctionComponent<{ href: string; children: string | ReactNode }> = ({
+	href,
+	children,
+}) => {
+	return (
+		<Link href={href}>
+			<button className="h-12 w-full px-2 justify-self-center bg-primary hover:bg-primary-600 rounded transition ease-in">
+				{children}
+			</button>
+		</Link>
+	);
+};
 
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({
@@ -42,21 +56,9 @@ const Home: NextPage = () => {
 							Portal
 						</h1>
 						<div className="grid grid-rows-3 grid-cols-1 gap-2 px-3 py-4 w-full text-white font-semibold">
-							<Link href="/events/">
-								<button className="h-12 w-full px-2 justify-self-center bg-primary hover:bg-primary-600 rounded transition ease-in">
-									Events
-								</button>
-							</Link>
-							<Link href="/register">
-								<button className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 rounded transition ease-in">
-									Register
-								</button>
-							</Link>
-							<Link href="/me" className="mx-2">
-								<button className="h-12 w-full justify-self-center bg-primary hover:bg-primary-600 hover:bg-primary-dark-hover rounded transition ease-in">
-									Status
-								</button>
-							</Link>
+							<IndexButton href="/events/">Events</IndexButton>
+							<IndexButton href="/register/">Register</IndexButton>
+							<IndexButton href="/status/">Status</IndexButton>
 						</div>
 					</div>
 				</div>
