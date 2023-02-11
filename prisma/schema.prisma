@@ -20,8 +20,8 @@ model Event {
     createdAt     DateTime  @default(now())
     eventStart    DateTime
     eventEnd      DateTime
-    formOpen      DateTime
-    formClose     DateTime
+    formOpen      DateTime?
+    formClose     DateTime?
     hasBeenForced Boolean   @default(false)
     forcedIsOpen  Boolean   @default(false)
     pageID        String    @unique @default("")

@@ -94,3 +94,26 @@ export async function getSemesters() {
 	});
 	return events.map((e) => e.semester);
 }
+
+export async function getAllEvents() {
+	return await prisma.event.findMany({
+		orderBy: {
+			eventStart: "asc",
+		},
+	});
+}
+
+export async function getAllEventsWithCount() {
+	return await prisma.event.findMany({
+		include: {
+			_count: {
+				select: {
+					checkins: true,
+				},
+			},
+		},
+		orderBy: {
+			eventStart: "asc",
+		},
+	});
+}

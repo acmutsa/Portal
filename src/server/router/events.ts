@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { sum } from "@/utils/helpers";
 import { validateAdmin } from "@/server/router/admin";
-import { EventFilterSchema, getEvents, getUnique } from "@/server/controllers/events";
+import { EventFilterSchema, getAllEvents, getEvents, getUnique } from "@/server/controllers/events";
 import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "@/server/trpc";
 import { getCheckin } from "@/server/controllers/checkin";
@@ -33,12 +33,8 @@ export const eventsRouter = router({
 
 			return event;
 		}),
-	getAll: publicProcedure.query(async function ({ ctx }) {
-		return await ctx.prisma.event.findMany({
-			orderBy: {
-				eventStart: "asc",
-			},
-		});
+	getAll: publicProcedure.query(async function () {
+		return await getAllEvents();
 	}),
 	getGroupedCheckins: publicProcedure
 		.input(

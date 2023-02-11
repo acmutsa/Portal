@@ -1,12 +1,15 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import React, { useState } from "react";
-import { trpc } from "@/utils/trpc";
+import React, { FunctionComponent, useState } from "react";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
+import { Event } from "@prisma/client";
 
-const preventDefault = (e: Event) => e.preventDefault();
+export type EventWithCount = Event & { checkinCount: number };
+
+export const preventDefault = (e: { preventDefault: () => void }) => e.preventDefault();
+
 const mouseLeaveHandler = (e: React.MouseEvent<HTMLDivElement>) => {
 	document.removeEventListener("wheel", preventDefault, false);
 };
@@ -27,9 +30,8 @@ const scrollHandlers = {
 	onMouseLeave: mouseLeaveHandler,
 };
 
-const EventDataTable = () => {
+const EventDataTable: FunctionComponent<{ data: EventWithCount[] }> = ({ data }) => {
 	const [selectedEvents, setSelectedEvents] = useState(null);
-	const { data: events } = trpc.events.getAll.useQuery();
 
 	return (
 		<DataTable
@@ -38,7 +40,7 @@ const EventDataTable = () => {
 			onSelectionChange={(e) => setSelectedEvents(e.value)}
 			selection={selectedEvents}
 			responsiveLayout="scroll"
-			value={events}
+			value={data}
 			selectionAriaLabel="name"
 			size="small"
 			paginator
@@ -48,11 +50,12 @@ const EventDataTable = () => {
 			currentPageReportTemplate="Showing {first} through {last} of {totalRecords} total events"
 			paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
 		>
-			<Column selectionMode="multiple" headerStyle={{ width: "3em" }}></Column>
-			<Column sortable filter field="name" header="Name"></Column>
-			<Column field="description" header="Description"></Column>
-			<Column filter field="organization" header="Organization"></Column>
-			<Column sortable filter field="location" header="Major"></Column>
+			<Column selectionMode="multiple" headerStyle={{ width: "3em" }} />
+			<Column sortable filter field="name" header="Name" />
+			<Column field="description" header="Description" />
+			<Column filter field="organization" header="Organization" />
+			<Column sortable filter field="location" header="Location" />
+			<Column sortable field="checkinCount" header="Checkins" />
 		</DataTable>
 	);
 };
