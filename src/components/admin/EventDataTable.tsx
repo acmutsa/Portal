@@ -32,7 +32,6 @@ const scrollHandlers = {
 
 const EventDataTable: FunctionComponent<{ data: EventWithCount[] }> = ({ data }) => {
 	const [selectedEvents, setSelectedEvents] = useState(null);
-
 	return (
 		<DataTable
 			id="events"
@@ -46,7 +45,7 @@ const EventDataTable: FunctionComponent<{ data: EventWithCount[] }> = ({ data })
 			paginator
 			rows={10}
 			rowsPerPageOptions={[10, 25, 50, 100]}
-			dataKey="event.id"
+			dataKey="id"
 			currentPageReportTemplate="Showing {first} through {last} of {totalRecords} total events"
 			paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
 		>
