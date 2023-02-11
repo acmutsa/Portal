@@ -2,7 +2,7 @@ import { Member, prisma } from "@/server/db/client";
 import { MemberData, Prisma } from "@prisma/client";
 import { PrettyMemberDataWithoutId, toMemberData } from "@/utils/transform";
 import { z } from "zod";
-import { isValuesNull, removeEmpty } from "@/utils/helpers";
+import { getPreciseSemester, isValuesNull, removeEmpty } from "@/utils/helpers";
 
 /**
  * An explicit type containing a nullable `data` property. Used for the Member.MemberData relation.
@@ -72,6 +72,32 @@ export async function getAllMembers(extended: boolean = false): Promise<Member[]
 			data: extended,
 		},
 	});
+}
+
+/**
+ * Return an exact count of the number of 'active' members.
+ * This is not a count of members who have completed membership successfully,
+ * this is a count of members who have checked-in to at least 1 event this precise semester.
+ */
+export async function countActiveMembers(): Promise<number> {
+	return await prisma.member.count({
+		where: {
+			checkins: {
+				some: {
+					event: {
+						semester: getPreciseSemester(),
+					},
+				},
+			},
+		},
+	});
+}
+
+/**
+ * Returns a simple count of *all* members.
+ */
+export async function countMembers(): Promise<number> {
+	return await prisma.member.count();
 }
 
 /**

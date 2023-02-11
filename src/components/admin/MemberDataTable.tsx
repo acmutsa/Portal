@@ -2,7 +2,7 @@ import { DataTable } from "primereact/datatable";
 import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
-import React, { useMemo, useState } from "react";
+import React, { FunctionComponent, useMemo, useState } from "react";
 import { trpc } from "@/utils/trpc";
 import {
 	EthnicityType,
@@ -159,7 +159,7 @@ function getFilterElement<ItemType>(placeholder: string, options: string[]) {
 	};
 }
 
-const DataTableDemo = () => {
+const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data }) => {
 	const [selectedCustomers, setSelectedCustomers] = useState(null);
 	const [filters] = useState({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -197,21 +197,6 @@ const DataTableDemo = () => {
 		},
 	});
 
-	const { data: members } = trpc.member.getAll.useQuery();
-
-	const memberTableItems = useMemo<MemberTableItem[]>(() => {
-		const items: MemberTableItem[] = [];
-		if (members)
-			for (let member of members as MemberWithData[]) {
-				items.push({
-					member: member,
-					prettyMemberData: toPrettyMemberData(member, member.data || ({} as MemberData)),
-				});
-			}
-
-		return items;
-	}, [members]);
-
 	return (
 		<DataTable
 			id="members"
@@ -219,7 +204,7 @@ const DataTableDemo = () => {
 			onSelectionChange={(e) => setSelectedCustomers(e.value)}
 			selection={selectedCustomers}
 			responsiveLayout="scroll"
-			value={memberTableItems}
+			value={data}
 			selectionAriaLabel="name"
 			size="small"
 			paginator
@@ -283,4 +268,4 @@ const DataTableDemo = () => {
 	);
 };
 
-export default DataTableDemo;
+export default MemberDataTable;

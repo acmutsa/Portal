@@ -4,6 +4,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { validateAdmin } from "@/server/router/admin";
 import {
+	countActiveMembers,
 	getAllMembers,
 	getMember,
 	MemberWithData,
@@ -227,24 +228,13 @@ export const memberRouter = router({
 	}),
 	getAll: publicProcedure.query(async function ({ ctx }) {
 		await validateAdmin(ctx);
-		return getAllMembers(true);
+		return (await getAllMembers(true)) as MemberWithData[];
 	}),
 	countActive: publicProcedure.query(async function ({ ctx }) {
 		await validateAdmin(ctx);
 
 		// Count the total number of members that have checked in at least once
-		const activeMembersPromise = ctx.prisma.member.count({
-			where: {
-				checkins: {
-					some: {
-						event: {
-							semester: getPreciseSemester(),
-						},
-					},
-				},
-			},
-		});
-
+		const activeMembersPromise = countActiveMembers();
 		const allMembersPromise = ctx.prisma.member.count();
 
 		const [activeMembers, allMembers] = await Promise.all([
