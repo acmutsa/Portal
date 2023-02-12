@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { GetStaticPropsContext, GetStaticPropsResult, NextPage } from "next";
 import AdminRootLayout from "@/components/admin/AdminRootLayout";
 import Stat from "@/components/common/Stat";
 import { pluralize } from "@/utils/helpers";
@@ -14,7 +14,9 @@ type EventViewProps = {
 	events: EventWithCount[];
 };
 
-export async function getServerSideProps() {
+export async function getStaticProps({}: GetStaticPropsContext): Promise<
+	GetStaticPropsResult<{ json: string }>
+> {
 	const events = await getAllEventsWithCount();
 
 	return {
@@ -26,6 +28,7 @@ export async function getServerSideProps() {
 				})),
 			}),
 		},
+		revalidate: 60 * 5,
 	};
 }
 

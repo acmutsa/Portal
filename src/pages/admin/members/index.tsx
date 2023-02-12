@@ -1,4 +1,9 @@
-import { NextPage } from "next";
+import {
+	GetServerSidePropsContext,
+	GetServerSidePropsResult,
+	GetStaticPropsResult,
+	NextPage,
+} from "next";
 import AdminRootLayout from "@/components/admin/AdminRootLayout";
 import Stat from "@/components/common/Stat";
 import { pluralize } from "@/utils/helpers";
@@ -24,7 +29,7 @@ type MemberViewProps = {
 	members: MemberWithData[];
 };
 
-export async function getServerSideProps() {
+export async function getStaticProps(): Promise<GetStaticPropsResult<{ json: string }>> {
 	const members = getAllMembers(true);
 	const activeCount = countActiveMembers();
 	const memberCount = countMembers();
@@ -43,6 +48,7 @@ export async function getServerSideProps() {
 				members: await members,
 			}),
 		},
+		revalidate: 60,
 	};
 }
 
