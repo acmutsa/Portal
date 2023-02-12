@@ -5,6 +5,7 @@ import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
 import { Event } from "@prisma/client";
+import { useRouter } from "next/router";
 
 export type EventWithCount = Event & { checkinCount: number };
 
@@ -32,12 +33,17 @@ const scrollHandlers = {
 
 const EventDataTable: FunctionComponent<{ data: EventWithCount[] }> = ({ data }) => {
 	const [selectedEvents, setSelectedEvents] = useState(null);
+	const router = useRouter();
 	return (
 		<DataTable
 			id="events"
 			rowHover
 			onSelectionChange={(e) => setSelectedEvents(e.value)}
 			selection={selectedEvents}
+			onRowClick={({ data: { pageID } }) => {
+				router.push(`/admin/events/${pageID}`);
+			}}
+			rowClassName={() => "cursor-pointer"}
 			responsiveLayout="scroll"
 			value={data}
 			selectionAriaLabel="name"
@@ -49,7 +55,7 @@ const EventDataTable: FunctionComponent<{ data: EventWithCount[] }> = ({ data })
 			currentPageReportTemplate="Showing {first} through {last} of {totalRecords} total events"
 			paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
 		>
-			<Column selectionMode="multiple" headerStyle={{ width: "3em" }} />
+			<Column headerStyle={{ width: "2em" }} />
 			<Column sortable filter field="name" header="Name" />
 			<Column field="description" header="Description" />
 			<Column filter field="organization" header="Organization" />
