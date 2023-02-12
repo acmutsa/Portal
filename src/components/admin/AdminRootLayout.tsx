@@ -19,7 +19,10 @@ const AdminRootLayout: FunctionComponent<AdminRootLayoutProps> = ({ current, chi
 	return (
 		<RootLayout background={false} className="flex" footer={false}>
 			<Sidebar current={current} />
-			<div className="flex-grow p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-scroll relative bg-zinc-100">
+			<div
+				className="flex-grow p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-y-auto overflow-x-clip relative bg-zinc-100"
+				style={{ minHeight: "calc(100vh - 72px)" }}
+			>
 				<div className="col-span-4">{children}</div>
 			</div>
 		</RootLayout>
