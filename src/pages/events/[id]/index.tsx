@@ -6,6 +6,7 @@ import useOpenGraph from "@/components/common/useOpenGraph";
 import OpenGraph from "@/components/common/OpenGraph";
 import {
 	absUrl,
+	choice,
 	classNames,
 	generateGoogleCalendarLink,
 	getOrganization,
@@ -28,6 +29,7 @@ import { useEffect } from "react";
 import { trpc } from "@/utils/trpc";
 import RootLayout from "@/components/layout/RootLayout";
 import superjson from "superjson";
+import { checkin_success_message } from "@/utils/constants";
 
 interface eventPageParams {
 	params: { id: string };
@@ -100,7 +102,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 					({ id, visible }) => (
 						<Toast
 							title="Checked-in Successfully!"
-							description="Fantastic! You're checked into the event. Thanks for coming!"
+							description={choice(checkin_success_message)}
 							type="success"
 							toastId={id}
 							visible={visible}
@@ -334,7 +336,7 @@ export async function getStaticProps({
 }
 
 export async function getStaticPaths() {
-	return {paths: [], fallback: "blocking"};
+	return { paths: [], fallback: "blocking" };
 }
 
 export default EventView;

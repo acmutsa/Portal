@@ -301,3 +301,13 @@ export function getCustomChoiceParser(
 		return undefined;
 	};
 }
+
+/**
+ * Return a random value from the array
+ * @param arr An array with at least one value.
+ * @returns A random value from the array.
+ */
+export function choice<T>(arr: T[]): T {
+	if (arr.length < 1) throw new RangeError("Array must have at least on value.");
+	return arr[Math.floor(Math.random() * arr.length)] as T;
+}
