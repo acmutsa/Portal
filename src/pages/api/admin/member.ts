@@ -2,8 +2,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/server/db/client";
 import { z } from "zod";
 import { isValuesNull, removeEmpty } from "@/utils/helpers";
-import {FilterType, FilterValueType, getWhereInput, StrictPrettyMemberSchema} from "@/utils/transform";
-import {validateAdmin} from "@/server/router/admin";
+import {
+	getWhereInput,
+	RequestSchemaWithFilter,
+	StrictPrettyMemberSchema,
+} from "@/utils/transform";
+import { validateAdmin } from "@/server/router/admin";
 
 /**
  * Handler for non member-indexing endpoints.
@@ -23,15 +27,42 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	await validateAdmin(credentials.data);
 
 	switch (req.method) {
-		// Get all members
+		/**
+		 * Get all members with respect to given 'where' clause
+		 *
+		 * TODO: Enable operations such as 'field_value_a && other_field_b' and 'field_value_a && other_field_b'
+		 */
 		case "GET":
-			const allMembers = await prisma.member.findMany({
-				include: {
-					data: true,
-				},
-			});
-			res.status(200).json(allMembers);
-			break;
+			const parsedGetBody = RequestSchemaWithFilter.safeParse(req.body);
+
+			removeEmpty(parsedGetBody);
+			if (isValuesNull(parsedGetBody))
+				throw new RangeError("At least one value in 'data' must be non-empty.");
+			if (!parsedGetBody.success) return res.status(500).json({ msg: "Invalid Request" });
+
+			// Check if filters were given
+			const gotWhereInput = getWhereInput(
+				parsedGetBody.data.filter,
+				parsedGetBody.data.filterValue
+			);
+
+			if (gotWhereInput) {
+				return res.status(200).json(
+					await prisma.member.findMany({
+						where: gotWhereInput,
+						include: {
+							data: true,
+						},
+					})
+				);
+			}
+			return res.status(200).json(
+				await prisma.member.findMany({
+					include: {
+						data: true,
+					},
+				})
+			);
 
 		// Add a new member
 		case "POST":
@@ -55,15 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		// Edit existing member(s) based on ID, name, email, or join date
 		case "PUT":
-			const putSchema = z.object({
-				id: z.string().trim().optional(),
-				name: z.string().trim().optional(),
-				email: z.string().email().trim().optional(),
-				extendedMemberData: z.string().trim().optional(),
-				filter: FilterType,
-				filterValue: FilterValueType,
-			});
-			const parsedPutBody = putSchema.safeParse(req.body);
+			const parsedPutBody = RequestSchemaWithFilter.safeParse(req.body);
 
 			if (isValuesNull(parsedPutBody))
 				throw new RangeError("At least one value in 'data' must be non-empty.");

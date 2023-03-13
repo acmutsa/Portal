@@ -82,6 +82,14 @@ export const FilterType = z.enum(["ID", "NAME", "EMAIL", "JOINDATE", "EXTENDEDME
 export type FilterType = z.infer<typeof FilterType>;
 export const FilterValueType = z.union([z.string(), z.date(), z.string().email()]);
 export type FilterValueType = z.infer<typeof FilterValueType>;
+export const RequestSchemaWithFilter = z.object({
+	id: z.string().trim().optional(),
+	name: z.string().trim().optional(),
+	email: z.string().email().trim().optional(),
+	extendedMemberData: z.string().trim().optional(),
+	filter: FilterType,
+	filterValue: FilterValueType,
+});
 
 /**
  * A function that returns the MemberWhereInput or MemberWhereUniqueInput associated with
@@ -116,8 +124,8 @@ export function getWhereInput(
  */
 export const StrictPrettyMemberSchema = z.object({
 	id: z.string().length(6).trim(),
-	email: z.string().email({ message: "Invalid email address" }).trim(),
-	name: z.string().min(1, { message: "Name must be at least 1 character" }).trim(),
+	email: z.string().email({message: "Invalid email address"}).trim(),
+	name: z.string().min(1, {message: "Name must be at least 1 character"}).trim(),
 	extendedMemberData: z.string(),
 });
 export type StrictPrettyMember = z.infer<typeof StrictPrettyMemberSchema>;
