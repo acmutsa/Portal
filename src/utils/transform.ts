@@ -100,12 +100,12 @@ export const RequestSchemaWithFilter = z.object({
 export function getWhereInput(
 	filter: FilterType,
 	filterValue: FilterValueType
-): Prisma.MemberWhereInput | Prisma.MemberWhereUniqueInput | undefined {
+): Prisma.MemberWhereInput | undefined {
 	if (typeof filterValue !== "string") return;
 
 	switch (filter) {
 		case FilterType.enum.ID:
-			return {id: filterValue as string};
+			return {id: filterValue};
 		case FilterType.enum.NAME:
 			return {name: filterValue};
 		case FilterType.enum.EMAIL:

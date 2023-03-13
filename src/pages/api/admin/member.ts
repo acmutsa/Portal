@@ -114,5 +114,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 					},
 				})
 			);
+
+		case "DELETE":
+			/**
+			 * Delete many records that contain a particular given value.
+			 *
+			 */
+			const parsedDeleteBody = RequestSchemaWithFilter.safeParse(req.body);
+
+			if (isValuesNull(parsedDeleteBody))
+				throw new RangeError("At least one value in 'data' must be non-empty.");
+			removeEmpty(parsedDeleteBody);
+
+			if (!parsedDeleteBody.success) return res.status(500).json({ msg: "Invalid Request" });
+			if (typeof parsedDeleteBody.data.filterValue !== "string")
+				return res.status(422).json({ msg: "'filterValue' must be a string" });
+
+			// Based on specified 'where' clause, update corresponding member(s)
+			const deleteWhereInput = getWhereInput(
+				parsedDeleteBody.data.filter,
+				parsedDeleteBody.data.filterValue
+			);
+			if (!deleteWhereInput)
+				return res.status(422).json({ msg: "Invalid 'filterValue' or 'filterValueType'" });
+
+			return res.status(200).json(
+				await prisma.member.deleteMany({
+					where: deleteWhereInput,
+				})
+			);
 	}
 }
