@@ -2,9 +2,10 @@
  * Utilities for transforming data representation, especially with likeness to the MemberData table.
  */
 
-import type { MemberData, Member } from "@prisma/client";
-import { z } from "zod";
-import { lightFormat, parse, subYears } from "date-fns";
+import type {Member, MemberData} from "@prisma/client";
+import {Prisma} from "@prisma/client";
+import {z} from "zod";
+import {lightFormat, parse, subYears} from "date-fns";
 
 interface OrganizationData {
 	isInACM: boolean | null;
@@ -77,6 +78,50 @@ export const IdentityType = z.enum([
 ]);
 export type IdentityType = z.infer<typeof IdentityType>;
 
+export const FilterType = z.enum(["ID", "NAME", "EMAIL", "JOINDATE", "EXTENDEDMEMBERDATA"]);
+export type FilterType = z.infer<typeof FilterType>;
+export const FilterValueType = z.union([z.string(), z.date(), z.string().email()]);
+export type FilterValueType = z.infer<typeof FilterValueType>;
+
+/**
+ * A function that returns the MemberWhereInput or MemberWhereUniqueInput associated with
+ * the given filter.
+ * @param filter The property used to filter which models to wrap before updating
+ * @param filterValue The value of the filter
+ */
+export function getWhereInput(
+	filter: FilterType,
+	filterValue: FilterValueType
+): Prisma.MemberWhereInput | Prisma.MemberWhereUniqueInput | undefined {
+	if (typeof filterValue !== "string") return;
+
+	switch (filter) {
+		case FilterType.enum.ID:
+			return {id: filterValue as string};
+		case FilterType.enum.NAME:
+			return {name: filterValue};
+		case FilterType.enum.EMAIL:
+			return {email: filterValue};
+		case FilterType.enum.JOINDATE:
+			return {joinDate: filterValue};
+		case FilterType.enum.EXTENDEDMEMBERDATA:
+			return {extendedMemberData: filterValue};
+	}
+}
+
+/**
+ * A zod schema containing properties for a member. This is a stricter version of
+ * PrettyMemberSchema, that is used for the purposes of enforcing the
+ * shape of POST requests.
+ */
+export const StrictPrettyMemberSchema = z.object({
+	id: z.string().length(6).trim(),
+	email: z.string().email({ message: "Invalid email address" }).trim(),
+	name: z.string().min(1, { message: "Name must be at least 1 character" }).trim(),
+	extendedMemberData: z.string(),
+});
+export type StrictPrettyMember = z.infer<typeof StrictPrettyMemberSchema>;
+
 // TODO: Figure out why required doesn't allow a mask like partial, remove all .optionals for .partial and .required
 
 export const PrettyMemberDataSchema = z.object({
@@ -98,7 +143,7 @@ export const PrettyMemberDataSchema = z.object({
 	identity: z.set(IdentityType.or(z.string())).optional(),
 });
 export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
-export const PrettyMemberDataWithoutIdSchema = PrettyMemberDataSchema.omit({ id: true });
+export const PrettyMemberDataWithoutIdSchema = PrettyMemberDataSchema.omit({id: true});
 export type PrettyMemberDataWithoutId = z.infer<typeof PrettyMemberDataWithoutIdSchema>;
 
 export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberData => {
