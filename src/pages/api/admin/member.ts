@@ -10,7 +10,7 @@ import {
 import { validateAdmin } from "@/server/router/admin";
 
 /**
- * Handler for non member-indexing endpoints.
+ * Handler for requests intending to operate across non-unique base member information.
  * @param req
  * @param res
  */
@@ -84,7 +84,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 				})
 			);
 
-		// Edit existing member(s) based on ID, name, email, or join date
+		/**
+		 * Edit existing members based on ID, name, email, or join date
+		 *
+		 */
 		case "PUT":
 			const parsedPutBody = RequestSchemaWithFilter.safeParse(req.body);
 
@@ -93,8 +96,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			removeEmpty(parsedPutBody);
 
 			if (!parsedPutBody.success) return res.status(500).json({ msg: "Invalid Request" });
-			if (isValuesNull(parsedPutBody.data))
-				throw new RangeError("At least one value in 'data' must be non-empty.");
 			if (typeof parsedPutBody.data.filterValue !== "string")
 				return res.status(422).json({ msg: "'filterValue' must be a string" });
 
@@ -105,7 +106,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 			return res.status(200).json(
 				await prisma.member.updateMany({
-					where: getWhereInput(parsedPutBody.data.filter, parsedPutBody.data.filterValue),
+					where: whereInput,
 					data: {
 						id: parsedPutBody.data.id,
 						name: parsedPutBody.data.name,
