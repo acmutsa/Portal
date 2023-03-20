@@ -6,6 +6,9 @@ import type {Member, MemberData} from "@prisma/client";
 import {Prisma} from "@prisma/client";
 import {z} from "zod";
 import {lightFormat, parse, subYears} from "date-fns";
+import {NextApiRequest, NextApiResponse} from "next";
+import {isValuesNull, removeEmpty} from "@/utils/helpers";
+import {prisma} from "@/server/db/client";
 
 interface OrganizationData {
 	isInACM: boolean | null;
@@ -78,6 +81,13 @@ export const IdentityType = z.enum([
 ]);
 export type IdentityType = z.infer<typeof IdentityType>;
 
+export const MemberDataCreateNestedType = z.enum([
+	"CONNECT",
+	"CREATE",
+	"CONNECT_OR_CREATE",
+]);
+export type MemberDataCreateNestedType = z.infer<typeof MemberDataCreateNestedType>;
+
 export const FilterType = z.enum(["ID", "NAME", "EMAIL", "JOINDATE", "EXTENDEDMEMBERDATA"]);
 export type FilterType = z.infer<typeof FilterType>;
 export const FilterValueType = z.union([z.string(), z.date(), z.string().email()]);
@@ -118,6 +128,58 @@ export function getWhereInput(
 }
 
 /**
+ * A method for determining whether the client specified to create a new
+ * record if the record specified to edit did not exist.
+ * @param req
+ * @param res
+ */
+export function upsert(req: NextApiRequest, res: NextApiResponse): boolean | void {
+	const upsertSchema = z.object({upsert: z.boolean()});
+	const upsert = upsertSchema.safeParse(req.body);
+	if (!upsert.success) {
+		return res.status(500).json({msg: "Invalid request"});
+	}
+
+	return upsert.data.upsert;
+}
+
+/**
+ * A method for updating the MemberData table associated with a given ID.
+ * @param req
+ * @param res
+ * @param id The ID of the member associated with the MemberData.
+ */
+export async function updateMemberAndData(
+	req: NextApiRequest,
+	res: NextApiResponse,
+	id: string
+): Promise<MemberData | void> {
+	const prettyMemberData = PrettyMemberDataWithoutIdSchema.safeParse(req.body);
+	if (!prettyMemberData.success) {
+		return res.status(500).json({msg: "Invalid request"});
+	}
+	if (isValuesNull(prettyMemberData.data)) {
+		throw new RangeError("At least one value in 'data' must be non-empty");
+	}
+
+	const nonPrettyMemberData = toMemberData({id, ...prettyMemberData.data});
+
+	if (upsert(req, res)) {
+		return await prisma.memberData.upsert({
+			where: {memberID: id},
+			create: nonPrettyMemberData,
+			update: removeEmpty(nonPrettyMemberData),
+			include: {member: false}
+		});
+	} else {
+		return await prisma.memberData.update({
+			where: {memberID: id as string},
+			data: nonPrettyMemberData,
+		});
+	}
+}
+
+/**
  * A zod schema containing properties for a member. This is a stricter version of
  * PrettyMemberSchema, that is used for the purposes of enforcing the
  * shape of POST requests.
@@ -149,10 +211,26 @@ export const PrettyMemberDataSchema = z.object({
 	birthday: z.date().min(subYears(now, 50)).max(subYears(now, 14)).optional(),
 	ethnicity: z.set(EthnicityType).optional(),
 	identity: z.set(IdentityType.or(z.string())).optional(),
+	resume: z.string().optional(),
+	shirtIsUnisex: z.boolean().optional(),
+	shirtSize: z.string().optional(),
+	address: z.string().optional(),
 });
 export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
 export const PrettyMemberDataWithoutIdSchema = PrettyMemberDataSchema.omit({id: true});
 export type PrettyMemberDataWithoutId = z.infer<typeof PrettyMemberDataWithoutIdSchema>;
+export const PrettyMemberDataWithoutIdSchemaExtended = PrettyMemberDataWithoutIdSchema.extend({
+	nestedMemberInitMethod: MemberDataCreateNestedType,
+});
+export type PrettyMemberDataWithoutIdExtended = z.infer<typeof PrettyMemberDataWithoutIdSchemaExtended>;
+export const IdParserSchema = z.object({id: z.string()});
+export type IdParser = z.infer<typeof IdParserSchema>;
+export const StrictPrettyMemberAndDataWithoutIdSchemaExtended = PrettyMemberDataWithoutIdSchemaExtended
+	.extend(StrictPrettyMemberSchema.shape);
+export type StrictPrettyMemberAndDataWithoutIdExtended = z
+	.infer<typeof StrictPrettyMemberAndDataWithoutIdSchemaExtended>;
+export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
 
 export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberData => {
 	const organizations = new Set<OrganizationType>();
