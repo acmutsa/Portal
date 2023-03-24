@@ -88,17 +88,17 @@ export const MemberDataCreateNestedType = z.enum([
 ]);
 export type MemberDataCreateNestedType = z.infer<typeof MemberDataCreateNestedType>;
 
-export const FilterType = z.enum(["ID", "NAME", "EMAIL", "JOINDATE", "EXTENDEDMEMBERDATA"]);
-export type FilterType = z.infer<typeof FilterType>;
-export const FilterValueType = z.union([z.string(), z.date(), z.string().email()]);
-export type FilterValueType = z.infer<typeof FilterValueType>;
+export const FilterSchema = z.enum(["ID", "NAME", "EMAIL", "JOINDATE", "EXTENDEDMEMBERDATA"]);
+export type FilterType = z.infer<typeof FilterSchema>;
+export const FilterValueSchema = z.union([z.string(), z.date(), z.string().email()]);
+export type FilterValueType = z.infer<typeof FilterValueSchema>;
 export const RequestSchemaWithFilter = z.object({
 	id: z.string().trim().optional(),
 	name: z.string().trim().optional(),
 	email: z.string().email().trim().optional(),
 	extendedMemberData: z.string().trim().optional(),
-	filter: FilterType,
-	filterValue: FilterValueType,
+	filter: FilterSchema,
+	filterValue: FilterValueSchema,
 });
 
 /**
@@ -114,15 +114,15 @@ export function getWhereInput(
 	if (typeof filterValue !== "string") return;
 
 	switch (filter) {
-		case FilterType.enum.ID:
+		case FilterSchema.enum.ID:
 			return {id: filterValue};
-		case FilterType.enum.NAME:
+		case FilterSchema.enum.NAME:
 			return {name: filterValue};
-		case FilterType.enum.EMAIL:
+		case FilterSchema.enum.EMAIL:
 			return {email: filterValue};
-		case FilterType.enum.JOINDATE:
+		case FilterSchema.enum.JOINDATE:
 			return {joinDate: filterValue};
-		case FilterType.enum.EXTENDEDMEMBERDATA:
+		case FilterSchema.enum.EXTENDEDMEMBERDATA:
 			return {extendedMemberData: filterValue};
 	}
 }
@@ -227,12 +227,6 @@ export const PrettyMemberDataWithoutIdSchemaExtended = PrettyMemberDataWithoutId
 export type PrettyMemberDataWithoutIdExtended = z.infer<typeof PrettyMemberDataWithoutIdSchemaExtended>;
 export const IdSchema = z.object({id: z.string()});
 export type IdType = z.infer<typeof IdSchema>;
-export const RestCredentialsSchema = z.object({
-	admin_username: z.string(),
-	admin_password: z.string(),
-});
-export type RestCredentialsType = z.infer<typeof RestCredentialsSchema>;
-export type RestCredentialsOutputType = z.output<typeof RestCredentialsSchema>;
 export const StrictPrettyMemberAndDataWithoutIdSchemaExtended = PrettyMemberDataWithoutIdSchemaExtended
 	.extend(StrictPrettyMemberSchema.shape);
 export type StrictPrettyMemberAndDataWithoutIdExtended = z

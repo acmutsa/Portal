@@ -4,10 +4,8 @@ import { isValuesNull, removeEmpty } from "@/utils/helpers";
 import {
 	getWhereInput,
 	RequestSchemaWithFilter,
-	RestCredentialsSchema,
 	StrictPrettyMemberSchema,
 } from "@/utils/transform";
-import { validateAdminRest } from "@/utils/rest";
 
 /**
  * Handler for requests intending to operate across non-unique base member information.
@@ -15,13 +13,6 @@ import { validateAdminRest } from "@/utils/rest";
  * @param res
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	const credentials = RestCredentialsSchema.safeParse(req.body);
-
-	if (!credentials.success) {
-		return res.status(500).json({ msg: "Invalid request" });
-	}
-	await validateAdminRest(credentials.data, res);
-
 	switch (req.method) {
 		/**
 		 * Get all members with respect to given 'where' clause

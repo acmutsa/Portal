@@ -17,8 +17,16 @@ export function middleware(req: NextRequest) {
 			}
 		}
 	}
+
+	if (requestPath.startsWith("/api")) {
+		let username = req.headers.get("admin_username");
+		let password = req.headers.get("admin_password");
+		if (password != env.ADMIN_PASS || username != env.ADMIN_UNAME) {
+			return NextResponse.json({ message: "Incorrect or missing credentials." }, { status: 401 });
+		}
+	}
 }
 
 export const config = {
-	matcher: ["/admin/:path*", "/admin", "/checkin/:path*", "/check-in/:path*"],
+	matcher: ["/admin/:path*", "/admin", "/checkin/:path*", "/check-in/:path*", "/api/admin/:path*"],
 };

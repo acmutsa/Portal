@@ -2,14 +2,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/server/db/client";
 import { z } from "zod";
 import {
-	IdType,
 	IdSchema,
 	IdType,
 	MemberDataCreateNestedType,
 	PrettyMemberDataWithoutIdExtended,
 	PrettyMemberDataWithoutIdSchema,
 	PrettyMemberDataWithoutIdSchemaExtended,
-	RestCredentialsSchema,
 	StrictPrettyMemberAndDataWithoutIdExtended,
 	StrictPrettyMemberAndDataWithoutIdSchemaExtended,
 	updateMemberAndData,
@@ -17,7 +15,6 @@ import {
 } from "@/utils/transform";
 import { Prisma } from "@prisma/client";
 import { isValuesNull } from "@/utils/helpers";
-import { validateAdminRest } from "@/utils/rest";
 
 /**
  * Handler for requests intending to operate on MemberData, given a unique member ID.
@@ -26,13 +23,6 @@ import { validateAdminRest } from "@/utils/rest";
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const { query, body, method } = req;
-
-	// Validate that the client is an admin
-	const credentials = RestCredentialsSchema.safeParse(req.body);
-	if (!credentials.success) {
-		return res.status(500).json({ msg: "Invalid request" });
-	}
-	await validateAdminRest(credentials.data, res);
 
 	// Validate queried ID
 	const id = IdSchema.safeParse(query);
