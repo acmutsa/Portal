@@ -81,18 +81,18 @@ export const IdentityType = z.enum([
 ]);
 export type IdentityType = z.infer<typeof IdentityType>;
 
-export const MemberDataCreateNestedType = z.enum([
+export const MemberDataCreateNestedSchema = z.enum([
 	"CONNECT",
 	"CREATE",
 	"CONNECT_OR_CREATE",
 ]);
-export type MemberDataCreateNestedType = z.infer<typeof MemberDataCreateNestedType>;
+export type MemberDataCreateNestedType = z.infer<typeof MemberDataCreateNestedSchema>;
 
 export const FilterSchema = z.enum(["ID", "NAME", "EMAIL", "JOINDATE", "EXTENDEDMEMBERDATA"]);
 export type FilterType = z.infer<typeof FilterSchema>;
 export const FilterValueSchema = z.union([z.string(), z.date(), z.string().email()]);
 export type FilterValueType = z.infer<typeof FilterValueSchema>;
-export const RequestSchemaWithFilter = z.object({
+export const RequestWithFilterSchema = z.object({
 	id: z.string().trim().optional(),
 	name: z.string().trim().optional(),
 	email: z.string().email().trim().optional(),
@@ -100,6 +100,7 @@ export const RequestSchemaWithFilter = z.object({
 	filter: FilterSchema,
 	filterValue: FilterValueSchema,
 });
+export type RequestWithFilterType = z.infer<typeof RequestWithFilterSchema>;
 
 /**
  * A function that returns the MemberWhereInput or MemberWhereUniqueInput associated with
@@ -192,7 +193,7 @@ export const StrictPrettyMemberSchema = z.object({
 	name: z.string().min(1, {message: "Name must be at least 1 character"}).trim(),
 	extendedMemberData: z.string(),
 });
-export type StrictPrettyMember = z.infer<typeof StrictPrettyMemberSchema>;
+export type StrictPrettyMemberType = z.infer<typeof StrictPrettyMemberSchema>;
 
 // TODO: Figure out why required doesn't allow a mask like partial, remove all .optionals for .partial and .required
 
@@ -218,23 +219,23 @@ export const PrettyMemberDataSchema = z.object({
 	shirtSize: z.string().optional(),
 	address: z.string().optional(),
 });
-export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
+export type PrettyMemberDataType = z.infer<typeof PrettyMemberDataSchema>;
 export const PrettyMemberDataWithoutIdSchema = PrettyMemberDataSchema.omit({id: true});
-export type PrettyMemberDataWithoutId = z.infer<typeof PrettyMemberDataWithoutIdSchema>;
-export const PrettyMemberDataWithoutIdSchemaExtended = PrettyMemberDataWithoutIdSchema.extend({
-	nestedMemberInitMethod: MemberDataCreateNestedType,
+export type PrettyMemberDataWithoutIdType = z.infer<typeof PrettyMemberDataWithoutIdSchema>;
+export const PrettyMemberDataWithoutIdExtendedSchema = PrettyMemberDataWithoutIdSchema.extend({
+	nestedMemberInitMethod: MemberDataCreateNestedSchema,
 });
-export type PrettyMemberDataWithoutIdExtended = z.infer<typeof PrettyMemberDataWithoutIdSchemaExtended>;
+export type PrettyMemberDataWithoutIdExtendedType = z.infer<typeof PrettyMemberDataWithoutIdExtendedSchema>;
 export const IdSchema = z.object({id: z.string()});
 export type IdType = z.infer<typeof IdSchema>;
-export const StrictPrettyMemberAndDataWithoutIdSchemaExtended = PrettyMemberDataWithoutIdSchemaExtended
+export const StrictPrettyMemberAndDataWithoutIdExtendedSchema = PrettyMemberDataWithoutIdExtendedSchema
 	.extend(StrictPrettyMemberSchema.shape);
-export type StrictPrettyMemberAndDataWithoutIdExtended = z
-	.infer<typeof StrictPrettyMemberAndDataWithoutIdSchemaExtended>;
+export type StrictPrettyMemberAndDataWithoutIdExtendedType = z
+	.infer<typeof StrictPrettyMemberAndDataWithoutIdExtendedSchema>;
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
 
-export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberData => {
+export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberDataType => {
 	const organizations = new Set<OrganizationType>();
 	const ethnicities = new Set<EthnicityType>();
 	const identities = new Set<IdentityType | string>();
@@ -288,7 +289,7 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 	};
 };
 
-export function toMemberData(data: PrettyMemberData): MemberData {
+export function toMemberData(data: PrettyMemberDataType): MemberData {
 	const basicData = {
 		memberID: data.id,
 		major: data.major ?? null,

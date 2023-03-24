@@ -8,7 +8,7 @@ import {
 	EthnicityType,
 	IdentityType,
 	OrganizationType,
-	PrettyMemberData,
+	PrettyMemberDataType,
 	toPrettyMemberData,
 } from "@/utils/transform";
 import type { Member, MemberData } from "@prisma/client";
@@ -71,7 +71,7 @@ FilterService.register("MATCH_IDENTITY", (a: Set<IdentityType>, b?: string) => {
 
 interface MemberTableItem {
 	member: MemberWithData;
-	prettyMemberData: PrettyMemberData;
+	prettyMemberData: PrettyMemberDataType;
 }
 
 const organizationCell = ({ prettyMemberData: { organizations } }: MemberTableItem) => {

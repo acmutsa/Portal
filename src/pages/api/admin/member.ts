@@ -3,7 +3,7 @@ import { prisma } from "@/server/db/client";
 import { isValuesNull, removeEmpty } from "@/utils/helpers";
 import {
 	getWhereInput,
-	RequestSchemaWithFilter,
+	RequestWithFilterSchema,
 	StrictPrettyMemberSchema,
 } from "@/utils/transform";
 
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		 * TODO: Enable operations such as 'field_value_a && other_field_b' and 'field_value_a && other_field_b'
 		 */
 		case "GET":
-			const parsedGetBody = RequestSchemaWithFilter.safeParse(req.body);
+			const parsedGetBody = RequestWithFilterSchema.safeParse(req.body);
 
 			removeEmpty(parsedGetBody);
 			if (isValuesNull(parsedGetBody))
@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		 *
 		 */
 		case "PUT":
-			const parsedPutBody = RequestSchemaWithFilter.safeParse(req.body);
+			const parsedPutBody = RequestWithFilterSchema.safeParse(req.body);
 
 			if (isValuesNull(parsedPutBody))
 				throw new RangeError("At least one value in 'data' must be non-empty.");
@@ -108,7 +108,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			 * Delete many records that contain a particular given value.
 			 *
 			 */
-			const parsedDeleteBody = RequestSchemaWithFilter.safeParse(req.body);
+			const parsedDeleteBody = RequestWithFilterSchema.safeParse(req.body);
 
 			if (isValuesNull(parsedDeleteBody))
 				throw new RangeError("At least one value in 'data' must be non-empty.");

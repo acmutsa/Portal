@@ -1,6 +1,6 @@
 import { Member, prisma } from "@/server/db/client";
 import { MemberData, Prisma } from "@prisma/client";
-import { PrettyMemberDataWithoutId, toMemberData } from "@/utils/transform";
+import { PrettyMemberDataWithoutIdType, toMemberData } from "@/utils/transform";
 import { z } from "zod";
 import { getPreciseSemester, isValuesNull, removeEmpty } from "@/utils/helpers";
 
@@ -132,7 +132,7 @@ export async function updateMember(id: string, data: PrettyMember): Promise<Memb
  */
 export async function updateMemberData(
 	id: string,
-	data: PrettyMemberDataWithoutId,
+	data: PrettyMemberDataWithoutIdType,
 	upsert: boolean = false
 ): Promise<MemberData | null> {
 	if (isValuesNull(data)) throw new RangeError("At least one value in 'data' must be non-empty.");

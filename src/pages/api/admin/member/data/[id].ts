@@ -4,12 +4,12 @@ import { z } from "zod";
 import {
 	IdSchema,
 	IdType,
-	MemberDataCreateNestedType,
-	PrettyMemberDataWithoutIdExtended,
+	MemberDataCreateNestedSchema,
+	PrettyMemberDataWithoutIdExtendedType,
 	PrettyMemberDataWithoutIdSchema,
-	PrettyMemberDataWithoutIdSchemaExtended,
-	StrictPrettyMemberAndDataWithoutIdExtended,
-	StrictPrettyMemberAndDataWithoutIdSchemaExtended,
+	PrettyMemberDataWithoutIdExtendedSchema,
+	StrictPrettyMemberAndDataWithoutIdExtendedType,
+	StrictPrettyMemberAndDataWithoutIdExtendedSchema,
 	updateMemberAndData,
 	XOR,
 } from "@/utils/transform";
@@ -57,8 +57,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 		case "POST":
 			let postBody;
-			const parsedPostBody = PrettyMemberDataWithoutIdSchemaExtended.safeParse(req.body);
-			const parsedPostBodyWithMember = StrictPrettyMemberAndDataWithoutIdSchemaExtended.safeParse(
+			const parsedPostBody = PrettyMemberDataWithoutIdExtendedSchema.safeParse(req.body);
+			const parsedPostBodyWithMember = StrictPrettyMemberAndDataWithoutIdExtendedSchema.safeParse(
 				req.body
 			);
 			if (!parsedPostBody.success && !parsedPostBodyWithMember.success) {
@@ -108,7 +108,7 @@ function createOrNullMember(
 	safeMemberData:
 		| undefined
 		| z.SafeParseSuccess<
-				XOR<StrictPrettyMemberAndDataWithoutIdExtended, PrettyMemberDataWithoutIdExtended>
+				XOR<StrictPrettyMemberAndDataWithoutIdExtendedType, PrettyMemberDataWithoutIdExtendedType>
 		  >
 ): Prisma.MemberCreateNestedOneWithoutDataInput | undefined {
 	if (!safeMemberData) return undefined;
@@ -116,14 +116,14 @@ function createOrNullMember(
 		throw new RangeError("Must select whether to create, connect, or createOrConnect.");
 	}
 
-	if (safeMemberData.data.nestedMemberInitMethod === MemberDataCreateNestedType.enum.CONNECT) {
+	if (safeMemberData.data.nestedMemberInitMethod === MemberDataCreateNestedSchema.enum.CONNECT) {
 		return { connect: { id: id.data.id } };
 	}
 
 	if (!safeMemberData.data.name) return undefined;
 
 	switch (safeMemberData.data.nestedMemberInitMethod) {
-		case MemberDataCreateNestedType.enum.CREATE:
+		case MemberDataCreateNestedSchema.enum.CREATE:
 			return {
 				connectOrCreate: {
 					where: {
@@ -139,7 +139,7 @@ function createOrNullMember(
 				},
 			};
 
-		case MemberDataCreateNestedType.enum.CONNECT_OR_CREATE:
+		case MemberDataCreateNestedSchema.enum.CONNECT_OR_CREATE:
 			return {
 				create: {
 					id: id.data.id,
