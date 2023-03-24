@@ -127,6 +127,9 @@ export function getWhereInput(
 	}
 }
 
+export const UpsertSchema = z.object({upsert: z.boolean()});
+export type UpsertType = z.infer<typeof UpsertSchema>;
+
 /**
  * A method for determining whether the client specified to create a new
  * record if the record specified to edit did not exist.
@@ -134,8 +137,7 @@ export function getWhereInput(
  * @param res
  */
 export function upsert(req: NextApiRequest, res: NextApiResponse): boolean | void {
-	const upsertSchema = z.object({upsert: z.boolean()});
-	const upsert = upsertSchema.safeParse(req.body);
+	const upsert = UpsertSchema.safeParse(req.body);
 	if (!upsert.success) {
 		return res.status(500).json({msg: "Invalid request"});
 	}
@@ -223,8 +225,13 @@ export const PrettyMemberDataWithoutIdSchemaExtended = PrettyMemberDataWithoutId
 	nestedMemberInitMethod: MemberDataCreateNestedType,
 });
 export type PrettyMemberDataWithoutIdExtended = z.infer<typeof PrettyMemberDataWithoutIdSchemaExtended>;
-export const IdParserSchema = z.object({id: z.string()});
-export type IdParser = z.infer<typeof IdParserSchema>;
+export const IdSchema = z.object({id: z.string()});
+export type IdType = z.infer<typeof IdSchema>;
+export const RestCredentialsSchema = z.object({
+	admin_username: z.string(),
+	admin_password: z.string(),
+});
+export type RestCredentialsType = z.infer<typeof RestCredentialsSchema>;
 export const StrictPrettyMemberAndDataWithoutIdSchemaExtended = PrettyMemberDataWithoutIdSchemaExtended
 	.extend(StrictPrettyMemberSchema.shape);
 export type StrictPrettyMemberAndDataWithoutIdExtended = z

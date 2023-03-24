@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/server/db/client";
-import { z } from "zod";
 import { isValuesNull, removeEmpty } from "@/utils/helpers";
 import {
 	getWhereInput,
 	RequestSchemaWithFilter,
+	RestCredentialsSchema,
 	StrictPrettyMemberSchema,
 } from "@/utils/transform";
 import { validateAdmin } from "@/server/router/admin";
@@ -15,11 +15,7 @@ import { validateAdmin } from "@/server/router/admin";
  * @param res
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-	const credentialsSchema = z.object({
-		admin_username: z.string(),
-		admin_password: z.string(),
-	});
-	const credentials = credentialsSchema.safeParse(req.body);
+	const credentials = RestCredentialsSchema.safeParse(req.body);
 
 	if (!credentials.success) {
 		return res.status(500).json({ msg: "Invalid request" });

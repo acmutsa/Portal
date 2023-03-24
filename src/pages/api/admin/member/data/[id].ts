@@ -2,12 +2,13 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/server/db/client";
 import { z } from "zod";
 import {
-	IdParser,
-	IdParserSchema,
+	IdType,
+	IdSchema,
 	MemberDataCreateNestedType,
 	PrettyMemberDataWithoutIdExtended,
 	PrettyMemberDataWithoutIdSchema,
 	PrettyMemberDataWithoutIdSchemaExtended,
+	RestCredentialsSchema,
 	StrictPrettyMemberAndDataWithoutIdExtended,
 	StrictPrettyMemberAndDataWithoutIdSchemaExtended,
 	updateMemberAndData,
@@ -15,7 +16,7 @@ import {
 } from "@/utils/transform";
 import { Prisma } from "@prisma/client";
 import { isValuesNull } from "@/utils/helpers";
-import {validateAdmin} from "@/server/router/admin";
+import { validateAdmin } from "@/server/router/admin";
 
 /**
  * Handler for requests intending to operate on MemberData, given a unique member ID.
@@ -26,18 +27,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const { query, body, method } = req;
 
 	// Validate that the client is an admin
-	const credentialsSchema = z.object({
-		admin_username: z.string(),
-		admin_password: z.string(),
-	});
-	const credentials = credentialsSchema.safeParse(req.body);
+	const credentials = RestCredentialsSchema.safeParse(req.body);
 	if (!credentials.success) {
 		return res.status(500).json({ msg: "Invalid request" });
 	}
 	await validateAdmin(credentials.data);
 
 	// Validate queried ID
-	const id = IdParserSchema.safeParse(query);
+	const id = IdSchema.safeParse(query);
 	if (!id.success) {
 		return res.status(500).json({ msg: "Invalid request" });
 	}
@@ -116,7 +113,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 function createOrNullMember(
-	id: z.SafeParseSuccess<IdParser>,
+	id: z.SafeParseSuccess<IdType>,
 	safeMemberData:
 		| undefined
 		| z.SafeParseSuccess<

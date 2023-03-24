@@ -1,8 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/server/db/client";
-import { date, z } from "zod";
-import { updateMemberAndData } from "@/utils/transform";
-import {validateAdmin} from "@/server/router/admin";
+import {
+	IdSchema,
+	RestCredentialsSchema,
+	StrictPrettyMemberSchema,
+	updateMemberAndData,
+} from "@/utils/transform";
+import { validateAdmin } from "@/server/router/admin";
+import { isValuesNull } from "@/utils/helpers";
 
 /**
  * Handler for requests intending to operate on a unique member ID.
@@ -13,19 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const { query, body, method } = req;
 
 	// Validate that the client is an admin
-	const credentialsSchema = z.object({
-		admin_username: z.string(),
-		admin_password: z.string(),
-	});
-	const credentials = credentialsSchema.safeParse(req.body);
+	const credentials = RestCredentialsSchema.safeParse(req.body);
 	if (!credentials.success) {
 		return res.status(500).json({ msg: "Invalid request" });
 	}
 	await validateAdmin(credentials.data);
 
 	// Validate queried ID
-	const idParser = z.object({ id: z.string() });
-	const id = idParser.safeParse(query);
+	const id = IdSchema.safeParse(query);
 	if (!id.success) {
 		return res.status(500).json({ msg: "Invalid request" });
 	}
@@ -49,16 +49,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			return res.status(200).json(await updateMemberAndData(req, body, id.data.id));
 
 		case "POST":
-			const memberSchema = z.object({
-				email: z.string().email().trim(),
-				name: z.string().trim(),
-				joinDate: z.string().or(date()),
-				extendedMemberData: z.string().trim(),
-			});
-			const parsedPostBody = memberSchema.safeParse(req.body);
-			if (!parsedPostBody.success) {
-				return res.status(500).json({ msg: "Invalid request" });
-			}
+			const parsedPostBody = StrictPrettyMemberSchema.required().safeParse(req.body);
+
+			if (!parsedPostBody.success) return res.status(500).json({ msg: "Invalid Request" });
+			if (isValuesNull(parsedPostBody.data))
+				throw new RangeError("At least one value in 'data' must be non-empty");
 
 			return res.status(200).json(
 				await prisma.member.create({
