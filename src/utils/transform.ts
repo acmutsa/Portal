@@ -232,6 +232,7 @@ export const RestCredentialsSchema = z.object({
 	admin_password: z.string(),
 });
 export type RestCredentialsType = z.infer<typeof RestCredentialsSchema>;
+export type RestCredentialsOutputType = z.output<typeof RestCredentialsSchema>;
 export const StrictPrettyMemberAndDataWithoutIdSchemaExtended = PrettyMemberDataWithoutIdSchemaExtended
 	.extend(StrictPrettyMemberSchema.shape);
 export type StrictPrettyMemberAndDataWithoutIdExtended = z

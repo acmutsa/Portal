@@ -7,7 +7,7 @@ import {
 	RestCredentialsSchema,
 	StrictPrettyMemberSchema,
 } from "@/utils/transform";
-import { validateAdmin } from "@/server/router/admin";
+import { validateAdminRest } from "@/utils/rest";
 
 /**
  * Handler for requests intending to operate across non-unique base member information.
@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	if (!credentials.success) {
 		return res.status(500).json({ msg: "Invalid request" });
 	}
-	await validateAdmin(credentials.data);
+	await validateAdminRest(credentials.data, res);
 
 	switch (req.method) {
 		/**
