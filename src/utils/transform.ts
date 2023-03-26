@@ -9,7 +9,6 @@ import {lightFormat, parse, subYears} from "date-fns";
 import {NextApiRequest, NextApiResponse} from "next";
 import {isValuesNull, removeEmpty} from "@/utils/helpers";
 import {prisma} from "@/server/db/client";
-import {PrettyMember, PrettyMemberSchema} from "@/server/controllers/member";
 
 interface OrganizationData {
 	isInACM: boolean | null;
@@ -88,7 +87,14 @@ export const MemberDataCreateNestedSchema = z.enum([
 	"CONNECT_OR_CREATE",
 ]);
 export type MemberDataCreateNestedType = z.infer<typeof MemberDataCreateNestedSchema>;
-
+export const PrettyMemberSchema = z
+	.object({
+		name: z.string(),
+		email: z.string(),
+		extendedMemberData: z.string(),
+	})
+	.partial();
+export type PrettyMember = z.infer<typeof PrettyMemberSchema>;
 export const FilterSchema = z.enum(["ID", "NAME", "EMAIL", "JOINDATE", "EXTENDEDMEMBERDATA"]);
 export type FilterType = z.infer<typeof FilterSchema>;
 export const FilterValueSchema = z.union([z.string(), z.date(), z.string().email()]);
