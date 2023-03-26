@@ -9,6 +9,7 @@ import {lightFormat, parse, subYears} from "date-fns";
 import {NextApiRequest, NextApiResponse} from "next";
 import {isValuesNull, removeEmpty} from "@/utils/helpers";
 import {prisma} from "@/server/db/client";
+import {PrettyMember, PrettyMemberSchema} from "@/server/controllers/member";
 
 interface OrganizationData {
 	isInACM: boolean | null;
@@ -97,22 +98,36 @@ export const RequestWithFilterSchema = z.object({
 	name: z.string().trim().optional(),
 	email: z.string().email().trim().optional(),
 	extendedMemberData: z.string().trim().optional(),
-	filter: FilterSchema,
-	filterValue: FilterValueSchema,
+	filter: FilterSchema.optional(),
+	filterValue: FilterValueSchema.optional(),
 });
 export type RequestWithFilterType = z.infer<typeof RequestWithFilterSchema>;
+
+export function containsMember(member: PrettyMemberAndDataExtendedType) {
+	return (member as PrettyMember).email !== undefined;
+}
+
+/**
+ * A function for determining whether the field in a WhereInput is unique.
+ * @param where A field in the Member table that may or may not be unique.
+ */
+export function isUniqueWhereInput(where: Prisma.MemberWhereInput | Prisma.MemberWhereUniqueInput | undefined)
+	: where is Prisma.MemberWhereUniqueInput {
+	return (where as Prisma.MemberWhereUniqueInput).id !== undefined
+		|| (where as Prisma.MemberWhereUniqueInput).email !== undefined;
+}
 
 /**
  * A function that returns the MemberWhereInput or MemberWhereUniqueInput associated with
  * the given filter.
- * @param filter The property used to filter which models to wrap before updating
- * @param filterValue The value of the filter
+ * @param filter The property used to filter which models to wrap before updating.
+ * @param filterValue The value of the filter.
  */
 export function getWhereInput(
-	filter: FilterType,
-	filterValue: FilterValueType
-): Prisma.MemberWhereInput | undefined {
-	if (typeof filterValue !== "string") return;
+	filter: FilterType | undefined,
+	filterValue: FilterValueType | undefined
+): Prisma.MemberWhereInput | Prisma.MemberWhereUniqueInput | undefined {
+	if (!filter && !filterValue || typeof filterValue !== "string") return;
 
 	switch (filter) {
 		case FilterSchema.enum.ID:
@@ -144,6 +159,64 @@ export function upsert(req: NextApiRequest, res: NextApiResponse): boolean | voi
 	}
 
 	return upsert.data.upsert;
+}
+
+
+// will 100% take in MemberData, but the Member will be optional
+export function createOrNullMember(
+	id: string,
+	safeMemberData:
+		z.SafeParseSuccess<PrettyMemberAndDataExtendedType | StrictPrettyMemberAndDataExtendedType>
+): Prisma.MemberCreateNestedOneWithoutDataInput | undefined {
+	if (!safeMemberData.data.nestedMemberInitMethod) {
+		throw new RangeError("Must select whether to create, connect, or createOrConnect.");
+	}
+
+	if (safeMemberData.data.nestedMemberInitMethod === MemberDataCreateNestedSchema.enum.CONNECT) {
+		return {connect: {id: id}};
+	}
+
+	if (
+		!safeMemberData.data.name
+		|| !safeMemberData.data.email
+		|| !safeMemberData.data.extendedMemberData
+	) {
+		return undefined;
+	}
+
+
+	switch (safeMemberData.data.nestedMemberInitMethod) {
+		case MemberDataCreateNestedSchema.enum.CREATE:
+			return {
+				connectOrCreate: {
+					where: {
+						id: id,
+					},
+					create: {
+						id: id,
+						email: safeMemberData.data.email,
+						name: safeMemberData.data.name,
+						joinDate: new Date(Date.now()),
+						extendedMemberData: safeMemberData.data.extendedMemberData,
+					},
+				},
+			};
+
+		case MemberDataCreateNestedSchema.enum.CONNECT_OR_CREATE:
+			return {
+				create: {
+					id: id,
+					email: safeMemberData.data.email,
+					name: safeMemberData.data.name,
+					joinDate: new Date(Date.now()),
+					extendedMemberData: safeMemberData.data.extendedMemberData,
+				},
+			};
+
+		default:
+			return undefined;
+	}
+
 }
 
 /**
@@ -225,6 +298,10 @@ export type PrettyMemberDataWithoutIdType = z.infer<typeof PrettyMemberDataWitho
 export const PrettyMemberDataWithoutIdExtendedSchema = PrettyMemberDataWithoutIdSchema.extend({
 	nestedMemberInitMethod: MemberDataCreateNestedSchema,
 });
+export const PrettyMemberDataExtendedSchema = PrettyMemberDataSchema.extend({
+	nestedMemberInitMethod: MemberDataCreateNestedSchema.optional(),
+});
+export type PrettyMemberDataExtendedType = z.infer<typeof PrettyMemberDataExtendedSchema>;
 export type PrettyMemberDataWithoutIdExtendedType = z.infer<typeof PrettyMemberDataWithoutIdExtendedSchema>;
 export const IdSchema = z.object({id: z.string()});
 export type IdType = z.infer<typeof IdSchema>;
@@ -232,6 +309,12 @@ export const StrictPrettyMemberAndDataWithoutIdExtendedSchema = PrettyMemberData
 	.extend(StrictPrettyMemberSchema.shape);
 export type StrictPrettyMemberAndDataWithoutIdExtendedType = z
 	.infer<typeof StrictPrettyMemberAndDataWithoutIdExtendedSchema>;
+export const StrictPrettyMemberAndDataExtendedSchema = PrettyMemberDataExtendedSchema
+	.extend(StrictPrettyMemberSchema.shape);
+export type StrictPrettyMemberAndDataExtendedType = z.infer<typeof StrictPrettyMemberAndDataExtendedSchema>;
+export const PrettyMemberAndDataExtendedSchema = PrettyMemberDataExtendedSchema
+	.extend(PrettyMemberSchema.shape);
+export type PrettyMemberAndDataExtendedType = z.infer<typeof PrettyMemberAndDataExtendedSchema>;
 export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
 
