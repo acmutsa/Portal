@@ -108,7 +108,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 							visible={visible}
 						/>
 					),
-					{ id: "checkin-success", duration: 2500 }
+					{ id: "checkin-success", duration: 8000 }
 				);
 			}
 

@@ -46,6 +46,7 @@ export async function getServerSideProps({
 						// Select ONLY the checkins name and start time.
 						name: true,
 						eventStart: true,
+						points: true,
 					},
 				},
 			},
@@ -53,7 +54,7 @@ export async function getServerSideProps({
 	).map((checkin) => ({
 		eventName: checkin.event.name,
 		eventDate: checkin.event.eventStart.toDateString(),
-		points: 1,
+		points: checkin.event.points,
 	}));
 
 	return {
