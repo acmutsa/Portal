@@ -1,25 +1,15 @@
-import {
-	GetServerSidePropsContext,
-	GetServerSidePropsResult,
-	GetStaticPropsResult,
-	NextPage,
-} from "next";
+import {GetStaticPropsResult, NextPage,} from "next";
 import AdminRootLayout from "@/components/admin/AdminRootLayout";
 import Stat from "@/components/common/Stat";
-import { pluralize } from "@/utils/helpers";
+import {pluralize} from "@/utils/helpers";
 import Link from "next/link";
-import { BsPlus } from "react-icons/bs";
+import {BsPlus} from "react-icons/bs";
 import MemberDataTable from "@/components/admin/MemberDataTable";
-import { useMemo } from "react";
-import { toPrettyMemberData } from "@/utils/transform";
-import { MemberData } from "@prisma/client";
+import {useMemo} from "react";
+import {toPrettyMemberData} from "@/utils/transform";
+import {MemberData} from "@prisma/client";
 import superjson from "superjson";
-import {
-	countActiveMembers,
-	countMembers,
-	getAllMembers,
-	MemberWithData,
-} from "@/server/controllers/member";
+import {countActiveMembers, countMembers, getAllMembers, MemberWithData,} from "@/server/controllers/member";
 
 type MemberViewProps = {
 	activeCount: {
@@ -92,7 +82,7 @@ const MembersView: NextPage<{ json: string }> = ({ json }) => {
 							</div>
 						</div>
 					</div>
-					<div className="overflow-scroll overflow-x-auto border-box">
+					<div className="border-box">
 						<div className="inline-block pb-1 w-full">
 							<MemberDataTable data={prettyData} />
 						</div>

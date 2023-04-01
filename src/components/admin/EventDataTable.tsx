@@ -41,7 +41,7 @@ const EventDataTable: FunctionComponent<{ data: EventWithCount[] }> = ({ data })
 			onSelectionChange={(e) => setSelectedEvents(e.value)}
 			selection={selectedEvents}
 			onRowClick={({ data: { pageID } }) => {
-				router.push(`/admin/events/${pageID}`);
+				router.push(`/admin/events/${pageID}`).then();
 			}}
 			rowClassName={() => "cursor-pointer"}
 			responsiveLayout="scroll"
