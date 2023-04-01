@@ -76,7 +76,7 @@ const EventViewPage: NextPage<{ json: string }> = ({ json }) => {
 							</div>
 						</div>
 					</div>
-					<div className="overflow-scroll overflow-x-auto border-box">
+					<div className="border-box">
 						<div className="inline-block pb-1 w-full">
 							<EventDataTable
 								data={events.map((item) => ({
