@@ -23,7 +23,7 @@ const AdminRootLayout: FunctionComponent<AdminRootLayoutProps> = ({
 	breadcrumbs,
 }) => {
 	return (
-		<RootLayout background={false} className="flex" footer={false}>
+		<RootLayout backgroundImage={null} className="flex" footer={false}>
 			<Sidebar current={current} />
 			<div
 				className="flex-grow max-h-full h-full max-w-full w-full overflow-y-auto overflow-x-clip relative bg-zinc-100"

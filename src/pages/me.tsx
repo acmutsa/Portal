@@ -104,7 +104,8 @@ const MeView: NextPage<{ json: string }> = ({ json }) => {
 				<OpenGraph properties={ogp} />
 			</Head>
 			<RootLayout
-				background="bg-zinc-100"
+				backgroundImage={null}
+				className="bg-zinc-100"
 				footerClass="text-zinc-800"
 				innerClassName="justify-center py-8 md:py-20"
 			>
