@@ -22,7 +22,7 @@ import {
 } from "@/components/util/EnumerationData";
 import { MemberWithData } from "@/server/controllers/member";
 import { useRouter } from "next/router";
-import { formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
 const preventDefault = (e: Event) => e.preventDefault();
 const mouseLeaveHandler = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -270,7 +270,9 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 				body={({ member }) => (
 					<div>
 						{member.lastSeen != null ? (
-							formatDistanceToNow(member.lastSeen, { addSuffix: true })
+							<span title={format(member.lastSeen, "MM/dd/yyyy hh:mm:ss a")}>
+								{formatDistanceToNow(member.lastSeen, { addSuffix: true })}
+							</span>
 						) : (
 							<span className="text-zinc-500">Unknown</span>
 						)}
