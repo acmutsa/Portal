@@ -112,6 +112,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 	} = useForm<EventFormValues>({
 		mode: "onChange",
 		defaultValues: {
+			points: 1,
 			eventStart: now,
 			eventEnd: now,
 			formOpen: now,
@@ -263,9 +264,10 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 								type="text"
 								register={register("points", {
 									required: { value: true, message: "Required." },
+									min: 0,
+									valueAsNumber: true,
 								})}
 								errors={errors}
-								controlClass="font-mono"
 							/>
 						</div>
 						<div className="col-span-12 sm:col-span-4">

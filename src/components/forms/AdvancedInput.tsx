@@ -16,6 +16,7 @@ interface AdvancedInputProps {
 	autocomplete?: string;
 	errorIcon?: IconType;
 	InlineIcon?: IconType;
+	// Apply a custom class to the control element as needed
 	controlClass?: string;
 }
 
