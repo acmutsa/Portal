@@ -121,8 +121,8 @@ const identityCell = ({ prettyMemberData: { identity: identities } }: MemberTabl
 						<Badge
 							key={index}
 							colorClass={classNames(
-								"text-white m-0.5 whitespace-nowrap",
-								IdentityBadgeClasses[identity as IdentityType]
+								IdentityBadgeClasses[identity as IdentityType],
+								"m-0.5 whitespace-nowrap"
 							)}
 						>
 							{IdentityById[identity as IdentityType]}
