@@ -1,6 +1,7 @@
-import { FunctionComponent, ReactNode } from "react";
+import React, { FunctionComponent, ReactNode } from "react";
 import Sidebar from "@/components/admin/Sidebar";
 import RootLayout from "@/components/layout/RootLayout";
+import Breadcrumbs, { Page } from "@/components/admin/common/Breadcrumbs";
 
 export type AdminPageIdentifier =
 	| "dashboard"
@@ -13,17 +14,25 @@ export type AdminPageIdentifier =
 type AdminRootLayoutProps = {
 	current?: AdminPageIdentifier;
 	children: string | ReactNode | ReactNode[];
+	breadcrumbs?: Page[];
 };
 
-const AdminRootLayout: FunctionComponent<AdminRootLayoutProps> = ({ current, children }) => {
+const AdminRootLayout: FunctionComponent<AdminRootLayoutProps> = ({
+	current,
+	children,
+	breadcrumbs,
+}) => {
 	return (
 		<RootLayout background={false} className="flex" footer={false}>
 			<Sidebar current={current} />
 			<div
-				className="flex-grow p-5 pt-[1rem] max-h-full h-full max-w-full w-full overflow-y-auto overflow-x-clip relative bg-zinc-100"
+				className="flex-grow max-h-full h-full max-w-full w-full overflow-y-auto overflow-x-clip relative bg-zinc-100"
 				style={{ minHeight: "calc(100vh - 72px)" }}
 			>
-				<div className="col-span-4">{children}</div>
+				{breadcrumbs != null ? <Breadcrumbs pages={breadcrumbs} /> : null}
+				<div className="p-5 pt-[1rem]">
+					<div className="col-span-4">{children}</div>
+				</div>
 			</div>
 		</RootLayout>
 	);

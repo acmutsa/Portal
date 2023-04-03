@@ -53,7 +53,16 @@ const ViewMemberPage: NextPage<{ json: string }> = ({ json }) => {
 	];
 
 	return (
-		<AdminRootLayout>
+		<AdminRootLayout
+			breadcrumbs={[
+				{ name: "Members", href: "/admin/members" },
+				{
+					name: member.name,
+					href: `/admin/members/${member.id}`,
+					current: true,
+				},
+			]}
+		>
 			<div className="flex items-center space-x-5">
 				<div className="pl-5 flex-shrink-0">
 					<div className="relative">
