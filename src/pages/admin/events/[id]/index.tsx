@@ -67,13 +67,13 @@ const ViewMemberPage: NextPage<{ json: string }> = ({ json }) => {
 			]}
 		>
 			<div className="grid grid-cols-12 space-y-2">
-				<div className="col-span-12 mb-6">
-					<div className="lg:w-[50%]">
+				<div className="col-span-6 mb-6">
+					<div className="max-w-screen-md">
 						<EventDetails event={event} />
 					</div>
 				</div>
-				<div className="col-span-12">
-					<div className="lg:w-[50%]">
+				<div className="col-span-8">
+					<div className="max-w-screen-lg">
 						<DataTable
 							id="checkins"
 							rowHover
