@@ -221,6 +221,8 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 				"member.data.classification",
 				"prettyMemberData.organizations",
 			]}
+			sortField="member.lastSeen"
+			sortOrder={-1}
 			filterDisplay="menu"
 			filters={filters}
 			dataKey="member.id"
