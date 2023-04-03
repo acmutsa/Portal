@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { classNames } from "@/utils/helpers";
 import Footer from "@/components/util/Footer";
 import Image, { StaticImageData } from "next/image";
+import BgImg from "@/img/bg.png";
 
 type RootLayoutProps = {
 	className?: string;
@@ -38,7 +39,7 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 	footer = footer ?? true;
 
 	if (backgroundImage === undefined) {
-		backgroundImage = "/img/bg.png";
+		backgroundImage = BgImg;
 		backgroundClass = "brightness-[0.60]";
 	}
 

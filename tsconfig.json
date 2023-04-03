@@ -21,6 +21,9 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": "./src/",
     "paths": {
+      "@/img/*": [
+        "../public/img/*"
+      ],
       "@/config/*": [
         "../config/*"
       ],

@@ -5,7 +5,7 @@ import OpenGraph from "@/components/common/OpenGraph";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import RootLayout from "@/components/layout/RootLayout";
 import Balancer from "react-wrap-balancer";
-import BgDark from "../../public/img/bg-dark.png";
+import BgImgDark from "@/img/bg-dark.png";
 
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({
@@ -25,7 +25,7 @@ const Home: NextPage = () => {
 			<RootLayout
 				innerClassName="text-white flex items-center justify-center"
 				backgroundClass="brightness-90"
-				backgroundImage={BgDark}
+				backgroundImage={BgImgDark}
 			>
 				<div className="w-full px-2 !mb-8 md:!mb-12 lg:!mb-20 max-w-[90rem] h-full flex flex-col items-center align-middle mx-auto px-4">
 					<div className="flex flex-col items-center">
@@ -44,13 +44,14 @@ const Home: NextPage = () => {
 						</h1>
 						<h4 className="mt-4 font-inter text-xl text-center text-zinc-200">
 							<Balancer>
-								The Premier Student Computer Science Organization at{" "}
+								We are the Premier Computer Science Organization at{" "}
 								<span
 									className="font-bold font-roboto font-white tracking-tighter"
 									title="The University of Texas at San Antonio"
 								>
 									UTSA
 								</span>
+								, run & staffed by students.
 							</Balancer>
 						</h4>
 					</div>
