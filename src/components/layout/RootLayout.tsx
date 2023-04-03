@@ -3,14 +3,14 @@ import Navbar, { StaticAuthenticationProps } from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import { classNames } from "@/utils/helpers";
 import Footer from "@/components/util/Footer";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 type RootLayoutProps = {
 	className?: string;
 	innerClassName?: string;
 	children: JSX.Element | JSX.Element[];
 	// A path to an image resource. If not given, no background image is used.
-	backgroundImage?: string | null;
+	backgroundImage?: StaticImageData | string | null;
 	// Image's image blur data URL.
 	backgroundImageBlur?: string;
 	// Classes to be applied to the background image.
@@ -53,12 +53,12 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 					<Image
 						className={classNames("w-screen h-screen -z-10", backgroundClass)}
 						src={backgroundImage}
-						blurDataURL={backgroundImageBlur}
 						width={1920}
 						height={1080}
-						priority
-						placeholder={backgroundImageBlur != null ? "blur" : "empty"}
-						quality={99}
+						placeholder={
+							backgroundImageBlur != null || typeof backgroundImage != "string" ? "blur" : "empty"
+						}
+						quality={80}
 						sizes="(max-width: 768px) 100vh,
               (max-width: 1200px) 100vh,
               70vw"

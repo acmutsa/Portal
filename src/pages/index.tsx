@@ -5,6 +5,7 @@ import OpenGraph from "@/components/common/OpenGraph";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import RootLayout from "@/components/layout/RootLayout";
 import Balancer from "react-wrap-balancer";
+import BgDark from "../../public/img/bg-dark.png";
 
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({
@@ -24,7 +25,7 @@ const Home: NextPage = () => {
 			<RootLayout
 				innerClassName="text-white flex items-center justify-center"
 				backgroundClass="brightness-90"
-				backgroundImage={"/img/bg-dark.png"}
+				backgroundImage={BgDark}
 			>
 				<div className="w-full px-2 !mb-8 md:!mb-12 lg:!mb-20 max-w-[90rem] h-full flex flex-col items-center align-middle mx-auto px-4">
 					<div className="flex flex-col items-center">
