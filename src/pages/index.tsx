@@ -1,25 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/legacy/image";
 import OpenGraph from "@/components/common/OpenGraph";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import RootLayout from "@/components/layout/RootLayout";
-import { FunctionComponent, ReactNode } from "react";
 import Balancer from "react-wrap-balancer";
-
-const IndexButton: FunctionComponent<{ href: string; children: string | ReactNode }> = ({
-	href,
-	children,
-}) => {
-	return (
-		<Link href={href}>
-			<button className="h-12 w-full px-2 justify-self-center bg-primary hover:bg-primary-600 rounded transition ease-in">
-				{children}
-			</button>
-		</Link>
-	);
-};
 
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({

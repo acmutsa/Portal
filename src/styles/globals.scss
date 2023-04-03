@@ -9,14 +9,6 @@
 @tailwind utilities;
 
 @layer utilities {
-  // TODO: Transform the background image into a Next.JS Image component ( https://uharston.medium.com/next-js-image-optimization-on-background-images-65de18ea03f5 )
-  .bg-acm {
-    //background: linear-gradient(#00000066, #00000066), url('/img/bg.png') fixed center / cover no-repeat;
-  }
-
-  .bg-acm-dark {
-    //background: linear-gradient(#00000001, #00000001), url('/img/bg-dark.png') fixed center / cover no-repeat;
-  }
 }
 
 body,
