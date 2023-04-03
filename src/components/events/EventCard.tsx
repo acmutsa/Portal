@@ -16,6 +16,7 @@ import Image from "next/legacy/image";
 import Badge from "@/components/common/Badge";
 import { Event } from "@prisma/client";
 import { classNames, isCheckinOpen } from "@/utils/helpers";
+import Balancer from "react-wrap-balancer";
 
 interface EventHeaderProps {
 	event: Event;
@@ -101,24 +102,23 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 			</Link>
 			<div className="bg-white rounded-b-xl">
 				<div className="flex flex-col align-middle p-2 pb-0 justify-between">
-					<span className="inline-flex text-xl text-slate-800 font-extrabold font-raleway mb-0.5">
-						<Link href={eventURL} className="inline-flex cursor-pointer">
+					<span className="text-xl text-slate-800 font-extrabold font-raleway mb-0.5">
+						<Balancer>
+							<Link href={eventURL} className="inline-flex cursor-pointer">
 								{event.name}
 								{isOngoing ? ping : null}
-						</Link>
-						<div className="space-x-2 mx-2">
-							<Badge colorClass="bg-sky-100 text-sky-800 my-0.5 font-inter">
+							</Link>
+							<Badge colorClass="mx-1 bg-sky-100 text-sky-800 my-0.5 font-inter">
 								{shortOrganizationName[event.organization] ?? event.organization}
 							</Badge>
 							{isEventPast ? (
-								<Badge colorClass="bg-red-100 text-red-800 my-0.5 font-inter">Past</Badge>
+								<Badge colorClass="mx-1 bg-red-100 text-red-800 my-0.5 font-inter">Past</Badge>
 							) : isEventToday ? (
-								<Badge colorClass="bg-sky-100 text-sky-800 my-0.5 font-inter">
+								<Badge colorClass="mx-1 bg-sky-100 text-sky-800 my-0.5 font-inter">
 									{isOngoing ? "Ongoing" : "Today"}
 								</Badge>
 							) : null}
-						</div>
-						{/*<div
+							{/*<div
 							className="text-[22px] text-red-600 ml-auto my-auto cursor-pointer p-1"
 							onClick={toggleLiked}
 						>
@@ -130,6 +130,7 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 								)
 							) : null}
 						</div>*/}
+						</Balancer>
 					</span>
 					<time
 						dateTime={isoString}
@@ -139,13 +140,9 @@ const EventCard: FunctionComponent<EventHeaderProps> = ({ event }: EventHeaderPr
 						{timeText}
 					</time>
 					<div className="card-buttongroup divide-x-2 divide-slate-200 flex [&>*]:flex-grow text-center mt-2 text-slate-900 font-medium font-inter">
-						<Link href={eventURL}>
-							Details
-						</Link>
+						<Link href={eventURL}>Details</Link>
 						{isOpen ? (
-							<Link href={checkinURL}>
-								Check-in
-							</Link>
+							<Link href={checkinURL}>Check-in</Link>
 						) : (
 							<span className="text-slate-300 hover:text-slate-300 cursor-not-allowed">
 								Check-in
