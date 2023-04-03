@@ -3,13 +3,18 @@ import Navbar, { StaticAuthenticationProps } from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import { classNames } from "@/utils/helpers";
 import Footer from "@/components/util/Footer";
+import Image from "next/image";
 
 type RootLayoutProps = {
 	className?: string;
 	innerClassName?: string;
 	children: JSX.Element | JSX.Element[];
-	// If true, show the background. If false, show white. If a string is provided, it will act as a class. Defaults to 'true'.
-	background?: boolean | string;
+	// A path to an image resource. If not given, no background image is used.
+	backgroundImage?: string | null;
+	// Image's image blur data URL.
+	backgroundImageBlur?: string;
+	// Classes to be applied to the background image.
+	backgroundClass?: string;
 	// If false, hide the navbar. Defaults to 'true'.
 	navbar?: boolean;
 	// If false, hide the footer. Defaults to 'true'.
@@ -20,32 +25,46 @@ type RootLayoutProps = {
 const RootLayout: FunctionComponent<RootLayoutProps> = ({
 	className,
 	innerClassName,
-	background,
+	backgroundImage,
+	backgroundImageBlur,
+	backgroundClass,
 	children,
 	authentication,
 	navbar,
 	footer,
 	footerClass,
 }) => {
-	// Decide what the background prop means.
-	background = background ?? true; // Defaults to 'true'
-	const backgroundClass =
-		typeof background === "boolean" ? (background ? "bg-acm" : "bg-white") : background;
-
 	navbar = navbar ?? true;
 	footer = footer ?? true;
+
+	if (backgroundImage === undefined) {
+		backgroundImage = "/img/bg.png";
+		backgroundClass = "brightness-[0.60]";
+	}
 
 	return (
 		<>
 			{navbar ? <Navbar authentication={authentication} /> : null}
 			<div
 				id="layout"
-				className={classNames(
-					className,
-					backgroundClass,
-					"flex flex-col flex-grow min-h-screen pt-[72px]"
-				)}
+				className={classNames(className, "flex flex-col flex-grow min-h-screen pt-[72px]")}
 			>
+				{backgroundImage != null ? (
+					<Image
+						className={classNames("-z-10", backgroundClass)}
+						src={backgroundImage}
+						blurDataURL={backgroundImageBlur}
+						fill
+						priority
+						placeholder={backgroundImageBlur != null ? "blur" : "empty"}
+						quality={99}
+						sizes="(max-width: 768px) 100vh,
+              (max-width: 1200px) 100vh,
+              70vw"
+						alt="The North Paseo Building"
+						style={{ backgroundImage: "fixed center / cover no-repeat", objectFit: "cover" }}
+					/>
+				) : null}
 				<Toaster
 					toastOptions={{
 						duration: 3000,
