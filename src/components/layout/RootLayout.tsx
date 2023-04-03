@@ -51,10 +51,11 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 			>
 				{backgroundImage != null ? (
 					<Image
-						className={classNames("-z-10", backgroundClass)}
+						className={classNames("w-screen h-screen -z-10", backgroundClass)}
 						src={backgroundImage}
 						blurDataURL={backgroundImageBlur}
-						fill
+						width={1920}
+						height={1080}
 						priority
 						placeholder={backgroundImageBlur != null ? "blur" : "empty"}
 						quality={99}
@@ -62,7 +63,7 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
               (max-width: 1200px) 100vh,
               70vw"
 						alt="The North Paseo Building"
-						style={{ backgroundImage: "fixed center / cover no-repeat", objectFit: "cover" }}
+						style={{ objectFit: "cover", position: "fixed" }}
 					/>
 				) : null}
 				<Toaster
