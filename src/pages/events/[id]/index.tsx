@@ -108,7 +108,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 							visible={visible}
 						/>
 					),
-					{ id: "checkin-success", duration: 2500 }
+					{ id: "checkin-success", duration: 8000 }
 				);
 			}
 
@@ -142,7 +142,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 				<OpenGraph properties={ogp} />
 			</Head>
 			<RootLayout
-				background={"bg-white md:bg-acm"}
+				className="bg-white md:bg-transparent"
 				footerClass={"text-gray-800 max-w-[22rem] md:max-w-full md:text-white"}
 				innerClassName="justify-center"
 			>

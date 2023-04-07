@@ -29,6 +29,8 @@ import {
 	OrganizationByName,
 } from "@/components/util/EnumerationData";
 import { MemberWithData } from "@/server/controllers/member";
+import { useRouter } from "next/router";
+import { format, formatDistanceToNow } from "date-fns";
 
 const preventDefault = (e: Event) => e.preventDefault();
 const mouseLeaveHandler = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -127,8 +129,8 @@ const identityCell = ({ prettyMemberData: { identity: identities } }: MemberTabl
 						<Badge
 							key={index}
 							colorClass={classNames(
-								"text-white m-0.5 whitespace-nowrap",
-								IdentityBadgeClasses[identity as IdentityType]
+								IdentityBadgeClasses[identity as IdentityType],
+								"m-0.5 whitespace-nowrap"
 							)}
 						>
 							{IdentityById[identity as IdentityType]}
@@ -196,12 +198,21 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
 		},
 	});
+	const router = useRouter();
 
 	return (
 		<DataTable
 			id="members"
 			rowHover
 			onSelectionChange={(e) => setSelectedCustomers(e.value)}
+			rowClassName={() => "cursor-pointer"}
+			onRowClick={({
+				data: {
+					member: { id },
+				},
+			}) => {
+				router.push(`/admin/members/${id}`).then();
+			}}
 			selection={selectedCustomers}
 			responsiveLayout="scroll"
 			value={data}
@@ -218,13 +229,16 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 				"member.data.classification",
 				"prettyMemberData.organizations",
 			]}
+			sortField="member.lastSeen"
+			sortOrder={-1}
 			filterDisplay="menu"
 			filters={filters}
 			dataKey="member.id"
 			currentPageReportTemplate="Showing {first} through {last} of {totalRecords} total members"
 			paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
 		>
-			<Column selectionMode="multiple" headerStyle={{ width: "3em" }}></Column>
+			{/*<Column selectionMode="multiple" headerStyle={{ width: "3em" }}></Column>*/}
+			<Column headerStyle={{ width: "2em" }} />
 			<Column sortable filter field="member.name" header="Name" className="name"></Column>
 			<Column filter field="member.email" header="Email"></Column>
 			<Column filter field="member.id" header="ABC123"></Column>
@@ -258,12 +272,28 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 				filterMatchMode="custom"
 			/>
 			<Column
+				sortable
+				field="member.lastSeen"
+				header="Last Seen"
+				body={({ member }) => (
+					<div>
+						{member.lastSeen != null ? (
+							<span title={format(member.lastSeen, "MM/dd/yyyy hh:mm:ss a")}>
+								{formatDistanceToNow(member.lastSeen, { addSuffix: true })}
+							</span>
+						) : (
+							<span className="text-zinc-500">Unknown</span>
+						)}
+					</div>
+				)}
+			/>
+			{/*<Column
 				filter
 				field="member.data.address"
 				header="Address"
 				className="address"
 				body={({ member: { data } }: MemberTableItem) => <div>{data?.address}</div>}
-			/>
+			/>*/}
 		</DataTable>
 	);
 };

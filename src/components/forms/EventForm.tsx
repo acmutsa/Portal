@@ -53,6 +53,7 @@ export type EventFormValues = {
 	eventEnd: Date;
 	formOpen: Date | null;
 	formClose: Date | null;
+	points: Number;
 };
 
 type EventFormProps = {
@@ -111,6 +112,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 	} = useForm<EventFormValues>({
 		mode: "onChange",
 		defaultValues: {
+			points: 1,
 			eventStart: now,
 			eventEnd: now,
 			formOpen: now,
@@ -243,7 +245,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 								errors={errors}
 							/>
 						</div>
-						<div className="col-span-12 sm:col-span-8">
+						<div className="col-span-12 sm:col-span-6">
 							<AdvancedInput
 								label="Header Image URL"
 								placeholder="https://i.imgur.com/kUK771p.jpeg"
@@ -254,6 +256,18 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 								})}
 								errors={errors}
 								controlClass="font-mono"
+							/>
+						</div>
+						<div className="col-span-6 sm:col-span-2">
+							<AdvancedInput
+								label="Points"
+								type="text"
+								register={register("points", {
+									required: { value: true, message: "Required." },
+									min: 0,
+									valueAsNumber: true,
+								})}
+								errors={errors}
 							/>
 						</div>
 						<div className="col-span-12 sm:col-span-4">

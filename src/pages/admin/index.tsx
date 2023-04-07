@@ -4,7 +4,10 @@ import DashView from "@/components/admin/DashView";
 
 const Dashboard: NextPage = () => {
 	return (
-		<AdminRootLayout current="dashboard">
+		<AdminRootLayout
+			current="dashboard"
+			breadcrumbs={[{ name: "Dashboard", href: "/admin", current: true }]}
+		>
 			<DashView />
 		</AdminRootLayout>
 	);

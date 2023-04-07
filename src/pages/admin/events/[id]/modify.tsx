@@ -2,9 +2,9 @@ import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "n
 import AdminRootLayout from "@/components/admin/AdminRootLayout";
 import EditEventView from "@/components/admin/EditEventView";
 import { z } from "zod";
-import { InitialEventFormValues } from "../../../components/forms/EventForm";
+import { InitialEventFormValues } from "@/components/forms/EventForm";
 import superjson from "superjson";
-import { getUnique } from "../../../server/controllers/events";
+import { getUnique } from "@/server/controllers/events";
 
 type EditEventProps = {
 	event: InitialEventFormValues;
@@ -46,7 +46,14 @@ const EditEventPage: NextPage<{ json: string }> = ({ json }) => {
 	const { id, event } = superjson.parse<EditEventProps>(json);
 	return (
 		<AdminRootLayout>
-			<EditEventView id={id} initialData={event} />
+			<div className="w-full h-full p-[5px]">
+				<div className="max-w-[50rem] mx-auto">
+					<div className="text-lg text-bold">{event.name}</div>
+					<div className="sm:px-6 lg:px-0 lg:col-span-9">
+						<EditEventView id={id} initialData={event} />
+					</div>
+				</div>
+			</div>
 		</AdminRootLayout>
 	);
 };

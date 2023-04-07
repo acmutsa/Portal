@@ -2,83 +2,84 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Event {
-    id            String    @id @default(cuid())
-    name          String
-    description   String
-    organization  String
-    headerImage   String
-    location      String
-    createdAt     DateTime  @default(now())
-    eventStart    DateTime
-    eventEnd      DateTime
-    formOpen      DateTime
-    formClose     DateTime
-    hasBeenForced Boolean   @default(false)
-    forcedIsOpen  Boolean   @default(false)
-    pageID        String    @unique @default("")
-    checkins      Checkin[]
-    semester      String
+  id            String    @id @default(cuid())
+  name          String
+  description   String
+  organization  String
+  headerImage   String
+  location      String
+  createdAt     DateTime  @default(now())
+  eventStart    DateTime
+  eventEnd      DateTime
+  formOpen      DateTime
+  formClose     DateTime
+  hasBeenForced Boolean   @default(false)
+  forcedIsOpen  Boolean   @default(false)
+  pageID        String    @unique @default("")
+  checkins      Checkin[]
+  semester      String
+  points        Int       @default(1)
 }
 
 model Checkin {
-    eventID    String
-    memberID   String
-    event      Event    @relation(fields: [eventID], references: [id], onDelete: Cascade)
-    member     Member   @relation(fields: [memberID], references: [id], onDelete: Cascade)
-    isInPerson Boolean
-    feedback   String?
-    timestamp  DateTime @default(now())
-    source String?
+  eventID    String
+  memberID   String
+  event      Event    @relation(fields: [eventID], references: [id], onDelete: Cascade)
+  member     Member   @relation(fields: [memberID], references: [id], onDelete: Cascade)
+  isInPerson Boolean
+  feedback   String?
+  timestamp  DateTime @default(now())
+  source     String?
 
-    @@id([eventID, memberID])
+  @@id([eventID, memberID])
 }
 
 model Member {
-    id                 String      @id
-    email              String      @unique
-    name               String
-    joinDate           DateTime
-    checkins           Checkin[]
-    data               MemberData?
-    extendedMemberData String
-    lastSeen           DateTime?
+  id                 String      @id
+  email              String      @unique
+  name               String
+  joinDate           DateTime
+  checkins           Checkin[]
+  data               MemberData?
+  extendedMemberData String
+  lastSeen           DateTime?
 }
 
 model MemberData {
-    member             Member?  @relation(fields: [memberID], references: [id], onDelete: Cascade)
-    memberID           String   @id
-    major              String?
-    classification     String?
-    graduationDate     String?
-    shirtIsUnisex      Boolean?
-    shirtSize          String?
-    Birthday           String?
-    isInACM            Boolean?
-    isInACMW           Boolean?
-    isInRC             Boolean?
-    isInICPC           Boolean?
-    isInCIC            Boolean?
-    isBlackorAA        Boolean?
-    isAsian            Boolean?
-    isNAorAN           Boolean?
-    isNHorPI           Boolean?
-    isHispanicorLatinx Boolean?
-    isWhite            Boolean?
-    isMale             Boolean?
-    isFemale           Boolean?
-    isNonBinary        Boolean?
-    isTransgender      Boolean?
-    isIntersex         Boolean?
-    doesNotIdentify    Boolean?
-    otherIdentity      String?
-    address            String?
+  member             Member?  @relation(fields: [memberID], references: [id], onDelete: Cascade)
+  memberID           String   @id
+  major              String?
+  classification     String?
+  graduationDate     String?
+  shirtIsUnisex      Boolean?
+  shirtSize          String?
+  Birthday           String?
+  isInACM            Boolean?
+  isInACMW           Boolean?
+  isInRC             Boolean?
+  isInICPC           Boolean?
+  isInCIC            Boolean?
+  isBlackorAA        Boolean?
+  isAsian            Boolean?
+  isNAorAN           Boolean?
+  isNHorPI           Boolean?
+  isHispanicorLatinx Boolean?
+  isWhite            Boolean?
+  isMale             Boolean?
+  isFemale           Boolean?
+  isNonBinary        Boolean?
+  isTransgender      Boolean?
+  isIntersex         Boolean?
+  doesNotIdentify    Boolean?
+  otherIdentity      String?
+  address            String?
 }

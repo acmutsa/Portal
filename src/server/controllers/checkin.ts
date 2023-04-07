@@ -48,14 +48,25 @@ export async function getMemberCheckins(memberId: string): Promise<Checkin[]> {
 	});
 }
 
+export type CheckinWithMember = Checkin & { member: { id: string; name: string; email: string } };
+
 /**
  * Get all checkins associated with a specific event.
  * @param eventId
  */
-export async function getEventCheckins(eventId: string): Promise<Checkin[]> {
+export async function getEventCheckins(eventId: string): Promise<CheckinWithMember[]> {
 	return await prisma.checkin.findMany({
 		where: {
 			eventID: eventId,
+		},
+		include: {
+			member: {
+				select: {
+					name: true,
+					id: true,
+					email: true,
+				},
+			},
 		},
 	});
 }

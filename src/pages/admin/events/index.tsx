@@ -46,7 +46,7 @@ const EventViewPage: NextPage<{ json: string }> = ({ json }) => {
 	};
 
 	return (
-		<AdminRootLayout current="events">
+		<AdminRootLayout current="events" breadcrumbs={[{ name: "Events", href: "/admin/events" }]}>
 			<div className="w-full h-full">
 				<div className="flex w-full">
 					<div className="flex gap-10 justify-start my-2 p-4 bg-white border-zinc-200 border-[1px] rounded-lg">
@@ -76,7 +76,7 @@ const EventViewPage: NextPage<{ json: string }> = ({ json }) => {
 							</div>
 						</div>
 					</div>
-					<div className="overflow-scroll overflow-x-auto border-box">
+					<div className="border-box">
 						<div className="inline-block pb-1 w-full">
 							<EventDataTable
 								data={events.map((item) => ({

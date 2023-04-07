@@ -6,6 +6,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
 import { Event } from "@prisma/client";
 import { useRouter } from "next/router";
+import { format } from "date-fns";
 
 export type EventWithCount = Event & { checkinCount: number };
 
@@ -41,7 +42,7 @@ const EventDataTable: FunctionComponent<{ data: EventWithCount[] }> = ({ data })
 			onSelectionChange={(e) => setSelectedEvents(e.value)}
 			selection={selectedEvents}
 			onRowClick={({ data: { pageID } }) => {
-				router.push(`/admin/events/${pageID}`);
+				router.push(`/admin/events/${pageID}`).then();
 			}}
 			rowClassName={() => "cursor-pointer"}
 			responsiveLayout="scroll"
@@ -57,6 +58,16 @@ const EventDataTable: FunctionComponent<{ data: EventWithCount[] }> = ({ data })
 		>
 			<Column headerStyle={{ width: "2em" }} />
 			<Column sortable filter field="name" header="Name" />
+			<Column
+				sortable
+				filter
+				field="eventStart"
+				header="Date"
+				bodyClassName="whitespace-nowrap"
+				body={(data) => {
+					return format(data.eventStart, "MM/dd hh:mm a");
+				}}
+			/>
 			<Column field="description" header="Description" />
 			<Column filter field="organization" header="Organization" />
 			<Column sortable filter field="location" header="Location" />

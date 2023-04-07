@@ -54,7 +54,7 @@ const Events: NextPage<{ json: string }> = ({ json }) => {
 				<OpenGraph properties={ogp} />
 			</Head>
 			<RootLayout>
-				<div className="w-full w-[90%] mx-auto p-1">
+				<div className="w-[90%] mx-auto p-1">
 					<div className="mt-6">
 						<FilterBar
 							semesters={semesters}

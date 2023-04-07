@@ -1,9 +1,4 @@
-import {
-	GetServerSidePropsContext,
-	GetServerSidePropsResult,
-	GetStaticPropsResult,
-	NextPage,
-} from "next";
+import { GetStaticPropsResult, NextPage } from "next";
 import AdminRootLayout from "@/components/admin/AdminRootLayout";
 import Stat from "@/components/common/Stat";
 import { pluralize } from "@/utils/helpers";
@@ -65,7 +60,10 @@ const MembersView: NextPage<{ json: string }> = ({ json }) => {
 	}, [members]);
 
 	return (
-		<AdminRootLayout current="members">
+		<AdminRootLayout
+			current="members"
+			breadcrumbs={[{ name: "Members", href: "/admin/members", current: true }]}
+		>
 			<div className="w-full h-full">
 				<div className="flex w-full">
 					<div className="flex gap-10 justify-start my-2 p-4 bg-white border-zinc-200 border-[1px] rounded-lg">
@@ -92,7 +90,7 @@ const MembersView: NextPage<{ json: string }> = ({ json }) => {
 							</div>
 						</div>
 					</div>
-					<div className="overflow-scroll overflow-x-auto border-box">
+					<div className="border-box">
 						<div className="inline-block pb-1 w-full">
 							<MemberDataTable data={prettyData} />
 						</div>
