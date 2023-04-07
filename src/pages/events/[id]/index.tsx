@@ -242,7 +242,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 									</Link>
 									{globalState.admin ? (
 										<span className="w-full flex relative z-0 inline-flex shadow-sm rounded-md text-base font-medium text-white">
-											<Link legacyBehavior href={`/admin/events/${id}`}>
+											<Link legacyBehavior href={`/admin/events/${id}/modify`}>
 												<button
 													type="button"
 													className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
