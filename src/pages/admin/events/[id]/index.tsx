@@ -6,7 +6,6 @@ import { Event } from "@prisma/client";
 import { getUnique } from "@/server/controllers/events";
 import { CheckinWithMember, getEventCheckins } from "@/server/controllers/checkin";
 import EventDetails from "@/components/admin/events/EventDetails";
-import React from "react";
 import { Column } from "primereact/column";
 import { format } from "date-fns";
 import { DataTable } from "primereact/datatable";
