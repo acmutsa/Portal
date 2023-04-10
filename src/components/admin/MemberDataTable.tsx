@@ -2,7 +2,13 @@ import { DataTable } from "primereact/datatable";
 import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
-import React, { FunctionComponent, useState } from "react";
+import React, {
+	type FunctionComponent,
+	useState,
+	useRef,
+	forwardRef,
+	type ForwardRefRenderFunction,
+} from "react";
 import { EthnicityType, IdentityType, OrganizationType, PrettyMemberData } from "@/utils/transform";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -153,7 +159,10 @@ function getFilterElement<ItemType>(placeholder: string, options: string[]) {
 	};
 }
 
-const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data }) => {
+const MemberDataTable: ForwardRefRenderFunction<DataTable, { data: MemberTableItem[] }> = (
+	{ data },
+	ref
+) => {
 	const [selectedCustomers, setSelectedCustomers] = useState(null);
 	const [filters] = useState({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -196,6 +205,7 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 		<DataTable
 			id="members"
 			rowHover
+			ref={ref}
 			onSelectionChange={(e) => setSelectedCustomers(e.value)}
 			rowClassName={() => "cursor-pointer"}
 			onRowClick={({
@@ -212,6 +222,7 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 			size="small"
 			paginator
 			rows={10}
+			exportFilename={`Members ${new Date().toLocaleDateString()}`}
 			rowsPerPageOptions={[10, 25, 50, 100]}
 			globalFilterFields={[
 				"member.name",
@@ -290,4 +301,4 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 	);
 };
 
-export default MemberDataTable;
+export default forwardRef(MemberDataTable);
