@@ -9,6 +9,7 @@ import EventDetails from "@/components/admin/events/EventDetails";
 import { Column } from "primereact/column";
 import { format } from "date-fns";
 import { DataTable } from "primereact/datatable";
+import { absUrl } from "@/utils/helpers";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
@@ -16,6 +17,7 @@ import "primereact/resources/primereact.css";
 type ViewEventProps = {
 	event: Event;
 	checkins: CheckinWithMember[];
+	qrCodeValue: string;
 };
 
 export async function getServerSideProps({
@@ -46,13 +48,14 @@ export async function getServerSideProps({
 			json: superjson.stringify({
 				event,
 				checkins,
+				qrCodeValue: absUrl(`/events/${event.pageID}/check-in`),
 			}),
 		},
 	};
 }
 
 const ViewMemberPage: NextPage<{ json: string }> = ({ json }) => {
-	const { event, checkins } = superjson.parse<ViewEventProps>(json);
+	const { event, checkins, qrCodeValue } = superjson.parse<ViewEventProps>(json);
 
 	return (
 		<AdminRootLayout
@@ -68,7 +71,7 @@ const ViewMemberPage: NextPage<{ json: string }> = ({ json }) => {
 			<div className="grid grid-cols-12 space-y-2">
 				<div className="col-span-6 mb-6">
 					<div className="max-w-screen-md">
-						<EventDetails event={event} />
+						<EventDetails qrCodeValue={qrCodeValue} event={event} />
 					</div>
 				</div>
 				<div className="col-span-8">
