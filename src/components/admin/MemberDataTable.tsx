@@ -26,7 +26,7 @@ import {
 	OrganizationById,
 	OrganizationByName,
 } from "@/components/util/EnumerationData";
-import { MemberWithData } from "@/server/controllers/member";
+import { MemberWithDataAndCheckins } from "@/server/controllers/member";
 import { useRouter } from "next/router";
 import { format, formatDistanceToNow } from "date-fns";
 
@@ -70,7 +70,7 @@ FilterService.register("MATCH_IDENTITY", (a: Set<IdentityType>, b?: string) => {
 });
 
 interface MemberTableItem {
-	member: MemberWithData;
+	member: MemberWithDataAndCheckins;
 	prettyMemberData: PrettyMemberData;
 }
 
@@ -186,6 +186,10 @@ const MemberDataTable: ForwardRefRenderFunction<DataTable, { data: MemberTableIt
 			operator: FilterOperator.OR,
 			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
 		},
+		"prettyMemberData.checkins['Spring 2023']": {
+			operator: FilterOperator.OR,
+			constraints: [{ value: null, matchMode: FilterMatchMode.GREATER_THAN }],
+		},
 		"prettyMemberData.organizations": {
 			operator: FilterOperator.OR,
 			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
@@ -248,6 +252,12 @@ const MemberDataTable: ForwardRefRenderFunction<DataTable, { data: MemberTableIt
 			<Column sortable filter field="member.data.major" header="Major"></Column>
 			<Column sortable filter field="member.data.classification" header="Classification"></Column>
 			<Column
+				sortable
+				field="prettyMemberData.checkins.spring2023"
+				header="Points"
+				dataType="numeric"
+			></Column>
+			<Column
 				filter
 				field="prettyMemberData.organizations"
 				header="Organizations"
@@ -274,6 +284,7 @@ const MemberDataTable: ForwardRefRenderFunction<DataTable, { data: MemberTableIt
 				filterMatchModeOptions={[{ label: "Match", value: "MATCH_IDENTITY" }]}
 				filterMatchMode="custom"
 			/>
+
 			<Column
 				sortable
 				field="member.lastSeen"
@@ -290,6 +301,7 @@ const MemberDataTable: ForwardRefRenderFunction<DataTable, { data: MemberTableIt
 					</div>
 				)}
 			/>
+
 			{/*<Column
 				filter
 				field="member.data.address"

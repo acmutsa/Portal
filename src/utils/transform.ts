@@ -2,9 +2,10 @@
  * Utilities for transforming data representation, especially with likeness to the MemberData table.
  */
 
-import type { MemberData, Member } from "@prisma/client";
+import type { MemberData, Member, Prisma } from "@prisma/client";
 import { z } from "zod";
 import { lightFormat, parse, subYears } from "date-fns";
+import { getSemesterRange } from "@/utils/helpers";
 
 interface OrganizationData {
 	isInACM: boolean | null;
@@ -35,6 +36,19 @@ interface IdentityData {
 
 const now = new Date();
 const currentYear = now.getFullYear();
+
+interface Choice<IDType = string, NameType = string> {
+	id: IDType;
+	name: NameType;
+}
+
+const semesters: Choice[] = getSemesterRange(
+	[3, Math.max(2022, now.getUTCFullYear() - 3)],
+	now.getUTCFullYear() + 1
+).map((s) => ({
+	id: s,
+	name: s,
+}));
 
 /**
  * Provide a default value to all values in an object.
@@ -96,15 +110,31 @@ export const PrettyMemberDataSchema = z.object({
 	birthday: z.date().min(subYears(now, 50)).max(subYears(now, 14)).optional(),
 	ethnicity: z.set(EthnicityType).optional(),
 	identity: z.set(IdentityType.or(z.string())).optional(),
+	checkins: z.record(z.number().min(0)),
 });
 export type PrettyMemberData = z.infer<typeof PrettyMemberDataSchema>;
 export const PrettyMemberDataWithoutIdSchema = PrettyMemberDataSchema.omit({ id: true });
 export type PrettyMemberDataWithoutId = z.infer<typeof PrettyMemberDataWithoutIdSchema>;
 
-export const toPrettyMemberData = (member: Member, memberData: MemberData): PrettyMemberData => {
+export const toPrettyMemberData = (
+	member: Member,
+	memberData: MemberData,
+	memberCheckins: Prisma.CheckinGetPayload<{ include: { event: true } }>[]
+): PrettyMemberData => {
 	const organizations = new Set<OrganizationType>();
 	const ethnicities = new Set<EthnicityType>();
 	const identities = new Set<IdentityType | string>();
+	let checkins: { [key: string]: number } = {};
+	for (const semester of semesters) {
+		checkins[semester.name.toLowerCase().replace(/ /g, "")] = 0;
+	}
+	for (const checkin of memberCheckins) {
+		if (checkins[checkin.event.semester.toLowerCase().replace(/ /g, "")]) {
+			checkins[checkin.event.semester.toLowerCase().replace(/ /g, "")] += 1;
+		} else {
+			checkins[checkin.event.semester.toLowerCase().replace(/ /g, "")] = 1;
+		}
+	}
 
 	if (memberData.isInACM) organizations.add(OrganizationType.enum.ACM);
 	if (memberData.isInACMW) organizations.add(OrganizationType.enum.ACM_W);
@@ -152,6 +182,7 @@ export const toPrettyMemberData = (member: Member, memberData: MemberData): Pret
 		birthday: memberData.Birthday ? new Date(memberData.Birthday) : undefined,
 		ethnicity: ethnicities,
 		identity: identities,
+		checkins: checkins,
 	};
 };
 

@@ -8,13 +8,14 @@ import { TbTableExport } from "react-icons/tb";
 import MemberDataTable from "@/components/admin/MemberDataTable";
 import { useMemo, useRef } from "react";
 import { toPrettyMemberData } from "@/utils/transform";
-import { MemberData } from "@prisma/client";
+import { MemberData, Prisma } from "@prisma/client";
 import superjson from "superjson";
 import {
 	countActiveMembers,
 	countMembers,
 	getAllMembers,
 	MemberWithData,
+	MemberWithDataAndCheckins,
 } from "@/server/controllers/member";
 import { DataTable } from "primereact/datatable";
 
@@ -23,11 +24,11 @@ type MemberViewProps = {
 		active: number;
 		inactive: number;
 	};
-	members: MemberWithData[];
+	members: MemberWithDataAndCheckins[];
 };
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<{ json: string }>> {
-	const members = getAllMembers(true);
+	const members = getAllMembers(true, true);
 	const activeCount = countActiveMembers();
 	const memberCount = countMembers();
 
@@ -51,12 +52,17 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<{ json: str
 
 const MembersView: NextPage<{ json: string }> = ({ json }) => {
 	const { members, activeCount } = superjson.parse<MemberViewProps>(json);
+	type checkinsWithEvents = Prisma.CheckinGetPayload<{ include: { event: true } }>;
 
 	const prettyData = useMemo(() => {
 		return (
 			members?.map((member) => ({
 				member: member,
-				prettyMemberData: toPrettyMemberData(member, member.data || ({} as MemberData)),
+				prettyMemberData: toPrettyMemberData(
+					member,
+					member.data || ({} as MemberData),
+					member.checkins || ([] as Prisma.CheckinGetPayload<{ include: { event: true } }>[])
+				),
 			})) ?? []
 		);
 	}, [members]);
