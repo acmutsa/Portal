@@ -157,16 +157,19 @@ export const adminRouter = router({
 
 			if (event == null)
 				throw new TRPCError({
-					message: "The event you tried to delete does not exist.",
+					message: "The event you tried to add check-ins to does not exist.",
 					code: "NOT_FOUND",
 				});
 
-			// const res = await ctx.prisma.checkin.upsertMany({
-			// 	data: Array.from(input.memberIDs).map((memberID) => ({
-			// 		eventID: input.eventID,
-			// 		memberID: memberID.toLowerCase(),
-			// 		isInPerson: true,
-			// 	})),
-			// });
+			const res = await ctx.prisma.checkin.createMany({
+				data: Array.from(input.memberIDs).map((memberID) => ({
+					eventID: input.eventID,
+					memberID: memberID.toLowerCase(),
+					isInPerson: true,
+				})),
+				skipDuplicates: true,
+			});
+
+			return res;
 		}),
 });

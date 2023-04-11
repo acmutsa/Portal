@@ -10,6 +10,7 @@ import { Column } from "primereact/column";
 import { format } from "date-fns";
 import { DataTable } from "primereact/datatable";
 import { absUrl } from "@/utils/helpers";
+import { BsPlus } from "react-icons/bs";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
@@ -68,14 +69,14 @@ const ViewMemberPage: NextPage<{ json: string }> = ({ json }) => {
 				},
 			]}
 		>
-			<div className="grid grid-cols-12 space-y-2">
+			<div className="flex flex-col">
 				<div className="col-span-6 mb-6">
-					<div className="max-w-screen-md">
+					<div className="max-w-[1000px] w-full">
 						<EventDetails qrCodeValue={qrCodeValue} event={event} />
 					</div>
 				</div>
 				<div className="col-span-8">
-					<div className="max-w-screen-lg">
+					<div className="max-w-[1000px] w-full sm:rounded-lg overflow-hidden">
 						<DataTable
 							id="checkins"
 							rowHover
