@@ -143,4 +143,33 @@ export const adminRouter = router({
 				},
 			});
 		}),
+	massCreateCheckins: publicProcedure
+		.input(
+			z.object({
+				eventID: z.string(),
+				memberIDs: z.set(z.string()),
+			})
+		)
+		.mutation(async function ({ input, ctx }) {
+			await validateAdmin(ctx);
+
+			const event = await getUnique({ id: input.eventID });
+
+			if (event == null)
+				throw new TRPCError({
+					message: "The event you tried to add check-ins to does not exist.",
+					code: "NOT_FOUND",
+				});
+
+			const res = await ctx.prisma.checkin.createMany({
+				data: Array.from(input.memberIDs).map((memberID) => ({
+					eventID: input.eventID,
+					memberID: memberID.toLowerCase(),
+					isInPerson: true,
+				})),
+				skipDuplicates: true,
+			});
+
+			return res;
+		}),
 });

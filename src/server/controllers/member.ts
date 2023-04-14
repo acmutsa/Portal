@@ -8,6 +8,9 @@ import { getPreciseSemester, isValuesNull, removeEmpty } from "@/utils/helpers";
  * An explicit type containing a nullable `data` property. Used for the Member.MemberData relation.
  */
 export type MemberWithData = Prisma.MemberGetPayload<{ include: { data: true } }>;
+export type MemberWithDataAndCheckins = Prisma.MemberGetPayload<{
+	include: { data: true; checkins: { include: { event: true } } };
+}>;
 
 /**
  * A zod schema containing the updatable properties in the Member table.
@@ -66,10 +69,18 @@ export async function getMemberData(id: string): Promise<MemberData | null> {
  * Return all Members in the database.
  * @param extended If true, eager-load the extended member data. Defaults to false.
  */
-export async function getAllMembers(extended: boolean = false): Promise<Member[]> {
+export async function getAllMembers(
+	extended: boolean = false,
+	checkins: boolean = false
+): Promise<Member[]> {
 	return await prisma.member.findMany({
 		include: {
 			data: extended,
+			checkins: {
+				include: {
+					event: true,
+				},
+			},
 		},
 	});
 }

@@ -4,28 +4,31 @@ import Stat from "@/components/common/Stat";
 import { pluralize } from "@/utils/helpers";
 import Link from "next/link";
 import { BsPlus } from "react-icons/bs";
+import { TbTableExport } from "react-icons/tb";
 import MemberDataTable from "@/components/admin/MemberDataTable";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { toPrettyMemberData } from "@/utils/transform";
-import { MemberData } from "@prisma/client";
+import { MemberData, Prisma } from "@prisma/client";
 import superjson from "superjson";
 import {
 	countActiveMembers,
 	countMembers,
 	getAllMembers,
 	MemberWithData,
+	MemberWithDataAndCheckins,
 } from "@/server/controllers/member";
+import { DataTable } from "primereact/datatable";
 
 type MemberViewProps = {
 	activeCount: {
 		active: number;
 		inactive: number;
 	};
-	members: MemberWithData[];
+	members: MemberWithDataAndCheckins[];
 };
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<{ json: string }>> {
-	const members = getAllMembers(true);
+	const members = getAllMembers(true, true);
 	const activeCount = countActiveMembers();
 	const memberCount = countMembers();
 
@@ -49,15 +52,22 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<{ json: str
 
 const MembersView: NextPage<{ json: string }> = ({ json }) => {
 	const { members, activeCount } = superjson.parse<MemberViewProps>(json);
+	type checkinsWithEvents = Prisma.CheckinGetPayload<{ include: { event: true } }>;
 
 	const prettyData = useMemo(() => {
 		return (
 			members?.map((member) => ({
 				member: member,
-				prettyMemberData: toPrettyMemberData(member, member.data || ({} as MemberData)),
+				prettyMemberData: toPrettyMemberData(
+					member,
+					member.data || ({} as MemberData),
+					member.checkins || ([] as Prisma.CheckinGetPayload<{ include: { event: true } }>[])
+				),
 			})) ?? []
 		);
 	}, [members]);
+
+	const dataTableRef = useRef<DataTable>(null);
 
 	return (
 		<AdminRootLayout
@@ -81,6 +91,15 @@ const MembersView: NextPage<{ json: string }> = ({ json }) => {
 							</span>
 							<div className="grow" />
 							<div className="justify-self-end">
+								<button
+									onClick={() => dataTableRef.current?.exportCSV()}
+									className="inline-flex h-8 md:h-9 text-sm whitespace-nowrap md:text-base justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 shadow-inner hover:shadow-inner-md-2 rounded-lg text-white font-inter font-medium"
+								>
+									<TbTableExport className="h-6 w-6 p-1" />
+									Export
+								</button>
+							</div>
+							<div className="justify-self-end">
 								<Link href="/admin/members/new">
 									<button className="inline-flex h-8 md:h-9 text-sm whitespace-nowrap md:text-base justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 shadow-inner hover:shadow-inner-md-2 rounded-lg text-white font-inter font-medium">
 										<BsPlus className="h-6 w-6" />
@@ -92,7 +111,7 @@ const MembersView: NextPage<{ json: string }> = ({ json }) => {
 					</div>
 					<div className="border-box">
 						<div className="inline-block pb-1 w-full">
-							<MemberDataTable data={prettyData} />
+							<MemberDataTable data={prettyData} ref={dataTableRef} />
 						</div>
 					</div>
 				</div>

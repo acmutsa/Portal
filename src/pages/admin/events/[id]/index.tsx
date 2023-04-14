@@ -6,10 +6,11 @@ import { Event } from "@prisma/client";
 import { getUnique } from "@/server/controllers/events";
 import { CheckinWithMember, getEventCheckins } from "@/server/controllers/checkin";
 import EventDetails from "@/components/admin/events/EventDetails";
-import React from "react";
 import { Column } from "primereact/column";
 import { format } from "date-fns";
 import { DataTable } from "primereact/datatable";
+import { absUrl } from "@/utils/helpers";
+import { BsPlus } from "react-icons/bs";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
@@ -17,6 +18,7 @@ import "primereact/resources/primereact.css";
 type ViewEventProps = {
 	event: Event;
 	checkins: CheckinWithMember[];
+	qrCodeValue: string;
 };
 
 export async function getServerSideProps({
@@ -47,13 +49,14 @@ export async function getServerSideProps({
 			json: superjson.stringify({
 				event,
 				checkins,
+				qrCodeValue: absUrl(`/events/${event.pageID}/check-in`),
 			}),
 		},
 	};
 }
 
 const ViewMemberPage: NextPage<{ json: string }> = ({ json }) => {
-	const { event, checkins } = superjson.parse<ViewEventProps>(json);
+	const { event, checkins, qrCodeValue } = superjson.parse<ViewEventProps>(json);
 
 	return (
 		<AdminRootLayout
@@ -66,14 +69,14 @@ const ViewMemberPage: NextPage<{ json: string }> = ({ json }) => {
 				},
 			]}
 		>
-			<div className="grid grid-cols-12 space-y-2">
+			<div className="flex flex-col">
 				<div className="col-span-6 mb-6">
-					<div className="max-w-screen-md">
-						<EventDetails event={event} />
+					<div className="max-w-[1000px] w-full">
+						<EventDetails qrCodeValue={qrCodeValue} event={event} />
 					</div>
 				</div>
 				<div className="col-span-8">
-					<div className="max-w-screen-lg">
+					<div className="max-w-[1000px] w-full sm:rounded-lg overflow-hidden">
 						<DataTable
 							id="checkins"
 							rowHover

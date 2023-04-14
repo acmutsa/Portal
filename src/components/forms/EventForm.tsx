@@ -100,6 +100,8 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 		name: s,
 	}));
 
+	const currentSemeterChoice = semesters.find((s) => s.name == currentSemester);
+
 	const {
 		register,
 		watch,
@@ -113,6 +115,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 		mode: "onChange",
 		defaultValues: {
 			points: 1,
+			semester: currentSemeterChoice,
 			eventStart: now,
 			eventEnd: now,
 			formOpen: now,

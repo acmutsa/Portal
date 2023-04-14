@@ -2,16 +2,13 @@ import { DataTable } from "primereact/datatable";
 import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
 import { Dropdown } from "primereact/dropdown";
 import { FilterMatchMode, FilterOperator, FilterService } from "primereact/api";
-import React, { FunctionComponent, useMemo, useState } from "react";
-import { trpc } from "@/utils/trpc";
+import React, { forwardRef, ForwardRefRenderFunction, useState } from "react";
 import {
 	EthnicityType,
 	IdentityType,
 	OrganizationType,
 	PrettyMemberDataType,
-	toPrettyMemberData,
 } from "@/utils/transform";
-import type { Member, MemberData } from "@prisma/client";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.css";
@@ -28,7 +25,7 @@ import {
 	OrganizationById,
 	OrganizationByName,
 } from "@/components/util/EnumerationData";
-import { MemberWithData } from "@/server/controllers/member";
+import { MemberWithDataAndCheckins } from "@/server/controllers/member";
 import { useRouter } from "next/router";
 import { format, formatDistanceToNow } from "date-fns";
 
@@ -72,8 +69,8 @@ FilterService.register("MATCH_IDENTITY", (a: Set<IdentityType>, b?: string) => {
 });
 
 interface MemberTableItem {
-	member: MemberWithData;
 	prettyMemberData: PrettyMemberDataType;
+	member: MemberWithDataAndCheckins;
 }
 
 const organizationCell = ({ prettyMemberData: { organizations } }: MemberTableItem) => {
@@ -161,7 +158,10 @@ function getFilterElement<ItemType>(placeholder: string, options: string[]) {
 	};
 }
 
-const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data }) => {
+const MemberDataTable: ForwardRefRenderFunction<DataTable, { data: MemberTableItem[] }> = (
+	{ data }: any,
+	ref: React.LegacyRef<DataTable> | undefined
+) => {
 	const [selectedCustomers, setSelectedCustomers] = useState(null);
 	const [filters] = useState({
 		global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -185,6 +185,10 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 			operator: FilterOperator.OR,
 			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
 		},
+		"prettyMemberData.checkins['Spring 2023']": {
+			operator: FilterOperator.OR,
+			constraints: [{ value: null, matchMode: FilterMatchMode.GREATER_THAN }],
+		},
 		"prettyMemberData.organizations": {
 			operator: FilterOperator.OR,
 			constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }],
@@ -204,6 +208,7 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 		<DataTable
 			id="members"
 			rowHover
+			ref={ref}
 			onSelectionChange={(e) => setSelectedCustomers(e.value)}
 			rowClassName={() => "cursor-pointer"}
 			onRowClick={({
@@ -220,6 +225,7 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 			size="small"
 			paginator
 			rows={10}
+			exportFilename={`Members ${new Date().toLocaleDateString()}`}
 			rowsPerPageOptions={[10, 25, 50, 100]}
 			globalFilterFields={[
 				"member.name",
@@ -244,6 +250,12 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 			<Column filter field="member.id" header="ABC123"></Column>
 			<Column sortable filter field="member.data.major" header="Major"></Column>
 			<Column sortable filter field="member.data.classification" header="Classification"></Column>
+			<Column
+				sortable
+				field="prettyMemberData.checkins.spring2023"
+				header="Points"
+				dataType="numeric"
+			></Column>
 			<Column
 				filter
 				field="prettyMemberData.organizations"
@@ -271,6 +283,7 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 				filterMatchModeOptions={[{ label: "Match", value: "MATCH_IDENTITY" }]}
 				filterMatchMode="custom"
 			/>
+
 			<Column
 				sortable
 				field="member.lastSeen"
@@ -287,6 +300,7 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 					</div>
 				)}
 			/>
+
 			{/*<Column
 				filter
 				field="member.data.address"
@@ -298,4 +312,4 @@ const MemberDataTable: FunctionComponent<{ data: MemberTableItem[] }> = ({ data 
 	);
 };
 
-export default MemberDataTable;
+export default forwardRef(MemberDataTable);

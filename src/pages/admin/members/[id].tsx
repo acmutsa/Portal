@@ -1,13 +1,18 @@
 import AdminRootLayout from "@/components/admin/AdminRootLayout";
+import { getPreciseSemester } from "@/utils/helpers";
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next";
 import { Member } from "@prisma/client";
 import superjson from "superjson";
 import { getMember } from "@/server/controllers/member";
 import { z } from "zod";
 import { format, formatDistanceToNow } from "date-fns";
+import { prisma } from "@/server/db/client";
+import { type SimpleCheckin } from "@/components/member/StatusView";
 
 type ViewMemberProps = {
 	member: Member;
+	checkIns: SimpleCheckin[];
+	currentSemester: string;
 };
 
 export async function getServerSideProps({
@@ -25,21 +30,50 @@ export async function getServerSideProps({
 
 	const member = await getMember(parsedId.data);
 
+	const checkins = (
+		await prisma.checkin.findMany({
+			where: {
+				memberID: parsedId.data,
+				event: {
+					semester: getPreciseSemester(),
+				},
+			},
+			select: {
+				event: {
+					select: {
+						// Select ONLY the checkins name and start time.
+						name: true,
+						eventStart: true,
+						points: true,
+					},
+				},
+			},
+		})
+	).map((checkin) => ({
+		eventName: checkin.event.name,
+		eventDate: checkin.event.eventStart.toDateString(),
+		points: checkin.event.points,
+	}));
+
 	return {
 		props: {
 			json: superjson.stringify({
 				member,
+				currentSemester: getPreciseSemester(),
+				checkIns: checkins,
 			}),
 		},
 	};
 }
 
 const ViewMemberPage: NextPage<{ json: string }> = ({ json }) => {
-	const { member } = superjson.parse<ViewMemberProps>(json);
+	const { member, currentSemester, checkIns } = superjson.parse<ViewMemberProps>(json);
 	const details = [
 		["Name", member.name],
 		["Join Date", format(member.joinDate, "MMMM do, yyyy h:mma")],
 		["myUTSA ID", member.id],
+		["Email", member.email],
+		[`Member Points (${currentSemester})`, checkIns.length],
 		[
 			"Last Seen",
 			member.lastSeen != null ? (
