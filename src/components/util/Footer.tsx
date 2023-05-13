@@ -26,7 +26,7 @@ const Footer: FunctionComponent<DisclosureProps> = ({ className }: DisclosurePro
 			{version != undefined ? (
 				<>
 					|{" "}
-					<Link className="underline" href="https://github.com/UTSA-ACM/Portal">
+					<Link className="underline" href="https://github.com/acmutsa/Portal">
 						v{version}
 					</Link>
 				</>
