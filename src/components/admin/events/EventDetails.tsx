@@ -156,7 +156,7 @@ export default function EventDetails({ event, qrCodeValue }: EventDetailsProps) 
 							<QRCode id="QRCode" className="hidden" value={qrCodeValue} />
 						</button>
 						<Link
-							href={`/admin/events/${event.id}/modify`}
+							href={`/admin/events/${event.pageID}/modify`}
 							className="inline-flex h-8 md:h-9 text-sm whitespace-nowrap md:text-base justify-center items-center align-middle mx-3 p-2 pr-4 bg-indigo-500 hover:bg-indigo-600 shadow-inner hover:shadow-inner-md-2 rounded-lg text-white font-inter font-medium"
 						>
 							<BsPencilSquare className="h-6 w-6 p-1" />
