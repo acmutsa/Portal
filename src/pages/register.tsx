@@ -283,6 +283,9 @@ const Join: NextPage = () => {
 									</>
 								);
 							})}
+							<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
+								Clubs
+							</p>
 
 							<span className="block text-sm md:text-base font-medium text-slate-700">
 								Ethnicity
@@ -298,6 +301,9 @@ const Join: NextPage = () => {
 									</>
 								);
 							})}
+							<p className="mb-1 text-[13px] invisible peer-invalid:visible text-pink-600 text-xs sm:text-sm">
+								Ethnicity
+							</p>
 
 							<span className="block text-sm md:text-base font-medium text-slate-700">
 								Shirt type
