@@ -7,7 +7,6 @@ import {
 	countActiveMembers,
 	getAllMembers,
 	getMember,
-	getMemberData,
 	MemberWithData,
 	PrettyMemberSchema,
 	setMemberSeen,
@@ -124,65 +123,6 @@ export const memberRouter = router({
 				});
 
 			return isCheckinOpen(event);
-		}),
-
-	createProfile: publicProcedure
-		.input(
-			z.object({
-				name: z.string(),
-				email: z.string().email(),
-				shirtSize: z.string(),
-				shirtType: z.string(),
-				abc123: z.string(),
-				graduationDate: z.string(),
-				addressLineOne: z.string(),
-				city: z.string(),
-				state: z.string(),
-				zipcode: z.string(),
-				organizations: z.array(z.string()),
-				classification: z.string(),
-				major: z.string(),
-				identity: z.array(z.string()),
-				ethnicities: z.array(z.string()),
-			})
-		)
-		.mutation(async function ({ ctx, input }) {
-			await ctx.prisma.member.create({
-				data: {
-					name: input.name,
-					email: input.email.toLowerCase(),
-					joinDate: new Date(),
-					id: input.abc123.toLowerCase(),
-					extendedMemberData: "{}",
-					data: {
-						create: {
-							major: input.major,
-							classification: input.classification,
-							graduationDate: input.graduationDate,
-							shirtIsUnisex: input.shirtType === "Unisex",
-							shirtSize: input.shirtSize,
-							isInACM: input.organizations.includes("ACM"),
-							isInACMW: input.organizations.includes("ACM_W"),
-							isInRC: input.organizations.includes("ROWDY_CREATORS"),
-							isInICPC: input.organizations.includes("ICPC"),
-							isInCIC: input.organizations.includes("CODING_IN_COLOR"),
-							isBlackorAA: input.ethnicities.includes("African American or Black"),
-							isAsian: input.ethnicities.includes("Asian"),
-							isNAorAN: input.ethnicities.includes("Native American/Alaskan Native"),
-							isNHorPI: input.ethnicities.includes("Native Hawaiian or Pacific Islander"),
-							isHispanicorLatinx: input.ethnicities.includes("Hispanic / Latinx"),
-							isWhite: input.ethnicities.includes("White"),
-							isMale: input.identity.includes("Male"),
-							isFemale: input.identity.includes("Female"),
-							isNonBinary: input.identity.includes("Non-Binary"),
-							isTransgender: input.identity.includes("Transgender"),
-							isIntersex: input.identity.includes("Intersex"),
-							doesNotIdentify: input.identity.includes("I prefer not to say"),
-							address: `${input.addressLineOne}, ${input.city}, ${input.state} ${input.zipcode}`,
-						},
-					},
-				},
-			});
 		}),
 	updateProfile: publicProcedure
 		.input(
