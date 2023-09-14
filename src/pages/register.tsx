@@ -5,6 +5,7 @@ import Head from "next/head";
 import RootLayout from "@/components/layout/RootLayout";
 import Balancer from "react-wrap-balancer";
 import Link from "next/link";
+import c from "@/portal.config";
 
 const Join: NextPage = () => {
 	const ogp = useOpenGraph({
@@ -26,13 +27,13 @@ const Join: NextPage = () => {
 						<h2 className="font-black text-8xl">Welcome!</h2>
 						<p className="pt-3 font-semibold w-full">
 							<Balancer ratio={0.4}>
-								This form will register you as a member of The Association for Computing Machinery
-								at UTSA! Curious about how membership works? Check out our{" "}
-								<Link className="underline" href="https://wiki.acmutsa.org/faq">
+								This form will register you as a member of {c.name.long}! Curious about how
+								membership works? Check out our{" "}
+								<Link className="underline" href={c.links.faq}>
 									FAQs
 								</Link>{" "}
 								or join us on{" "}
-								<Link className="underline" href={"https://go.acmutsa.org/discord"}>
+								<Link className="underline" href={c.links.discord}>
 									Discord
 								</Link>
 								!
