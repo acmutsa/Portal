@@ -6,6 +6,7 @@ import Head from "next/head";
 import useNProgress from "@/utils/useNProgress";
 import { Analytics } from "@vercel/analytics/react";
 import "@/styles/globals.scss";
+import "@/styles/globals.css";
 import "nprogress/nprogress.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {

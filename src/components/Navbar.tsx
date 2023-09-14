@@ -139,7 +139,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({ authentication }) => {
 		];
 
 	return (
-		<div className="h-[4.5rem] p-1 w-full bg-primary-600 font-inter drop-shadow-lg z-50 text-white text-xl fixed">
+		<div className="h-[4.5rem] p-1 w-full bg-portal-primary-600 font-inter drop-shadow-lg z-50 text-white text-xl fixed">
 			<div className="flex justify-between h-full w-full max-w-[100vw] px-0.5 xs:px-1 sm:px-6 md:px-16 lg:pr-32 mx-auto">
 				<Link href="/">
 					<div className="h-full mx-1 sm:mx-2 flex items-center cursor-pointer">

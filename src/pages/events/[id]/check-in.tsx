@@ -205,7 +205,7 @@ const CheckinView: NextPage<{ json: string }> = ({ json }) => {
 							>
 								{remainingCharacters}
 							</span>
-							<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[10rem]">
+							<button className="h-[36px] my-1.5 w-full bg-portal-primary font-inter text-white rounded font-semibold max-w-[10rem]">
 								{form == null ? "Submit" : "Save"}
 							</button>
 						</div>

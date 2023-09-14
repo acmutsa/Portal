@@ -34,7 +34,7 @@ export const OrganizationByName: Record<string, OrganizationType> = Object.fromE
 );
 
 export const OrganizationBadgeClasses: Record<OrganizationType, string> = {
-	ACM: "text-secondary-700 bg-secondary-100",
+	ACM: "text-secondary-700 bg-portal-secondary-100",
 	ACM_W: "text-[#F2751B] bg-[#f2e7df]",
 	ICPC: "text-yellow-500 bg-yellow-100",
 	ROWDY_CREATORS: "text-sky-600 bg-sky-100",

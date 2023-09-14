@@ -211,7 +211,9 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 											disabled={!checkinOpen}
 											className={classNames(
 												"w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
-												!checkinOpen ? "bg-primary-200" : "bg-primary-500 hover:bg-primary-800"
+												!checkinOpen
+													? "bg-portal-primary-200"
+													: "bg-portal-primary-500 hover:bg-portal-primary-800"
 											)}
 										>
 											<BsBookmarkPlusFill className="mr-2 w-5 h-5" />
@@ -225,7 +227,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 									<Link legacyBehavior href={calendarLink} target="_blank">
 										<button
 											type="button"
-											className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+											className="w-full bg-portal-secondary hover:bg-portal-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
 										>
 											<SiGooglecalendar className="mr-2 w-5 h-5" />
 											Add to Google Calendar

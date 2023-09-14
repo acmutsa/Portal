@@ -66,7 +66,7 @@ th {
   touch-action: none;
 
   &.isResizing {
-    @apply bg-accent opacity-90;
+    @apply bg-portal-accent opacity-90;
   }
 }
 

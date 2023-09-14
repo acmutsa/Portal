@@ -87,7 +87,7 @@ export default function CustomSelect<TFormValues extends FieldValues>({
 										key={choice.id}
 										className={({ active }) =>
 											classNames(
-												active ? "text-white bg-secondary" : "text-gray-900",
+												active ? "text-white bg-portal-secondary" : "text-gray-900",
 												"cursor-default select-none relative py-2 pl-3 pr-9"
 											)
 										}

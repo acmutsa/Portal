@@ -85,7 +85,7 @@ const organizationCell = ({ prettyMemberData: { organizations } }: MemberTableIt
 				return (
 					<Badge
 						key={index}
-						parentClass={isCIC ? "bg-primary-700 !font-semibold m-0.5 rounded" : undefined}
+						parentClass={isCIC ? "bg-portal-primary-700 !font-semibold m-0.5 rounded" : undefined}
 						colorClass={classNames(isCIC ? null : "m-0.5", badgeClass)}
 					>
 						{OrganizationById[organization]}
