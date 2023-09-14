@@ -11,7 +11,8 @@
     "lint": "next lint",
     "postinstall": "prisma generate",
     "studio": "npx prisma studio",
-    "analyze": "cross-env ANALYZE=true next build"
+    "analyze": "cross-env ANALYZE=true next build",
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.3",
