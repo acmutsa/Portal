@@ -45,18 +45,23 @@ type EventStaticProps = {
 };
 
 const EventView: NextPage<{ json: string }> = ({ json }) => {
+	// Decode the ISR-generated JSON data.
 	const { event, qrcodeData } = superjson.parse<EventStaticProps>(json);
 
 	const router = useRouter();
 	const { id, notify } = router.query;
-	const [{ member: isMember }] = useGlobalContext();
+	const [globalState] = useGlobalContext();
+
+	// Query whether or not the member is already checked in for this event.
+	// Since this is a ISR page, we can't fetch this server-side, a query is required.
 	const { data: existingCheckin } = trpc.events.checkedIn.useQuery(
 		{ eventId: event.id },
 		{
-			enabled: isMember ?? false,
+			enabled: globalState.member ?? false,
 		}
 	);
-
+	
+	// Create the OpenGraph metadata for this page.
 	const ogp = useOpenGraph({
 		title: event.name,
 		description: `Come and join ${event.organization} for ${event.name}!`,
@@ -73,10 +78,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 			["Where", event.location!],
 		],
 	});
-	const formatString = "h:mmaaaaaa";
-	const startString = lightFormat(event.eventStart, formatString);
-	const endString = lightFormat(event.eventEnd, formatString);
-	const [globalState] = useGlobalContext();
+	
 
 	/**
 	 * If any issue crops up where the form toast keeps being shown despite my attempts to ensure it won't,
@@ -119,6 +121,9 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 		}
 	}, [router]);
 
+	const formatString = "h:mmaaaaa"; // Like 1:04pm
+	const startString = lightFormat(event.eventStart, formatString);
+	const endString = lightFormat(event.eventEnd, formatString);
 	const calendarLink = generateGoogleCalendarLink(
 		event.eventStart,
 		event.eventEnd,
@@ -173,6 +178,13 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 											No description was provided for this event.
 										</p>
 									)}
+									{/*
+										This section can't be rendered on the server as it uses .toLocaleString.
+										If I remember correctly, this causes a hydration mismatch error at minimum, and even if bypassed, it
+										won't render a user-locale accurate datetime string.
+										It's possible a custom formatter could be used to get around this, but I'm not sure it's necessary.
+										If switching off NoSSR, use date-fns as the server date formatter.
+									*/}
 									<NoSSR>
 										<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-2 lg:gap-y-4 md:grid-cols-2">
 											<div className="sm:col-span-1">
@@ -306,6 +318,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 	);
 };
 
+// Revalidate using EVENT_PAGE_REVALIDATION_TIME environment variable, with a minimum of 20 seconds.
 const revalidationTime = Math.max(env.EVENT_PAGE_REVALIDATION_TIME, 20);
 
 export async function getStaticProps({
@@ -317,6 +330,7 @@ export async function getStaticProps({
 		},
 	});
 
+	// If the event doesn't exist, return a 404. This
 	if (event == null) {
 		return {
 			notFound: true,
