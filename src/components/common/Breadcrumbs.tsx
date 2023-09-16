@@ -1,10 +1,10 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, ReactNode } from "react";
 import { HiHome, HiChevronRight } from "react-icons/hi";
 import Link from "next/link";
 import { UrlObject } from "url";
 
 export type Breadcrumb = {
-	label: string;
+	label: ReactNode;
 	href?: string | UrlObject;
 	active?: boolean;
 };
@@ -13,6 +13,16 @@ declare type BreadcrumbProps = {
 	value: Breadcrumb[];
 };
 
+/**
+ * A breadcrumbs component helps show the user where they are in the app's hierarchy.
+ * It also provides a clickable trail of links to navigate back to 'parent' pages.
+ * 
+ * @param value An array of Breadcrumb objects.
+ * @param value[].label The text to display for the breadcrumb.
+ * @param value[].href The URL to link to.
+ * @param value[].active Whether the breadcrumb is the current page.
+ * @constructor 
+ */
 const Breadcrumbs: FunctionComponent<BreadcrumbProps> = ({ value }) => {
 	return (
 		<nav className="flex" aria-label="Breadcrumb">
@@ -25,9 +35,9 @@ const Breadcrumbs: FunctionComponent<BreadcrumbProps> = ({ value }) => {
 						</a>
 					</div>
 				</li>
-				{value.map((crumb) => {
+				{value.map((crumb, index) => {
 					return (
-						<li key={crumb.label}>
+						<li key={index}>
 							<div className="flex items-center max-w-full">
 								<HiChevronRight
 									className="mr-3 mt-0.5 flex-shrink-0 h-5 w-5 text-gray-400"
