@@ -6,7 +6,7 @@ import Head from "next/head";
 import useNProgress from "@/utils/useNProgress";
 import { Analytics } from "@vercel/analytics/react";
 import "@/styles/globals.scss";
-import "nprogress/nprogress.css";
+import "nprogress/nprogress.css"; // CSS for nProgress, adds the app-wide progress bar.
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const [globalState, setGlobalState] = useState(initialState);

@@ -6,6 +6,7 @@ export const cookies = {
 	admin_password: "admin_pass",
 };
 
+// TODO: Should any of htese be conditional based on the time? Or any other attributes?
 export const checkin_success_message = [
 	"Great job! You're checked in and ready to enjoy the event.",
 	"Welcome to the event! You're now officially checked in.",
