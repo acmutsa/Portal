@@ -167,7 +167,7 @@ export const formatDateCell = (value: Date) => {
  * Combines classes into a single string. Supports null or undefined classes while adding spaces between valid classes.
  * @param classes
  */
-export function classNames(...classes: (string | null | undefined)[]) {
+export function classNames(...classes: (string | null | undefined | boolean)[]) {
 	return classes.filter(Boolean).join(" ");
 }
 

@@ -30,6 +30,7 @@ import { trpc } from "@/utils/trpc";
 import RootLayout from "@/components/layout/RootLayout";
 import superjson from "superjson";
 import { checkin_success_message } from "@/utils/constants";
+import DeactivatableLink from "@/components/common/DeactivatableLink";
 
 interface eventPageParams {
 	params: { id: string };
@@ -60,7 +61,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 			enabled: globalState.member ?? false,
 		}
 	);
-	
+
 	// Create the OpenGraph metadata for this page.
 	const ogp = useOpenGraph({
 		title: event.name,
@@ -78,7 +79,6 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 			["Where", event.location!],
 		],
 	});
-	
 
 	/**
 	 * If any issue crops up where the form toast keeps being shown despite my attempts to ensure it won't,
@@ -121,13 +121,14 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 		}
 	}, [router]);
 
-	const formatString = "h:mmaaaaa"; // Like 1:04pm
+	const formatString = "h:mmaaaaa"; // Formats like 1:04pm
 	const startString = lightFormat(event.eventStart, formatString);
 	const endString = lightFormat(event.eventEnd, formatString);
 	const calendarLink = generateGoogleCalendarLink(
 		event.eventStart,
 		event.eventEnd,
 		event.name,
+		// TODO: Create a description length limit, as all of this is passed in as query parameters. There is a theoretical limit. Ideal implementation would use newline delimiters and only limit the dynamic description portion.
 		`Location: ${event.location}\nWhen: ${startString} to ${endString}\n\n${
 			event.description ?? `Come join us for ${event.name}`
 		}`,
@@ -140,6 +141,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 	}${formatRelative(!isPast(event.eventStart) ? event.eventStart : event.eventEnd, now)}`;
 
 	const checkinOpen = isCheckinOpen(event);
+	const disableCheckin = !(checkinOpen && globalState.member);
 	return (
 		<>
 			<Head>
@@ -217,53 +219,51 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 									</NoSSR>
 								</div>
 								<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
-									<Link legacyBehavior href={`/events/${id}/check-in`}>
-										<button
-											type="button"
-											disabled={!checkinOpen}
-											className={classNames(
-												"w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
-												!checkinOpen ? "bg-primary-200" : "bg-primary-500 hover:bg-primary-800"
-											)}
-										>
-											<BsBookmarkPlusFill className="mr-2 w-5 h-5" />
-											{checkinOpen
+									<DeactivatableLink
+										href={`/events/${id}/check-in`}
+										disabled={disableCheckin}
+										className={classNames(
+											"w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center",
+											!disableCheckin && "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
+											!checkinOpen ? "bg-primary-200" : "bg-primary-500 hover:bg-primary-800"
+										)}
+									>
+										<BsBookmarkPlusFill className="mr-2 w-5 h-5" />
+										{checkinOpen
+											? globalState.member
 												? existingCheckin
 													? "Edit Feedback"
 													: "Check-in"
-												: "Check-in closed."}
-										</button>
-									</Link>
-									<Link legacyBehavior href={calendarLink} target="_blank">
-										<button
-											type="button"
-											className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-										>
-											<SiGooglecalendar className="mr-2 w-5 h-5" />
-											Add to Google Calendar
-										</button>
-									</Link>
-									<Link legacyBehavior href={"https://twitch.tv/acmutsa"} target="_blank">
-										<button
-											type="button"
-											className="w-full bg-twitch-light hover:bg-twitch-dark border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-										>
-											<SiTwitch className="mr-2 w-5 h-5" />
-											Watch on Twitch
-										</button>
+												: "Login to Check-in"
+											: "Check-in closed."}
+									</DeactivatableLink>
+									<DeactivatableLink
+										href={calendarLink}
+										target="_blank"
+										className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+									>
+										<SiGooglecalendar className="mr-2 w-5 h-5" />
+										Add to Google Calendar
+									</DeactivatableLink>
+									<Link
+										href={"https://twitch.tv/acmutsa"}
+										as="button"
+										target="_blank"
+										className="w-full bg-twitch-light hover:bg-twitch-dark border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+									>
+										<SiTwitch className="mr-2 w-5 h-5" />
+										Watch on Twitch
 									</Link>
 									{globalState.admin ? (
 										<span className="w-full flex relative z-0 inline-flex shadow-sm rounded-md text-base font-medium text-white">
-											<Link legacyBehavior href={`/admin/events/${id}`}>
-												<button
-													type="button"
-													className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-												>
-													<BsPencilFill className="mr-2 w-4 h-4" />
-													Edit
-												</button>
+											<Link
+												href={`/admin/events/${id}`}
+												className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+											>
+												<BsPencilFill className="mr-2 w-4 h-4" />
+												Edit
 											</Link>
-											<Link legacyBehavior href={`/admin/events/${id}?action=delete`}>
+											<Link href={`/admin/events/${id}?action=delete`}>
 												<button className="bg-rose-500 hover:bg-rose-600 relative inline-flex items-center px-2 py-3 rounded-r-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
 													<span className="sr-only">Open options</span>
 													<BsTrashFill className="h-5 w-5" aria-hidden="true" />
