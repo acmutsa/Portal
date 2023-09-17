@@ -28,6 +28,7 @@ const NewMemberView: FunctionComponent = () => {
 		control,
 		formState: { errors },
 	} = useForm();
+
 	const didSubmit = async (data: any) => {
 		// Birthday may be invalid/NaN when form submits.
 		// date-fns will format as UTC, but it will be in CST, thus -6 hours behind for Texas/CST.
@@ -55,7 +56,7 @@ const NewMemberView: FunctionComponent = () => {
 			major,
 			graduationDate,
 			identity,
-			ethnicity: ethnicities,
+			ethnicity: new Set([ethnicity]),
 			birthday,
 		});
 	};
@@ -68,7 +69,10 @@ const NewMemberView: FunctionComponent = () => {
 		<div className="w-full h-full p-[5px]">
 			<div className="max-w-[50rem] mx-auto">
 				<div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-					<form onSubmit={handleSubmit(didSubmit)}>
+					<form onSubmit={
+						() => {}
+						// disabled: handleSubmit(didSubmit)
+					}>
 						<div className="shadow rounded-md">
 							<div className="bg-white py-6 px-4 space-y-6 sm:p-6">
 								<div>
@@ -305,12 +309,17 @@ const NewMemberView: FunctionComponent = () => {
 								</div>
 							</div>
 							<div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-								<button
-									type="submit"
-									className="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-								>
-									Create
-								</button>
+								{/* Disabled: remove this div before re-enabling, the button stays. */}
+								<div className="cursor-not-allowed inline-block">
+									<button
+										type="submit"
+										disabled={true}
+										className="bg-violet-400 pointer-events-none border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+										// Disabled: className="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+									>
+										Disabled
+									</button>
+								</div>
 							</div>
 						</div>
 					</form>
