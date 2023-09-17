@@ -7,19 +7,22 @@ const {
 	publicRuntimeConfig: { version },
 } = getConfig();
 
-interface DisclosureProps {
+export type FooterProps = {
 	className?: string;
-}
+	darkText?: boolean;
+};
 
-const Footer: FunctionComponent<DisclosureProps> = ({ className }: DisclosureProps) => {
+const Footer: FunctionComponent<FooterProps> = ({ className, darkText: darkText }: FooterProps) => {
 	return (
 		<footer
 			className={classNames(
 				className,
-				"pt-10 footer w-full font-inter opacity-[60%] z-10 text-center text-[12px] mx-auto text-white py-1"
+				darkText ? "text-zinc-900" : "text-zinc-100",
+				"pt-10 footer w-full font-inter opacity-[60%] z-10 text-center text-[12px] mx-auto py-1"
 			)}
 		>
-			Made with <span className="disclosure-symbol">&lt;/&gt;</span> & ♥ @ ACM UTSA |{" "}
+			Made with <span className="disclosure-symbol">&lt;/&gt;</span> &amp; &hearts; @ ACM
+			UTSA |{" "}
 			<a href="https://forms.gle/eqj1gMRRhZKitAn47" target={"_blank"} className="underline">
 				Report a Bug
 			</a>{" "}
@@ -35,7 +38,8 @@ const Footer: FunctionComponent<DisclosureProps> = ({ className }: DisclosurePro
 			<Link href="/terms-of-service" className="underline">
 				TOS
 			</Link>
-			<br />© The Association for Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
+			<br />
+			&copy; The Association for Computing Machinery at UTSA {new Date().getFullYear()}. All Rights
 			Reserved.
 		</footer>
 	);
