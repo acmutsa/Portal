@@ -1,15 +1,15 @@
-import { FunctionComponent } from "react";
-import { useForm, Controller } from "react-hook-form";
 import CustomSelect from "@/components/forms/CustomSelect";
-import majors from "@/utils/majors.json";
 import classifications from "@/utils/classifications.json";
-import identities from "@/utils/identities.json";
-import months from "@/utils/months.json";
 import ethnicities from "@/utils/ethnicities.json";
 import { classNames, range } from "@/utils/helpers";
-import { BsExclamationCircle } from "react-icons/bs";
-import { PrettyMemberDataSchema, toMemberData } from "@/utils/transform";
+import identities from "@/utils/identities.json";
+import majors from "@/utils/majors.json";
+import months from "@/utils/months.json";
+import { PrettyMemberDataSchema } from "@/utils/transform";
 import { addMinutes } from "date-fns";
+import { FunctionComponent } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { BsExclamationCircle } from "react-icons/bs";
 
 const currentYear = new Date().getFullYear();
 const years = range(currentYear - 4, currentYear + 4).map((year) => ({
