@@ -77,7 +77,7 @@ const RootLayout: FunctionComponent<RootLayoutProps> = ({
 					}}
 				/>
 				<div className={classNames(innerClassName, "flex flex-grow")}>{children}</div>
-				{footer ? <Footer className={classNames(footerClass, "")} /> : null}
+				{footer ? <Footer className={footerClass} /> : null}
 			</div>
 		</>
 	);
