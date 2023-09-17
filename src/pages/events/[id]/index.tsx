@@ -24,13 +24,14 @@ import { Event } from "@prisma/client";
 import { BsBookmarkPlusFill, BsPencilFill, BsTrashFill } from "react-icons/bs";
 import { useGlobalContext } from "@/components/common/GlobalContext";
 import { toast } from "react-hot-toast";
-import Toast from "@/components/common/Toast";
+import Toast, {ToastType} from "@/components/common/Toast";
 import { useEffect } from "react";
 import { trpc } from "@/utils/trpc";
 import RootLayout from "@/components/layout/RootLayout";
 import superjson from "superjson";
 import { checkin_success_message } from "@/utils/constants";
 import DeactivatableLink from "@/components/common/DeactivatableLink";
+import { z } from "zod";
 
 interface eventPageParams {
 	params: { id: string };
@@ -45,12 +46,15 @@ type EventStaticProps = {
 	existingCheckin: boolean;
 };
 
+const NotificationEnum = z.enum(["formClosed", "checkinSuccess"]);
+export type NotificationType = z.infer<typeof NotificationEnum>;
+
 const EventView: NextPage<{ json: string }> = ({ json }) => {
 	// Decode the ISR-generated JSON data.
 	const { event, qrcodeData } = superjson.parse<EventStaticProps>(json);
 
 	const router = useRouter();
-	const { id, notify } = router.query;
+	const { id } = router.query;
 	const [globalState] = useGlobalContext();
 
 	// Query whether or not the member is already checked in for this event.
@@ -85,39 +89,51 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 	 * Check this gist for an alternative solution: https://gist.github.com/Xevion/11ba3c06cd0ca374a11acb18e4d4360b
 	 */
 	useEffect(() => {
-		if (router.isReady) {
-			if (notify == "formClosed") {
+		// If you remove the 'router.query.notify' check, make sure to add a check for the router.replace call below!
+		if (router.isReady && router.query.notify != undefined) {
+			let notify = NotificationEnum.safeParse(router.query.notify);
+
+			// Only display a toast if the notify query parameter was valid.
+			if (notify.success) {
+				// Figure out the title and description we want to display.
+				let toastData: { title: string; description: string, type: ToastType };
+				switch (notify.data) {
+					case "formClosed":
+						toastData = {
+							title: "Form Closed",
+							description: "The form you tried to access is closed.",
+							type: "error"
+						};
+						break;
+					case "checkinSuccess":
+						toastData = {
+							title: "Checked-in Successfully!",
+							description: choice(checkin_success_message),
+							type: "success"
+						};
+						break;
+				}
+				
+				// Display it!
 				toast.custom(
 					({ id, visible }) => (
 						<Toast
-							title="Form Closed"
-							description="The form you tried to access is closed."
-							type="error"
+							title={toastData.title}
+							description={toastData.description}
+							type={toastData.type}
 							toastId={id}
 							visible={visible}
 						/>
 					),
-					{ id: "form-closed", duration: 8000 }
-				);
-			} else if (notify == "checkinSuccess") {
-				toast.custom(
-					({ id, visible }) => (
-						<Toast
-							title="Checked-in Successfully!"
-							description={choice(checkin_success_message)}
-							type="success"
-							toastId={id}
-							visible={visible}
-						/>
-					),
-					{ id: "checkin-success", duration: 8000 }
+					{ id: notify.data, duration: 8000 }
 				);
 			}
 
-			if (notify != undefined) {
-				const { notify: _, ...omittedQuery } = router.query;
-				router.replace({ query: omittedQuery }, undefined, { shallow: true });
-			}
+			// Remove the notify query parameter from the URL while preserving the rest of the query.
+			const { notify: _, ...remaining } = router.query;
+
+			// Replace (don't add to history), shallow (prevent data fetch, )
+			router.replace({ query: remaining }, undefined, { shallow: true });
 		}
 	}, [router]);
 
@@ -224,7 +240,8 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 										disabled={disableCheckin}
 										className={classNames(
 											"w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center",
-											!disableCheckin && "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
+											!disableCheckin &&
+												"focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
 											!checkinOpen ? "bg-primary-200" : "bg-primary-500 hover:bg-primary-800"
 										)}
 									>
