@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.3",
-    "@prisma/client": "^4.10.1",
+    "@prisma/client": "4.16.2",
     "@sentry/nextjs": "7.31.1",
     "@tailwindcss/forms": "^0.5.3",
     "@tanstack/react-query": "^4.23.0",
@@ -72,7 +72,7 @@
     "eslint-config-next": "^13.1.6",
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
-    "prisma": "^4.3.1",
+    "prisma": "4.16.2",
     "tailwindcss": "^3.3.1",
     "typescript": "4.7.4"
   },
