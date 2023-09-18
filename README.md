@@ -1,32 +1,48 @@
 # 🌀 Portal
 
-ACM UTSA's in-house membership portal and database system.
+Portal is ACM-UTSA's in-house registration, member management, and database system.
 
-## Stack
+- Register, manage, and track members
+  - Member attendance turns into points, granting membership benefits
+- Create, display, and manage events
+  - Track attendance with custom points
+- Built on [Next.js][next-js] + [tRPC][trpc] and [Prisma][prisma]
+  - SSR, ISR, and SSG for fast, dynamic, and static pages
+- Tailwind-style CSS with [HeadlessUI][headless-ui]
 
-- [Next.js][next-js]
-  - [tRPC][trpc]
+## Stack & Dependencies
+
+- [Next.js][next-js] deployed on [Vercel][vercel]
+  - [tRPC][trpc] (supported by [TanStack Query][tanstack-query])
 - [React][react]
   - [TailwindCSS][tailwind-css]
     - [HeadlessUI][headless-ui]
-  - [TanStack Table][tanstack-table]
-  - [TanStack Query][tanstack-query]
-- [Typescript][typescript]
+  - [React Hook Form][react-hook-form]
+  - [React Markdown][react-markdown] with [Remark GFM][remark-gfm]
+  - [PrimeReact][prime-react]
+  - [Chart.js][chartjs]
 - [Prisma][prisma]
   - [PostgreSQL][postgresql] on [Railway][railway]
-- [Chart.js][chartjs]
-- [Prettier][prettier]
+- [Typescript][typescript]
+- [Sentry][sentry]
+- [Typeform][typeform]
+- [Zod][zod]
+- [Prettier][prettier], [Sharp][sharp], [superjson][superjson], [Nprogress][nprogress]
 
 See [`package.json`](./package.json) for all other requirements. Bootstrapped using [Create T3 App](https://create.t3.gg).
 
 ## Installation
 
 - [Node.js][node-js]
-  - Use Node v16 (LTS). Anything higher or lower may not be compatible.
-
-This project uses `yarn` for package management. Install `yarn` with `npm` via `npm install --global yarn`.
-
-This project requires credentials to run properly. See [Database](#Database).
+  - Use Node v18 (LTS). Anything higher or lower may not be compatible.
+- [Yarn](https://yarnpkg.com/)
+  - `npm install --global yarn`
+  - Note: While `yarn` is the package manager, `npx` is recommended for executing `prisma` commands.
+- [PostgreSQL][postgresql]
+  - Officers should use the Railway `development` PostgreSQL instance.
+  - If you are not an officer, you will need to create your own PostgreSQL instance.
+    - [Docker](https://www.docker.com/) is recommended for this.
+    - See [Database](#Database) for more information.
 
 ## Development
 
@@ -90,7 +106,7 @@ The `DATABASE_URL` here would be `postgresql://admin:password@localhost:39755/po
 The port mapping chosen here is arbitrary (high port number reduces chances of appearance in a port exclusion range).
 Change as you wish. Details [here][docker-compose-networking].
 
-Once created, the database will need to be updated with the current schema. Execute [`yarn prisma db push`][prisma-db-push].
+Once created, the database will need to be updated with the current schema. Execute [`npx prisma db push`][prisma-db-push].
 This command should not be used for _existing_ DBs.
 
 ## Migration
@@ -136,11 +152,22 @@ be alongside client-side methods.
 [tailwind-css]: https://tailwindcss.com/
 [chartjs]: https://www.chartjs.org/
 [tanstack-query]: https://tanstack.com/query/v4
-[tanstack-table]: https://tanstack.com/table/v8
 [prettier]: https://prettier.io/
 [postgresql]: https://www.postgresql.org/
 [railway]: https://railway.app/
 [headless-ui]: https://headlessui.com/
+[vercel]: https://vercel.com/
+[sentry]: https://sentry.io/
+[typeform]: https://www.typeform.com/
+[prime-react]: https://primereact.org/
+[react-hook-form]: https://react-hook-form.com/
+[zod]: https://zod.dev/
+[react-markdown]: https://github.com/remarkjs/react-markdown
+[remark-gfm]: https://github.com/remarkjs/remark-gfm
+[sharp]: https://sharp.pixelplumbing.com/
+[superjson]: https://github.com/blitz-js/superjson
+[nprogress]: https://ricostacruz.com/nprogress/
+
 [docker-compose-networking]: https://docs.docker.com/compose/networking/
 [docker-compose-ref]: https://docs.docker.com/compose/reference/
 [prisma-db-push]: https://www.prisma.io/docs/reference/api-reference/command-reference#db-push
