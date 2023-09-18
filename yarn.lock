@@ -10,7 +10,7 @@
     core-js-pure "^3.25.1"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.9.0":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2":
   version "7.19.0"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.19.0.tgz"
   integrity sha512-eR8Lo9hnDS7tqkO7NsV+mKvCmv5boaXFSZ70DnfhcgiEne8hv9oCEd36Klw74EtizEqLsy4YnW8UWwpBVolHZA==
@@ -412,13 +412,6 @@
   resolved "https://registry.yarnpkg.com/@trpc/react-query/-/react-query-10.9.0.tgz#b37c7bef6fbf5a8acec08d8d0532ba4060fa136b"
   integrity sha512-I7xtdFj/AETwc9HfY2bGxKINij39r26LvfIiTBfz2pBj1ELrcgucWmPeI2eS6pon/uI1E9Nqa6fQCg/zkg764Q==
 
-"@trpc/react@^9.27.2":
-  version "9.27.2"
-  resolved "https://registry.npmjs.org/@trpc/react/-/react-9.27.2.tgz"
-  integrity sha512-d2Nu3gYD7W9B5J5GylLw41jElQexb9zzwOLmCUR54azhvkIjk2w5dZLLqG3ou7L4ZsnlLOHgyO/LMwrgR4U9ZA==
-  dependencies:
-    "@babel/runtime" "^7.9.0"
-
 "@trpc/server@^10.9.0":
   version "10.9.0"
   resolved "https://registry.yarnpkg.com/@trpc/server/-/server-10.9.0.tgz#e470df429c823858d715b21acd564f9c6f17f0d9"
@@ -488,15 +481,15 @@
   resolved "https://registry.npmjs.org/@types/ms/-/ms-0.7.31.tgz"
   integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
+"@types/node@18.14.2":
+  version "18.14.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.2.tgz#c076ed1d7b6095078ad3cf21dfeea951842778b1"
+  integrity sha512-1uEQxww3DaghA0RxqHx0O0ppVlo43pJhepY51OxuQIKHpjbnYLA7vcdwioNPzIqmC2u3I/dmylcqjlh0e7AyUA==
+
 "@types/node@^16.10.2":
   version "16.11.59"
   resolved "https://registry.npmjs.org/@types/node/-/node-16.11.59.tgz"
   integrity sha512-6u+36Dj3aDzhfBVUf/mfmc92OEdzQ2kx2jcXGdigfl70E/neV21ZHE6UCz4MDzTRcVqGAM27fk+DLXvyDsn3Jw==
-
-"@types/node@^18":
-  version "18.17.17"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.17.17.tgz#53cc07ce582c9d7c5850702a3c2cb0af0d7b0ca1"
-  integrity sha512-cOxcXsQ2sxiwkykdJqvyFS+MLQPLvIdwh5l6gNg8qF6s+C7XSkEWOZjK+XhUZd+mYvHV/180g2cnCcIl4l06Pw==
 
 "@types/nprogress@^0.2.0":
   version "0.2.0"
@@ -2920,10 +2913,10 @@ node-releases@^2.0.6:
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-2.0.6.tgz"
   integrity sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==
 
-node@~16.15.0:
-  version "16.15.1"
-  resolved "https://registry.yarnpkg.com/node/-/node-16.15.1.tgz#30145953359cb0a59b55fc001c46edb313575f56"
-  integrity sha512-cgcFiK2JxuXZ6v3hqqbI1qLG/NRY2IE9YB+jqgtiuUOQIFu+/vKm9YPY6gpjCOtwaMOBh1uTiJ0ehDM6Gu3Zzw==
+node@18.14.2:
+  version "18.14.2"
+  resolved "https://registry.yarnpkg.com/node/-/node-18.14.2.tgz#4e7c9f6c9d273c6e39ec7b8527e4b69c3bc962bf"
+  integrity sha512-qPZtzc6VcVPnh2ZUsI7R4JM2Ytr1kQvw+1H3Kuzou29DzdoK/jKO7rodr27Po2/GMJp1MlI4Fg+Fqkf4PXBp+w==
   dependencies:
     node-bin-setup "^1.0.0"
 
