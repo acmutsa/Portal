@@ -43,7 +43,6 @@ const OpenGraph = ({
 }: {
 	properties: OGProperties;
 }) => {
-
 	const base_properties: [string, string][] = [
 		["og:locale", locale || "en_US"],
 		["og:title", title],
@@ -60,15 +59,15 @@ const OpenGraph = ({
 		["twitter:description", description || ""],
 		["twitter:site", "@acmutsa"],
 		["twitter:creator", "@acmutsa"],
-	]
+	];
 
 	if (type === "article") {
 		base_properties.push(
 			["article:author", author!],
 			["article:section", section!],
 			["article:modified_time", modified_time!],
-			["article:published_time", published_time!],
-		)
+			["article:published_time", published_time!]
+		);
 	}
 
 	if (image != null) {
@@ -79,23 +78,17 @@ const OpenGraph = ({
 			["og:image:height", image.height.toString()],
 			["og:image:alt", image.alt],
 			["og:image:type", image.type],
-			["twitter:image", image.url],
-		)
+			["twitter:image", image.url]
+		);
 	}
 
-	/*
-	if (labels != null) {
-		base_properties.push(
-			...(labels.map(([label, data], index) => {
-				return [
-					[`twitter:label${index + 1}`, label],
-					[`twitter:data${index + 1}`, data]
-				] as [string, string][]
-			}))
-		)
-	}
-	*/
-
+	if (labels != null)
+		labels.forEach(([label, data], index) => {
+			base_properties.push(
+				[`twitter:label${index + 1}`, label],
+				[`twitter:data${index + 1}`, data]
+			);
+		});
 
 	return (
 		<>
