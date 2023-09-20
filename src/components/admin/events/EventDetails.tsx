@@ -21,7 +21,7 @@ export default function EventDetails({ event, qrCodeValue }: EventDetailsProps) 
 		["Event Name", event.name],
 		["Event Start", format(event.eventStart, "M/dd/yyyy h:mm a")],
 		["Event End", format(event.eventEnd, "M/dd/yyyy h:mm a")],
-		["Description", <ReactMarkdown>{event.description}</ReactMarkdown>],
+		["Description", <ReactMarkdown className="markdown">{event.description}</ReactMarkdown>],
 	];
 
 	const doQrDownload = () => {

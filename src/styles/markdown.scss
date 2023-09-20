@@ -1,0 +1,16 @@
+/* 
+    Styles for markdown rendered components.
+*/
+.markdown {
+    // Restores link colors in markdown
+    a {
+        // If this fails on certain browsers, try out these colors: base #0070f3, active #6366f1, #6366f1
+        color: LinkText;
+        &:active {
+            color: ActiveText;
+        }
+        &:visited {
+            color: VisitedText;
+        }
+    }
+}

@@ -165,7 +165,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 										{relativeText}
 									</p>
 									{event.description != null && event.description.length > 0 ? (
-										<ReactMarkdown className="mt-3 [&>*]:my-0" remarkPlugins={[remarkGfm]}>
+										<ReactMarkdown className="mt-3 [&>*]:my-0 markdown" remarkPlugins={[remarkGfm]}>
 											{event.description!}
 										</ReactMarkdown>
 									) : (
