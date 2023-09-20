@@ -3,7 +3,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";
 import { useGlobalContext } from "@/components/common/GlobalContext";
-import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next";
+import {
+	GetServerSidePropsContext,
+	GetServerSidePropsResult,
+	NextPage,
+	InferGetServerSidePropsType,
+} from "next";
 import Breadcrumbs from "@/components/common/Breadcrumbs";
 import { classNames, isCheckinOpen } from "@/utils/helpers";
 import { validateMember } from "@/utils/server_helpers";
@@ -102,7 +107,9 @@ export async function getServerSideProps({
 	};
 }
 
-const CheckinView: NextPage<{ json: string }> = ({ json }) => {
+const CheckinView: NextPage<{ json: string }> = ({
+    	json,
+    }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 	const { event, form } = superjson.parse<CheckinServerProps>(json);
 	const checkin = trpc.member.checkin.useMutation();
 	const router = useRouter();
@@ -187,7 +194,7 @@ const CheckinView: NextPage<{ json: string }> = ({ json }) => {
 										},
 										pattern: {
 											message: "Letters, numbers & punctuation only",
-											value: /^[A-z\-!@#$%^&*(){},\.;':\[\]~\s\/=+|]*$/,
+											value: /^[A-z\-!@#$%^&*(){},\.;':\[\]~\s\/=+0-9|]*$/,
 										},
 									})}
 								/>
