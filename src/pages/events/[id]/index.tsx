@@ -96,31 +96,31 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 			// Only display a toast if the notify query parameter was valid.
 			if (notify.success) {
 				// Figure out the title and description we want to display.
-				let toastData: { title: string; description: string, type: ToastType };
+				let toastData: { title: string; description: string; type: ToastType };
 				switch (notify.data) {
 					case "closed":
 						toastData = {
 							title: "Form Closed",
 							description: "The form you tried to access is closed.",
-							type: "error"
+							type: "error",
 						};
 						break;
 					case "success":
 						toastData = {
 							title: "Checked-in Successfully!",
 							description: choice(checkin_success_message),
-							type: "success"
+							type: "success",
 						};
 						break;
 					case "not-open":
 						toastData = {
 							title: "Check-in Not Open",
 							description: "The check-in period for this event has not yet started.",
-							type: "error"
+							type: "error",
 						};
 						break;
 				}
-				
+
 				// Display it!
 				toast.custom(
 					({ id, visible }) => (
@@ -165,6 +165,59 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 
 	const checkinOpen = isCheckinOpen(event);
 	const disableCheckin = !(checkinOpen && globalState.member);
+
+	const eventButtons = (
+		<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
+			<DeactivatableLink
+				href={`/events/${id}/check-in`}
+				disabled={disableCheckin}
+				className={classNames(
+					"w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center",
+					!disableCheckin &&
+						"focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
+					!checkinOpen ? "bg-primary-200" : "bg-primary-500 hover:bg-primary-800"
+				)}
+			>
+				<BsBookmarkPlusFill className="mr-2 w-5 h-5" />
+				{checkinOpen ? (existingCheckin ? "Edit Feedback" : "Check-in") : "Check-in closed."}
+			</DeactivatableLink>
+			<Link
+				href={calendarLink}
+				target="_blank"
+				className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+			>
+				<SiGooglecalendar className="mr-2 w-5 h-5" />
+				Add to Google Calendar
+			</Link>
+			<Link
+				href={"https://twitch.tv/acmutsa"}
+				as="button"
+				target="_blank"
+				className="w-full bg-twitch-light hover:bg-twitch-dark border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+			>
+				<SiTwitch className="mr-2 w-5 h-5" />
+				Watch on Twitch
+			</Link>
+			{globalState.admin ? (
+				<span className="w-full flex relative z-0 shadow-sm rounded-md text-base font-medium text-white">
+					<Link
+						href={`/admin/events/${id}`}
+						className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex h-full justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+					>
+						<BsPencilFill className="mr-2 w-4 h-4" />
+						Edit
+					</Link>
+					<Link href={`/admin/events/${id}?action=delete`}>
+						<button className="bg-rose-500 hover:bg-rose-600 relative h-full inline-flex items-center px-2 py-3 rounded-r-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+							<span className="sr-only">Delete Event</span>
+							<BsTrashFill className="h-5 w-5" aria-hidden="true" />
+						</button>
+					</Link>
+				</span>
+			) : null}
+		</div>
+	);
+
 	return (
 		<>
 			<Head>
@@ -178,7 +231,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 			>
 				<div className="sm:pt-12">
 					<div className="flex justify-center w-full">
-						<div className="bg-white z-30 max-w-[1200px] sm:mx-3 md:mx-6 p-5 md:p-2 md:p-3 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 sm:rounded-lg">
+						<div className="bg-white z-30 max-w-[1200px] sm:mx-3 md:mx-6 p-5 md:p-2 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 sm:rounded-lg">
 							<div className="flex items-center justify-center overflow-hidden md:ml-3">
 								<div
 									className="w-full drop-shadow-xl md:drop-shadow-lg max-h-[25rem] aspect-[9/16] bg-top md:bg-center lg:bg-top lg:aspect-video rounded-lg bg-cover hover:bg-contain hover:bg-center bg-no-repeat"
@@ -241,63 +294,8 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 										</dl>
 									</NoSSR>
 								</div>
-								<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
-									<DeactivatableLink
-										href={`/events/${id}/check-in`}
-										disabled={disableCheckin}
-										className={classNames(
-											"w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center",
-											!disableCheckin &&
-												"focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
-											!checkinOpen ? "bg-primary-200" : "bg-primary-500 hover:bg-primary-800"
-										)}
-									>
-										<BsBookmarkPlusFill className="mr-2 w-5 h-5" />
-										{checkinOpen
-											? globalState.member
-												? existingCheckin
-													? "Edit Feedback"
-													: "Check-in"
-												: "Login to Check-in"
-											: "Check-in closed."}
-									</DeactivatableLink>
-									<DeactivatableLink
-										href={calendarLink}
-										target="_blank"
-										className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-									>
-										<SiGooglecalendar className="mr-2 w-5 h-5" />
-										Add to Google Calendar
-									</DeactivatableLink>
-									<Link
-										href={"https://twitch.tv/acmutsa"}
-										as="button"
-										target="_blank"
-										className="w-full bg-twitch-light hover:bg-twitch-dark border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-									>
-										<SiTwitch className="mr-2 w-5 h-5" />
-										Watch on Twitch
-									</Link>
-									{globalState.admin ? (
-										<span className="w-full flex relative z-0 inline-flex shadow-sm rounded-md text-base font-medium text-white">
-											<Link
-												href={`/admin/events/${id}`}
-												className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-											>
-												<BsPencilFill className="mr-2 w-4 h-4" />
-												Edit
-											</Link>
-											<Link href={`/admin/events/${id}?action=delete`}>
-												<button className="bg-rose-500 hover:bg-rose-600 relative inline-flex items-center px-2 py-3 rounded-r-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-													<span className="sr-only">Open options</span>
-													<BsTrashFill className="h-5 w-5" aria-hidden="true" />
-												</button>
-											</Link>
-										</span>
-									) : null}
-								</div>
+								{eventButtons}
 							</div>
-							{/*<div className="md:block" />*/}
 							<div className="px-5 md:pl-0 pb-5 prose prose-md max-w-none font-inter">
 								<h2 className="border-b-2 mb-1 mt-2 md:mt-4">About ACM</h2>
 								<p className="ml-3 tracking-tight md:tracking-normal">
@@ -374,6 +372,7 @@ export async function getStaticProps({
 }
 
 export async function getStaticPaths() {
+	// TODO: This isn't generating any paths at build-time. Did we simply not complete this, or is there a reason?
 	return { paths: [], fallback: "blocking" };
 }
 
