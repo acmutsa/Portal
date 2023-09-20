@@ -3,6 +3,7 @@
 *.log
 
 .idea
+.vscode
 .env.prod
 .env.dev
 
