@@ -340,7 +340,6 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 	);
 };
 
-// Revalidate using EVENT_PAGE_REVALIDATION_TIME environment variable, with a minimum of 20 seconds.
 const revalidationTime = Math.max(env.EVENT_PAGE_REVALIDATION_TIME, 20);
 
 export async function getStaticProps({
