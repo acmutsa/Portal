@@ -352,7 +352,7 @@ export async function getStaticProps({
 		},
 	});
 
-	// If the event doesn't exist, return a 404. This
+	// If the event doesn't exist, return a 404.
 	if (event == null) {
 		return {
 			notFound: true,
