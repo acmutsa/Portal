@@ -1,4 +1,4 @@
-# 🌀 Portal
+![Portal](./banner.jpg)
 
 Portal is ACM-UTSA's in-house registration, member management, and database system.
 
