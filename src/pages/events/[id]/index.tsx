@@ -1,9 +1,13 @@
-import type { GetStaticPropsResult, NextPage } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { prisma } from "@/server/db/client";
-import useOpenGraph from "@/components/common/useOpenGraph";
+import DeactivatableLink from "@/components/common/DeactivatableLink";
+import { useGlobalContext } from "@/components/common/GlobalContext";
+import NoSSR from "@/components/common/NoSSR";
 import OpenGraph from "@/components/common/OpenGraph";
+import Toast, { ToastType } from "@/components/common/Toast";
+import useOpenGraph from "@/components/common/useOpenGraph";
+import RootLayout from "@/components/layout/RootLayout";
+import { env } from "@/env/server.mjs";
+import { prisma } from "@/server/db/client";
+import { checkin_success_message } from "@/utils/constants";
 import {
 	absUrl,
 	choice,
@@ -12,25 +16,21 @@ import {
 	getOrganization,
 	isCheckinOpen,
 } from "@/utils/helpers";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import Link from "next/link";
-import { SiGooglecalendar, SiTwitch } from "react-icons/si";
-import { format, formatRelative, isPast, lightFormat } from "date-fns";
-import QRCode from "react-qr-code";
-import NoSSR from "@/components/common/NoSSR";
-import { env } from "@/env/server.mjs";
-import { Event } from "@prisma/client";
-import { BsBookmarkPlusFill, BsPencilFill, BsTrashFill } from "react-icons/bs";
-import { useGlobalContext } from "@/components/common/GlobalContext";
-import { toast } from "react-hot-toast";
-import Toast, {ToastType} from "@/components/common/Toast";
-import { useEffect } from "react";
 import { trpc } from "@/utils/trpc";
-import RootLayout from "@/components/layout/RootLayout";
+import { Event } from "@prisma/client";
+import { format, formatRelative, isPast, lightFormat } from "date-fns";
+import type { GetStaticPropsResult, NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { BsBookmarkPlusFill, BsPencilFill, BsTrashFill } from "react-icons/bs";
+import { SiGooglecalendar, SiTwitch } from "react-icons/si";
+import ReactMarkdown from "react-markdown";
+import QRCode from "react-qr-code";
+import remarkGfm from "remark-gfm";
 import superjson from "superjson";
-import { checkin_success_message } from "@/utils/constants";
-import DeactivatableLink from "@/components/common/DeactivatableLink";
 import { z } from "zod";
 
 interface eventPageParams {
@@ -46,7 +46,7 @@ type EventStaticProps = {
 	existingCheckin: boolean;
 };
 
-const NotificationEnum = z.enum(["formClosed", "checkinSuccess"]);
+const NotificationEnum = z.enum(["closed", "success", "not-open"]);
 export type NotificationType = z.infer<typeof NotificationEnum>;
 
 const EventView: NextPage<{ json: string }> = ({ json }) => {
@@ -98,18 +98,25 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 				// Figure out the title and description we want to display.
 				let toastData: { title: string; description: string, type: ToastType };
 				switch (notify.data) {
-					case "formClosed":
+					case "closed":
 						toastData = {
 							title: "Form Closed",
 							description: "The form you tried to access is closed.",
 							type: "error"
 						};
 						break;
-					case "checkinSuccess":
+					case "success":
 						toastData = {
 							title: "Checked-in Successfully!",
 							description: choice(checkin_success_message),
 							type: "success"
+						};
+						break;
+					case "not-open":
+						toastData = {
+							title: "Check-in Not Open",
+							description: "The check-in period for this event has not yet started.",
+							type: "error"
 						};
 						break;
 				}

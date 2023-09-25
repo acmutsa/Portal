@@ -1,36 +1,35 @@
+import Breadcrumbs from "@/components/common/Breadcrumbs";
+import OpenGraph from "@/components/common/OpenGraph";
+import useOpenGraph from "@/components/common/useOpenGraph";
+import RootLayout from "@/components/layout/RootLayout";
 import { Event, prisma } from "@/server/db/client";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/router";
+import { classNames, isCheckinOpen } from "@/utils/helpers";
+import { validateMember } from "@/utils/server_helpers";
 import { trpc } from "@/utils/trpc";
-import { useGlobalContext } from "@/components/common/GlobalContext";
+import { isFuture } from "date-fns";
 import {
 	GetServerSidePropsContext,
 	GetServerSidePropsResult,
-	NextPage,
 	InferGetServerSidePropsType,
+	NextPage,
 } from "next";
-import Breadcrumbs from "@/components/common/Breadcrumbs";
-import { classNames, isCheckinOpen } from "@/utils/helpers";
-import { validateMember } from "@/utils/server_helpers";
-import { useEffect } from "react";
-import useOpenGraph from "@/components/common/useOpenGraph";
-import OpenGraph from "@/components/common/OpenGraph";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { SubmitHandler, useForm } from "react-hook-form";
 import superjson from "superjson";
-import RootLayout from "@/components/layout/RootLayout";
+import { NotificationType } from ".";
 
-interface CheckinPageParams {
+type CheckinPageParams = {
 	[key: string]: string;
-
 	id: string;
-}
+};
 
-interface FormValues {
+type FormValues = {
 	feedback: string;
-}
+};
 
 type CheckinServerProps = {
-	form: { feedback: string | null; inPerson: boolean } | null;
+	previous: { feedback: string | null; inPerson: boolean } | null;
 	event: Pick<
 		Event,
 		"id" | "name" | "pageID" | "formClose" | "formOpen" | "eventStart" | "eventEnd" | "forcedIsOpen"
@@ -45,17 +44,17 @@ export async function getServerSideProps({
 	GetServerSidePropsResult<{ json: string }>
 > {
 	const [valid, member] = await validateMember(req, res, true);
-	const idParam = params!.id;
+	const eventId = params!.id;
 
 	if (!valid)
 		return {
-			redirect: { destination: `/login?next=/events/${idParam}/check-in`, permanent: false },
+			redirect: { destination: `/login?next=/events/${eventId}/check-in`, permanent: false },
 		};
 
 	// Limit selection of properties for SSR
 	const event = await prisma.event.findUnique({
 		where: {
-			pageID: idParam.toLowerCase(),
+			pageID: eventId.toLowerCase(),
 		},
 		select: {
 			id: true,
@@ -74,6 +73,17 @@ export async function getServerSideProps({
 			notFound: true,
 		};
 
+	// If the event is not open, redirect to the event page. Use the notify query parameter to display a message about the form being cloed.
+	if (!isCheckinOpen(event)) {
+		const notifyType: NotificationType = isFuture(event.formOpen) ? "not-open" : "closed";
+		return {
+			redirect: {
+				destination: `/events/${event.pageID}?notify=${notifyType}`,
+				permanent: false,
+			},
+		};
+	}
+	
 	const checkin = await prisma.checkin.findUnique({
 		where: {
 			eventID_memberID: {
@@ -83,18 +93,10 @@ export async function getServerSideProps({
 		},
 	});
 
-	if (!isCheckinOpen(event))
-		return {
-			redirect: {
-				destination: `/events/${event.pageID}?notify=formClosed`,
-				permanent: false,
-			},
-		};
-
 	return {
 		props: {
 			json: superjson.stringify({
-				form:
+				previous:
 					checkin != null
 						? {
 								feedback: checkin.feedback,
@@ -110,10 +112,9 @@ export async function getServerSideProps({
 const CheckinView: NextPage<{ json: string }> = ({
     	json,
     }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-	const { event, form } = superjson.parse<CheckinServerProps>(json);
+	const { event, previous } = superjson.parse<CheckinServerProps>(json);
 	const checkin = trpc.member.checkin.useMutation();
 	const router = useRouter();
-	const [globalState] = useGlobalContext();
 
 	const ogp = useOpenGraph({
 		title: `Check-in to "${event.name}"`,
@@ -121,19 +122,13 @@ const CheckinView: NextPage<{ json: string }> = ({
 		url: `/events/${event.id}/check-in`,
 	});
 
-	useEffect(() => {
-		return () => {
-			console.log(form);
-		};
-	}, []);
-
 	const {
 		register,
 		handleSubmit,
 		watch,
 		formState: { errors },
 	} = useForm({
-		defaultValues: { feedback: form?.feedback ?? "" },
+		defaultValues: { feedback: previous?.feedback ?? "" },
 		mode: "onChange",
 	});
 
@@ -145,7 +140,7 @@ const CheckinView: NextPage<{ json: string }> = ({
 			{ pageID: event!.pageID, feedback, inPerson: true },
 			{
 				onSuccess: async () => {
-					await router.push(`/events/${event!.pageID}?notify=checkinSuccess`);
+					await router.push(`/events/${event!.pageID}?notify=success`);
 				},
 			}
 		);
@@ -207,13 +202,14 @@ const CheckinView: NextPage<{ json: string }> = ({
 							<span
 								className={classNames(
 									"px-2 text-sm flex items-center",
+									// Make text red when less than 15% of maximum characters remain
 									remainingCharacters / maximumCharacters < 0.15 ? "text-red-500" : "text-zinc-500"
 								)}
 							>
 								{remainingCharacters}
 							</span>
 							<button className="h-[36px] my-1.5 w-full bg-primary font-inter text-white rounded font-semibold max-w-[10rem]">
-								{form == null ? "Submit" : "Save"}
+								{previous == null ? "Submit" : "Save"}
 							</button>
 						</div>
 					</form>
