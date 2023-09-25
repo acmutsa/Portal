@@ -8,6 +8,9 @@ export function pluralize(count: number) {
 	return count != 1 ? "s" : "";
 }
 
+/**
+ * Produces a formatted URL with the app's currently deployed domain, given a path.
+ */
 export const absUrl = (path: string): string => {
 	path = path.trim();
 	if (path.startsWith("http")) return path;
@@ -37,7 +40,14 @@ const weekdayIndex = {
 	saturday: 6,
 };
 
-// Modifies a date object to become the nearest weekday as specified
+/*
+ * Modifies the date of the given date to the weekday specified, in the current week.
+ * TODO: Test this function.
+ * @example moveToNearestWeekday(new Date("2023-09-16"), "monday") // Moves saturday back 5 days to monday (2023-09-11).
+ * @param date The date to be moved.
+ * @param weekday The weekday to move the date to.
+ * @returns Nothing. The date is modified in-place.
+ */
 export const moveToNearestWeekday = (date: Date, weekday: Weekday) => {
 	const targetIndex = weekdayIndex[weekday];
 	if (date.getDay() != targetIndex)
@@ -72,7 +82,7 @@ export const getDates = (
 };
 
 /**
- * A reducer function for summing two numbers.
+ * A function for summing two numbers. This is used for reducers.
  */
 export const sum = (a: number, b: number) => a + b;
 
@@ -97,6 +107,7 @@ export const removeEmptyItems = (array: any[]): {}[] => {
 
 /**
  * Generates a Google Calendar link while maintaining all attributes, formatting the date & more.
+ * Be careful with the length of inputted values, as URLs have a maximum length.
  * @param start The start date.
  * @param end The end date.
  * @param title The title of the event. Optional.
@@ -156,7 +167,7 @@ export const formatDateCell = (value: Date) => {
  * Combines classes into a single string. Supports null or undefined classes while adding spaces between valid classes.
  * @param classes
  */
-export function classNames(...classes: (string | null | undefined)[]) {
+export function classNames(...classes: (string | null | undefined | boolean)[]) {
 	return classes.filter(Boolean).join(" ");
 }
 

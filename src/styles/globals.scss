@@ -13,150 +13,147 @@
 
 body,
 html {
-  height: 100vh;
+	height: 100vh;
 }
 
-/* For IE, Edge and Firefox */
+// Highly experimental, mostly unsupported. https://caniuse.com/css-scrollbar
 .scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; // IE and Edge
+	scrollbar-width: none; // Firefox
 
-  /* For Webkit-based browsers (Chrome, Safari and Opera) */
-  &::-webkit-scrollbar {
-    display: none;
-  }
+	// For Webkit-based browsers (Chrome, Safari and Opera)
+	&::-webkit-scrollbar {
+		display: none;
+	}
 }
 
 .page-view {
-  height: 100vh;
-  width: 100%;
-  overflow-y: auto;
-  padding-top: 72px;
-
-  &.bg-darken {
-    padding-bottom: 60px;
-  }
+	height: 100vh;
+	width: 100%;
+	overflow-y: auto;
+	padding-top: 72px;
 }
 
 .grayscale {
-  -webkit-transition: -webkit-filter 100ms linear;
+	transition: filter 100ms linear;
 }
 
 table {
-  @apply w-full;
-  font-family: "Inter", arial, sans-serif;
-  border-collapse: collapse;
+	@apply w-full;
+	font-family: "Inter", arial, sans-serif;
+	border-collapse: collapse;
 }
 
 td,
 th {
-  @apply text-left p-2 relative;
-  border: 1px solid #dddddd;
+	@apply text-left p-2 relative;
+	border: 1px solid #dddddd;
 }
 
 .resizer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 5px;
-  background: rgba(0, 0, 0, 0.5);
-  cursor: col-resize;
-  user-select: none;
-  touch-action: none;
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+	width: 5px;
+	background: rgba(0, 0, 0, 0.5);
+	cursor: col-resize;
+	user-select: none;
+	touch-action: none;
 
-  &.isResizing {
-    @apply bg-accent opacity-90;
-  }
+	&.isResizing {
+		@apply bg-accent opacity-90;
+	}
 }
 
 @media (hover: hover) {
-  .resizer {
-    opacity: 0;
-  }
+	.resizer {
+		opacity: 0;
+	}
 
-  *:hover > .resizer {
-    opacity: 1;
-  }
+	*:hover > .resizer {
+		opacity: 1;
+	}
 }
 
 .card-buttongroup > * {
-  @apply p-1 pb-2 hover:text-sky-700;
+	@apply p-1 pb-2 hover:text-sky-700;
 }
 
+// Used for the footer
 .disclosure-symbol {
-  font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
+	font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
 }
 
 input.login {
-  @apply disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
+	@apply disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 focus:outline-none
   focus:border-sky-500 focus:ring-sky-500  focus:ring-1
   invalid:border-pink-500 invalid:text-pink-600 focus:invalid:border-pink-500
   focus:invalid:ring-pink-500 disabled:shadow-none;
 }
 
 input[type="date"]::-moz-placeholder {
-  @apply text-gray-500;
+	@apply text-gray-500;
 }
 
 .p-datatable {
-  @apply text-base rounded-lg border border-gray-200;
+	@apply text-base rounded-lg border border-gray-200;
 
-  thead {
-    @apply bg-gray-50;
-    > tr {
-      @apply border-b-4 border-gray-200;
-      > th {
-        @apply px-6 py-3 text-left text-sm text-gray-500 uppercase tracking-wide;
-        font-weight: 700 !important;
+	thead {
+		@apply bg-gray-50;
+		> tr {
+			@apply border-b-4 border-gray-200;
+			> th {
+				@apply px-6 py-3 text-left text-sm text-gray-500 uppercase tracking-wide;
+				font-weight: 700 !important;
 
-        .pi {
-          font-size: 0.8rem !important;
-          line-height: 1.25rem !important;
-        }
-      }
-    }
-  }
+				.pi {
+					font-size: 0.8rem !important;
+					line-height: 1.25rem !important;
+				}
+			}
+		}
+	}
 
-  tbody > tr > td {
-    > &.name {
-      min-width: 180px;
-    }
+	tbody > tr > td {
+		> &.name {
+			min-width: 180px;
+		}
 
-    > &.address > div {
-      max-width: 400px;
-      min-width: 230px;
-      overflow: hidden;
-      max-height: 65px;
-    }
-  }
+		> &.address > div {
+			max-width: 400px;
+			min-width: 230px;
+			overflow: hidden;
+			max-height: 65px;
+		}
+	}
 
-  .p-datatable-table {
-  }
+	.p-datatable-table {
+	}
 
-  .p-checkbox {
-    @apply m-2;
-    > .p-checkbox-box {
-      @apply h-[1.1rem] w-[1.1rem] rounded border border-gray-300;
-    }
-  }
+	.p-checkbox {
+		@apply m-2;
+		> .p-checkbox-box {
+			@apply h-[1.1rem] w-[1.1rem] rounded border border-gray-300;
+		}
+	}
 }
 
 .badges {
-  display: flex;
-  flex-flow: column wrap;
-  justify-items: flex-start;
-  align-items: flex-start; // Prevents stretching
-  justify-content: flex-start;
+	display: flex;
+	flex-flow: column wrap;
+	justify-items: flex-start;
+	align-items: flex-start; // Prevents stretching
+	justify-content: flex-start;
 
-  max-width: 150px;
-  max-height: 3.8rem;
-  overflow-x: hidden;
+	max-width: 150px;
+	max-height: 3.8rem;
+	overflow-x: hidden;
 
-  > * {
-    //&:nth-child(2n+1) { order: 1; }
-    //&:nth-child(2n)   { order: 2; }
-  }
+	> * {
+		//&:nth-child(2n+1) { order: 1; }
+		//&:nth-child(2n)   { order: 2; }
+	}
 
-  //@apply flex flex-col justify-items-start items-start flex-wrap overflow-x-hidden scrollbar-hide;
+	//@apply flex flex-col justify-items-start items-start flex-wrap overflow-x-hidden scrollbar-hide;
 }

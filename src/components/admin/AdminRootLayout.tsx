@@ -1,8 +1,9 @@
-import React, { FunctionComponent, ReactNode } from "react";
 import Sidebar from "@/components/admin/Sidebar";
-import RootLayout from "@/components/layout/RootLayout";
 import Breadcrumbs, { Page } from "@/components/admin/common/Breadcrumbs";
+import RootLayout from "@/components/layout/RootLayout";
+import { FunctionComponent, ReactNode } from "react";
 
+// Used in conjunction with Sidebar to highlight the current page.
 export type AdminPageIdentifier =
 	| "dashboard"
 	| "members"
@@ -13,7 +14,7 @@ export type AdminPageIdentifier =
 
 type AdminRootLayoutProps = {
 	current?: AdminPageIdentifier;
-	children: string | ReactNode | ReactNode[];
+	children: ReactNode;
 	breadcrumbs?: Page[];
 };
 

@@ -1,11 +1,11 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
 import OpenGraph from "@/components/common/OpenGraph";
 import useOpenGraph from "@/components/common/useOpenGraph";
 import RootLayout from "@/components/layout/RootLayout";
-import Balancer from "react-wrap-balancer";
 import BgImgDark from "@/img/bg-dark.png";
+import type { NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import Balancer from "react-wrap-balancer";
 
 const Home: NextPage = () => {
 	const ogp = useOpenGraph({
@@ -27,7 +27,7 @@ const Home: NextPage = () => {
 				backgroundClass="brightness-90"
 				backgroundImage={BgImgDark}
 			>
-				<div className="w-full px-2 !mb-8 md:!mb-12 lg:!mb-20 max-w-[90rem] h-full flex flex-col items-center align-middle mx-auto px-4">
+				<div className="w-full px-4 !mb-8 md:!mb-12 lg:!mb-20 max-w-[90rem] h-full flex flex-col items-center align-middle mx-auto">
 					<div className="flex flex-col items-center">
 						<h1 className="text-center text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black tracking-[-0.045em] space-x-5 h-full w-full">
 							<Balancer>

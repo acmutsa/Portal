@@ -1,9 +1,13 @@
-import type { GetStaticPropsResult, NextPage } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { prisma } from "@/server/db/client";
-import useOpenGraph from "@/components/common/useOpenGraph";
+import DeactivatableLink from "@/components/common/DeactivatableLink";
+import { useGlobalContext } from "@/components/common/GlobalContext";
+import NoSSR from "@/components/common/NoSSR";
 import OpenGraph from "@/components/common/OpenGraph";
+import Toast, { ToastType } from "@/components/common/Toast";
+import useOpenGraph from "@/components/common/useOpenGraph";
+import RootLayout from "@/components/layout/RootLayout";
+import { env } from "@/env/server.mjs";
+import { prisma } from "@/server/db/client";
+import { checkin_success_message } from "@/utils/constants";
 import {
 	absUrl,
 	choice,
@@ -12,24 +16,22 @@ import {
 	getOrganization,
 	isCheckinOpen,
 } from "@/utils/helpers";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import Link from "next/link";
-import { SiGooglecalendar, SiTwitch } from "react-icons/si";
-import { format, formatRelative, isPast, lightFormat } from "date-fns";
-import QRCode from "react-qr-code";
-import NoSSR from "@/components/common/NoSSR";
-import { env } from "@/env/server.mjs";
-import { Event } from "@prisma/client";
-import { BsBookmarkPlusFill, BsPencilFill, BsTrashFill } from "react-icons/bs";
-import { useGlobalContext } from "@/components/common/GlobalContext";
-import { toast } from "react-hot-toast";
-import Toast from "@/components/common/Toast";
-import { useEffect } from "react";
 import { trpc } from "@/utils/trpc";
-import RootLayout from "@/components/layout/RootLayout";
+import { Event } from "@prisma/client";
+import { format, formatRelative, isPast, lightFormat } from "date-fns";
+import type { GetStaticPropsResult, NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { BsBookmarkPlusFill, BsPencilFill, BsTrashFill } from "react-icons/bs";
+import { SiGooglecalendar, SiTwitch } from "react-icons/si";
+import ReactMarkdown from "react-markdown";
+import QRCode from "react-qr-code";
+import remarkGfm from "remark-gfm";
 import superjson from "superjson";
-import { checkin_success_message } from "@/utils/constants";
+import { z } from "zod";
 
 interface eventPageParams {
 	params: { id: string };
@@ -44,19 +46,27 @@ type EventStaticProps = {
 	existingCheckin: boolean;
 };
 
+const NotificationEnum = z.enum(["closed", "success", "not-open"]);
+export type NotificationType = z.infer<typeof NotificationEnum>;
+
 const EventView: NextPage<{ json: string }> = ({ json }) => {
+	// Decode the ISR-generated JSON data.
 	const { event, qrcodeData } = superjson.parse<EventStaticProps>(json);
 
 	const router = useRouter();
-	const { id, notify } = router.query;
-	const [{ member: isMember }] = useGlobalContext();
+	const { id } = router.query;
+	const [globalState] = useGlobalContext();
+
+	// Query whether or not the member is already checked in for this event.
+	// Since this is a ISR page, we can't fetch this server-side, a query is required.
 	const { data: existingCheckin } = trpc.events.checkedIn.useQuery(
 		{ eventId: event.id },
 		{
-			enabled: isMember ?? false,
+			enabled: globalState.member ?? false,
 		}
 	);
 
+	// Create the OpenGraph metadata for this page.
 	const ogp = useOpenGraph({
 		title: event.name,
 		description: `Come and join ${event.organization} for ${event.name}!`,
@@ -73,56 +83,75 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 			["Where", event.location!],
 		],
 	});
-	const formatString = "h:mmaaaaaa";
-	const startString = lightFormat(event.eventStart, formatString);
-	const endString = lightFormat(event.eventEnd, formatString);
-	const [globalState] = useGlobalContext();
 
 	/**
 	 * If any issue crops up where the form toast keeps being shown despite my attempts to ensure it won't,
 	 * Check this gist for an alternative solution: https://gist.github.com/Xevion/11ba3c06cd0ca374a11acb18e4d4360b
 	 */
 	useEffect(() => {
-		if (router.isReady) {
-			if (notify == "formClosed") {
+		// If you remove the 'router.query.notify' check, make sure to add a check for the router.replace call below!
+		if (router.isReady && router.query.notify != undefined) {
+			let notify = NotificationEnum.safeParse(router.query.notify);
+
+			// Only display a toast if the notify query parameter was valid.
+			if (notify.success) {
+				// Figure out the title and description we want to display.
+				let toastData: { title: string; description: string; type: ToastType };
+				switch (notify.data) {
+					case "closed":
+						toastData = {
+							title: "Form Closed",
+							description: "The form you tried to access is closed.",
+							type: "error",
+						};
+						break;
+					case "success":
+						toastData = {
+							title: "Checked-in Successfully!",
+							description: choice(checkin_success_message),
+							type: "success",
+						};
+						break;
+					case "not-open":
+						toastData = {
+							title: "Check-in Not Open",
+							description: "The check-in period for this event has not yet started.",
+							type: "error",
+						};
+						break;
+				}
+
+				// Display it!
 				toast.custom(
 					({ id, visible }) => (
 						<Toast
-							title="Form Closed"
-							description="The form you tried to access is closed."
-							type="error"
+							title={toastData.title}
+							description={toastData.description}
+							type={toastData.type}
 							toastId={id}
 							visible={visible}
 						/>
 					),
-					{ id: "form-closed", duration: 8000 }
-				);
-			} else if (notify == "checkinSuccess") {
-				toast.custom(
-					({ id, visible }) => (
-						<Toast
-							title="Checked-in Successfully!"
-							description={choice(checkin_success_message)}
-							type="success"
-							toastId={id}
-							visible={visible}
-						/>
-					),
-					{ id: "checkin-success", duration: 8000 }
+					{ id: notify.data, duration: 8000 }
 				);
 			}
 
-			if (notify != undefined) {
-				const { notify: _, ...omittedQuery } = router.query;
-				router.replace({ query: omittedQuery }, undefined, { shallow: true });
-			}
+			// Remove the notify query parameter from the URL while preserving the rest of the query.
+			const { notify: _, ...remaining } = router.query;
+
+			// Replace (don't add to history), shallow (prevent data fetch, )
+			router.replace({ query: remaining }, undefined, { shallow: true });
 		}
 	}, [router]);
 
+	const formatString = "h:mmaaaaa"; // Formats like 1:04pm
+	const startString = lightFormat(event.eventStart, formatString);
+	const endString = lightFormat(event.eventEnd, formatString);
 	const calendarLink = generateGoogleCalendarLink(
 		event.eventStart,
 		event.eventEnd,
 		event.name,
+		// TODO: Create a description length limit, as all of this is passed in as query parameters. There is a theoretical limit. Ideal implementation would use newline delimiters and only limit the dynamic description portion.
 		`Location: ${event.location}\nWhen: ${startString} to ${endString}\n\n${
 			event.description ?? `Come join us for ${event.name}`
 		}`,
@@ -135,6 +164,60 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 	}${formatRelative(!isPast(event.eventStart) ? event.eventStart : event.eventEnd, now)}`;
 
 	const checkinOpen = isCheckinOpen(event);
+	const disableCheckin = !(checkinOpen && globalState.member);
+
+	const eventButtons = (
+		<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
+			<DeactivatableLink
+				href={`/events/${id}/check-in`}
+				disabled={disableCheckin}
+				className={classNames(
+					"w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center",
+					!disableCheckin &&
+						"focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
+					!checkinOpen ? "bg-primary-200" : "bg-primary-500 hover:bg-primary-800"
+				)}
+			>
+				<BsBookmarkPlusFill className="mr-2 w-5 h-5" />
+				{checkinOpen ? (existingCheckin ? "Edit Feedback" : "Check-in") : "Check-in closed."}
+			</DeactivatableLink>
+			<Link
+				href={calendarLink}
+				target="_blank"
+				className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+			>
+				<SiGooglecalendar className="mr-2 w-5 h-5" />
+				Add to Google Calendar
+			</Link>
+			<Link
+				href={"https://twitch.tv/acmutsa"}
+				as="button"
+				target="_blank"
+				className="w-full bg-twitch-light hover:bg-twitch-dark border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+			>
+				<SiTwitch className="mr-2 w-5 h-5" />
+				Watch on Twitch
+			</Link>
+			{globalState.admin ? (
+				<span className="w-full flex relative z-0 shadow-sm rounded-md text-base font-medium text-white">
+					<Link
+						href={`/admin/events/${id}`}
+						className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex h-full justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+					>
+						<BsPencilFill className="mr-2 w-4 h-4" />
+						Edit
+					</Link>
+					<Link href={`/admin/events/${id}?action=delete`}>
+						<button className="bg-rose-500 hover:bg-rose-600 relative h-full inline-flex items-center px-2 py-3 rounded-r-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+							<span className="sr-only">Delete Event</span>
+							<BsTrashFill className="h-5 w-5" aria-hidden="true" />
+						</button>
+					</Link>
+				</span>
+			) : null}
+		</div>
+	);
+
 	return (
 		<>
 			<Head>
@@ -148,7 +231,7 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 			>
 				<div className="sm:pt-12">
 					<div className="flex justify-center w-full">
-						<div className="bg-white z-30 max-w-[1200px] sm:mx-3 md:mx-6 p-5 md:p-2 md:p-3 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 sm:rounded-lg">
+						<div className="bg-white z-30 max-w-[1200px] sm:mx-3 md:mx-6 p-5 md:p-2 grid grid-cols-1 md:grid-cols-2 md:min-h-[19rem] lg:min-h-[2rem] md:space-x-6 sm:rounded-lg">
 							<div className="flex items-center justify-center overflow-hidden md:ml-3">
 								<div
 									className="w-full drop-shadow-xl md:drop-shadow-lg max-h-[25rem] aspect-[9/16] bg-top md:bg-center lg:bg-top lg:aspect-video rounded-lg bg-cover hover:bg-contain hover:bg-center bg-no-repeat"
@@ -173,6 +256,13 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 											No description was provided for this event.
 										</p>
 									)}
+									{/*
+										This section can't be rendered on the server as it uses .toLocaleString.
+										If I remember correctly, this causes a hydration mismatch error at minimum, and even if bypassed, it
+										won't render a user-locale accurate datetime string.
+										It's possible a custom formatter could be used to get around this, but I'm not sure it's necessary.
+										If switching off NoSSR, use date-fns as the server date formatter.
+									*/}
 									<NoSSR>
 										<dl className="text-base grid grid-cols-1 mt-4 gap-x-4 gap-y-2 lg:gap-y-4 md:grid-cols-2">
 											<div className="sm:col-span-1">
@@ -204,64 +294,8 @@ const EventView: NextPage<{ json: string }> = ({ json }) => {
 										</dl>
 									</NoSSR>
 								</div>
-								<div className="mt-6 text-base font-medium text-white grid grid-cols-1 [&>*]:mx-auto [&>*]:max-w-[25rem] gap-x-4 gap-y-4 xl:grid-cols-2">
-									<Link legacyBehavior href={`/events/${id}/check-in`}>
-										<button
-											type="button"
-											disabled={!checkinOpen}
-											className={classNames(
-												"w-full border border-transparent rounded-md py-3 px-8 flex items-center justify-center  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500",
-												!checkinOpen ? "bg-primary-200" : "bg-primary-500 hover:bg-primary-800"
-											)}
-										>
-											<BsBookmarkPlusFill className="mr-2 w-5 h-5" />
-											{checkinOpen
-												? existingCheckin
-													? "Edit Feedback"
-													: "Check-in"
-												: "Check-in closed."}
-										</button>
-									</Link>
-									<Link legacyBehavior href={calendarLink} target="_blank">
-										<button
-											type="button"
-											className="w-full bg-secondary hover:bg-secondary-700 border border-transparent rounded-md py-3 px-4 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-										>
-											<SiGooglecalendar className="mr-2 w-5 h-5" />
-											Add to Google Calendar
-										</button>
-									</Link>
-									<Link legacyBehavior href={"https://twitch.tv/acmutsa"} target="_blank">
-										<button
-											type="button"
-											className="w-full bg-twitch-light hover:bg-twitch-dark border border-transparent rounded-md py-3 px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-										>
-											<SiTwitch className="mr-2 w-5 h-5" />
-											Watch on Twitch
-										</button>
-									</Link>
-									{globalState.admin ? (
-										<span className="w-full flex relative z-0 inline-flex shadow-sm rounded-md text-base font-medium text-white">
-											<Link legacyBehavior href={`/admin/events/${id}`}>
-												<button
-													type="button"
-													className="grow bg-teal-500 hover:bg-teal-600 relative inline-flex justify-center items-center px-4 py-3 rounded-l-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-												>
-													<BsPencilFill className="mr-2 w-4 h-4" />
-													Edit
-												</button>
-											</Link>
-											<Link legacyBehavior href={`/admin/events/${id}?action=delete`}>
-												<button className="bg-rose-500 hover:bg-rose-600 relative inline-flex items-center px-2 py-3 rounded-r-md focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
-													<span className="sr-only">Open options</span>
-													<BsTrashFill className="h-5 w-5" aria-hidden="true" />
-												</button>
-											</Link>
-										</span>
-									) : null}
-								</div>
+								{eventButtons}
 							</div>
-							{/*<div className="md:block" />*/}
 							<div className="px-5 md:pl-0 pb-5 prose prose-md max-w-none font-inter">
 								<h2 className="border-b-2 mb-1 mt-2 md:mt-4">About ACM</h2>
 								<p className="ml-3 tracking-tight md:tracking-normal">
@@ -317,6 +351,7 @@ export async function getStaticProps({
 		},
 	});
 
+	// If the event doesn't exist, return a 404.
 	if (event == null) {
 		return {
 			notFound: true,
@@ -336,6 +371,7 @@ export async function getStaticProps({
 }
 
 export async function getStaticPaths() {
+	// TODO: This isn't generating any paths at build-time. Did we simply not complete this, or is there a reason?
 	return { paths: [], fallback: "blocking" };
 }
 
