@@ -83,6 +83,17 @@ function FormWarning(props: { className?: string; title?: string; children: stri
 	);
 }
 
+const checkIfSubmitted = (callback: any) => {
+	const [called, setCalled] = useState(false);
+
+	return (e: any) => {
+		if (!called) {
+			setCalled(true);
+			callback(e);
+		}
+	}
+}
+
 const EventForm: FunctionComponent<EventFormProps> = ({
 	context,
 	onSubmit,
@@ -175,7 +186,7 @@ const EventForm: FunctionComponent<EventFormProps> = ({
 	}, [watchedEventTiming]);
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(checkIfSubmitted(onSubmit))}>
 			<div className="shadow rounded-md">
 				<div className="bg-white py-6 px-4 space-y-6 sm:p-6">
 					<div>
