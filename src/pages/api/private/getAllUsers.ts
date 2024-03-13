@@ -19,7 +19,7 @@ const getAllUsers = async (req: NextApiRequest, res: NextApiResponse) => {
 		if (parseRes.data.apikey == env.ADMIN_UNAME + env.ADMIN_PASS) {
 			const allMembers = await prisma.member.findMany({
         include: {
-			data: extended,
+			data: true,
 			checkins: {
 				include: {
 					event: true,
