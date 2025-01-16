@@ -40,3 +40,9 @@ const getAllUsers = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default getAllUsers;
+
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+}
