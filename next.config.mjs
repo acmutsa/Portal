@@ -24,6 +24,7 @@ function defineNextConfig(config) {
 }
 
 export const nextConfig = {
+	output: "export",
 	reactStrictMode: true,
 	swcMinify: true,
 	// Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
@@ -34,14 +35,16 @@ export const nextConfig = {
 	async redirects() {
 		return [
 			{
-				source: '/tos',
-				destination: '/terms-of-service',
-				permanent: true
-			}
-		]
+				source: "/tos",
+				destination: "/terms-of-service",
+				permanent: true,
+			},
+		];
 	},
 	// TODO: Remove this once we don't use external images
 	images: {
+		loader: "akamai", // Use Cloudflare-compatible loader
+		path: "/",
 		remotePatterns: [
 			{
 				protocol: "https",
@@ -50,14 +53,14 @@ export const nextConfig = {
 		],
 	},
 	sentry: {
-		hideSourceMaps: true
+		hideSourceMaps: true,
 	},
 	experimental: {
-		appDir: false
+		appDir: false,
 	},
 	publicRuntimeConfig: {
-		version: pack.default.version
-	}
+		version: pack.default.version,
+	},
 };
 
 export default defineNextConfig(nextConfig);
